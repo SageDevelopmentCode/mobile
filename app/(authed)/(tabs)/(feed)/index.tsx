@@ -19,6 +19,12 @@ export default function FeedScreen() {
       }}
     >
       <Text>Hello Feed</Text>
+      <TouchableOpacity onPress={() => router.push("/login")}>
+        <Text>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => router.push("/register")}>
+        <Text>Register</Text>
+      </TouchableOpacity>
     </View>
   );
 }

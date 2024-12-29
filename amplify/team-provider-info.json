@@ -1,0 +1,25 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mobile-dev-8487d-authRole",
+      "UnauthRoleArn": "arn:aws:iam::665360444809:role/amplify-mobile-dev-8487d-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::665360444809:role/amplify-mobile-dev-8487d-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-mobile-dev-8487d-deployment",
+      "UnauthRoleName": "amplify-mobile-dev-8487d-unauthRole",
+      "StackName": "amplify-mobile-dev-8487d",
+      "StackId": "arn:aws:cloudformation:us-west-2:665360444809:stack/amplify-mobile-dev-8487d/5f474a70-c583-11ef-a0ce-02d7b4b0cd3f",
+      "AmplifyAppId": "dlymsr1j9f6qp"
+    },
+    "categories": {
+      "auth": {
+        "mobilef7025f37": {
+          "userPoolId": "us-west-2_vU3FuZ4C8",
+          "userPoolName": "User pool - lolac-",
+          "webClientId": "5ig2l3r1e2kd1440u7h0i22fal",
+          "nativeClientId": "5ig2l3r1e2kd1440u7h0i22fal"
+        }
+      }
+    }
+  }
+}
