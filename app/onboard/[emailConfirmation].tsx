@@ -11,17 +11,19 @@ import {
 } from "react-native";
 
 const ConfirmEmailScreen = () => {
-  const { email } = useLocalSearchParams<{ email: string }>();
+  const { emailConfirmation } = useLocalSearchParams<{
+    emailConfirmation: string;
+  }>();
   const router = useRouter();
   const [confirmationCode, setConfirmationCode] = useState("");
 
   const handleConfirm = async () => {
-    if (!email || !confirmationCode) {
+    if (!emailConfirmation || !confirmationCode) {
       Alert.alert("Error", "Please fill out all fields.");
     } else {
       try {
         // Confirm the sign-up process using the code sent to the user's email
-        await Auth.confirmSignUp(email, confirmationCode);
+        await Auth.confirmSignUp(emailConfirmation, confirmationCode);
         Alert.alert("Success", "Your email has been confirmed!");
         // After successful confirmation, you can navigate the user to the next screen
         router.push("/(authed)/(tabs)/(feed)");
@@ -32,14 +34,14 @@ const ConfirmEmailScreen = () => {
   };
 
   const handleResendCode = async () => {
-    if (!email) {
+    if (!emailConfirmation) {
       Alert.alert("Error", "Please enter your email to resend the code.");
       return;
     }
 
     try {
       // Resend the confirmation code
-      await Auth.resendSignUp(email);
+      await Auth.resendSignUp(emailConfirmation);
       Alert.alert(
         "Success",
         "A new confirmation code has been sent to your email."

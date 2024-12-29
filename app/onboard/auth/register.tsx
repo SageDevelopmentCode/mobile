@@ -13,7 +13,7 @@ import { Auth } from "aws-amplify";
 
 const RegisterScreen = () => {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -29,11 +29,11 @@ const RegisterScreen = () => {
           password: password,
         });
         console.log("register res", res);
-        Alert.alert("Success", `Welcome, ${name}!`);
+        Alert.alert("Success", `We've sent a confirmation code to ${email}`);
         // Navigate to next screen after successful registration
         router.push({
           pathname: "/onboard/[emailConfirmation]",
-          params: { email: email },
+          params: { emailConfirmation: email },
         });
       } catch (error: any) {
         Alert.alert("Error", error);

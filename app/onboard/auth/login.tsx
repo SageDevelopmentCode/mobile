@@ -8,17 +8,20 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { Auth } from "aws-amplify";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Replace with your login logic
     if (email === "" || password === "") {
       Alert.alert("Error", "Please fill out all fields.");
     } else {
-      Alert.alert("Success", `Welcome, ${email}!`);
+      await Auth.signIn(email, password);
+      Alert.alert("Login Successful");
+      router.push("/(authed)/(tabs)/(feed)");
     }
   };
 
@@ -41,10 +44,7 @@ const LoginScreen = () => {
         value={password}
         onChangeText={setPassword}
       />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("/(authed)/(tabs)/(feed)")}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
     </View>
