@@ -1,45 +1,31 @@
 {
   "auth": {
-    "mobilef7025f37": {
+    "mobileb0a3a245": {
       "customAuth": false,
       "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL",
+          "PHONE_NUMBER"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
       "providerPlugin": "awscloudformation",
-      "service": "Cognito",
-      "serviceType": "imported"
-    }
-  },
-  "parameters": {
-    "AMPLIFY_auth_mobilef7025f37_nativeClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilef7025f37"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilef7025f37_userPoolId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilef7025f37"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilef7025f37_userPoolName": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilef7025f37"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilef7025f37_webClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilef7025f37"
-        }
-      ]
+      "service": "Cognito"
     }
   }
 }

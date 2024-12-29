@@ -13,12 +13,7 @@
     },
     "categories": {
       "auth": {
-        "mobilef7025f37": {
-          "userPoolId": "us-west-2_vU3FuZ4C8",
-          "userPoolName": "User pool - lolac-",
-          "webClientId": "5ig2l3r1e2kd1440u7h0i22fal",
-          "nativeClientId": "5ig2l3r1e2kd1440u7h0i22fal"
-        }
+        "mobileb0a3a245": {}
       }
     }
   }

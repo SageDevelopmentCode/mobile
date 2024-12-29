@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { Auth } from "aws-amplify";
+// import { signUp } from "aws-amplify/auth";
 
 const RegisterScreen = () => {
   const [name, setName] = useState("");
@@ -23,19 +24,16 @@ const RegisterScreen = () => {
       Alert.alert("Error", "Passwords do not match.");
     } else {
       try {
-        await Auth.signUp({
+        const res = await Auth.signUp({
           username: email, // email as username
           password: password,
-          attributes: {
-            email, // Add other attributes if needed
-            name,
-          },
         });
+        console.log("register res", res);
         Alert.alert("Success", `Welcome, ${name}!`);
         // Navigate to next screen after successful registration
         router.push("/(authed)/(tabs)/(feed)");
       } catch (error: any) {
-        Alert.alert("Error", error.message);
+        Alert.alert("Error", error);
       }
       // Replace with your registration logic
     }
@@ -58,6 +56,7 @@ const RegisterScreen = () => {
         keyboardType="email-address"
         value={email}
         onChangeText={setEmail}
+        autoCapitalize="none" // Add this line to prevent automatic capitalization
       />
       <TextInput
         style={styles.input}
@@ -66,6 +65,7 @@ const RegisterScreen = () => {
         secureTextEntry
         value={password}
         onChangeText={setPassword}
+        autoCapitalize="none" // Add this line to prevent automatic capitalization
       />
       <TextInput
         style={styles.input}
@@ -74,11 +74,9 @@ const RegisterScreen = () => {
         secureTextEntry
         value={confirmPassword}
         onChangeText={setConfirmPassword}
+        autoCapitalize="none" // Add this line to prevent automatic capitalization
       />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("/(authed)/(tabs)/(feed)")}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
     </View>
