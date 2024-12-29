@@ -31,7 +31,10 @@ const RegisterScreen = () => {
         console.log("register res", res);
         Alert.alert("Success", `Welcome, ${name}!`);
         // Navigate to next screen after successful registration
-        router.push("/(authed)/(tabs)/(feed)");
+        router.push({
+          pathname: "/onboard/[emailConfirmation]",
+          params: { email: email },
+        });
       } catch (error: any) {
         Alert.alert("Error", error);
       }
