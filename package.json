@@ -15,6 +15,12 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@aws-amplify/analytics": "^7.0.64",
+    "@aws-amplify/api": "^6.1.9",
+    "@aws-amplify/auth": "^6.9.0",
+    "@aws-amplify/core": "^6.8.0",
+    "@aws-amplify/interactions": "^6.1.5",
+    "@aws-amplify/storage": "^6.7.5",
     "@expo/vector-icons": "^14.0.2",
     "@react-native-async-storage/async-storage": "^2.1.0",
     "@react-native-community/netinfo": "^11.4.1",

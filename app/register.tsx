@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { Auth } from "aws-amplify";
 
 const RegisterScreen = () => {
   const [name, setName] = useState("");
@@ -15,13 +16,27 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
       Alert.alert("Error", "Please fill out all fields.");
     } else if (password !== confirmPassword) {
       Alert.alert("Error", "Passwords do not match.");
     } else {
-      Alert.alert("Success", `Welcome, ${name}!`);
+      try {
+        await Auth.signUp({
+          username: email, // email as username
+          password: password,
+          attributes: {
+            email, // Add other attributes if needed
+            name,
+          },
+        });
+        Alert.alert("Success", `Welcome, ${name}!`);
+        // Navigate to next screen after successful registration
+        router.push("/(authed)/(tabs)/(feed)");
+      } catch (error: any) {
+        Alert.alert("Error", error.message);
+      }
       // Replace with your registration logic
     }
   };
