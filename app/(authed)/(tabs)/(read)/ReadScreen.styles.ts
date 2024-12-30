@@ -9,30 +9,28 @@ export const styles = StyleSheet.create({
     width: "100%",
   },
   hero: {
-    flex: 0.1,
+    flex: 0.15,
     width: "100%",
     backgroundColor: colors.LightBrownBackground,
-    padding: 20,
+    padding: 30,
     paddingTop: 70,
   },
   version: {
-    // flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    // position: "relative",
+    alignItems: "center",
   },
   dropdownButton: {
-    backgroundColor: "#007BFF",
+    backgroundColor: colors.PrimaryWhite,
     paddingVertical: 12,
     paddingHorizontal: 20,
-    borderRadius: 20,
+    borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    // width: "100%",
-  },
-  buttonText: {
-    color: "#FFF",
+    borderWidth: 1,
+    borderColor: "#F0F0F0",
+    color: colors.BrownPrimaryText,
     fontSize: 16,
   },
   dropdown: {
@@ -41,10 +39,10 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#DDD",
     borderRadius: 5,
-    width: "80%",
+    width: "40%",
     maxHeight: 150, // Limits dropdown height
     position: "absolute",
-    bottom: "-300%",
+    bottom: "-350%",
     right: 0,
   },
   dropdownItem: {
@@ -54,5 +52,12 @@ export const styles = StyleSheet.create({
   },
   dropdownItemText: {
     fontSize: 16,
+  },
+  searchBar: {
+    flex: 1,
+    height: 40,
+    paddingHorizontal: 10,
+    backgroundColor: "transparent",
+    fontWeight: 600,
   },
 });

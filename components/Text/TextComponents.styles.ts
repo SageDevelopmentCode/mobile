@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
     color: colors.DarkPrimaryText,
   },
   buttonText: {
-    fontSize: 20,
+    fontSize: 13,
     color: colors.DarkPrimaryText,
   },
 });
