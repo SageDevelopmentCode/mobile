@@ -25,16 +25,19 @@ export default function FeedScreen() {
     }
   }
 
-  const logAsyncStorage = async () => {
+  const checkUserInStorage = async () => {
     try {
-      const keys = await AsyncStorage.getAllKeys();
-      const items = await AsyncStorage.multiGet(keys);
-
-      items.forEach(([key, value]) => {
-        console.log(`Key: ${key}, Value: ${value}`);
-      });
+      const user = await AsyncStorage.getItem("auth_user"); // Replace "user" with the key you're using
+      if (user) {
+        console.log("User found in AsyncStorage:", JSON.parse(user));
+        return JSON.parse(user); // Convert the string back to an object if needed
+      } else {
+        console.log("No user found in AsyncStorage.");
+        return null;
+      }
     } catch (error) {
-      console.log("Error reading AsyncStorage:", error);
+      console.log("Error checking AsyncStorage for user:", error);
+      return null;
     }
   };
 
@@ -62,8 +65,8 @@ export default function FeedScreen() {
       <TouchableOpacity style={styles.button} onPress={handleSignOut}>
         <Text>Sign out</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={logAsyncStorage}>
-        <Text>Log AsyncStorage</Text>
+      <TouchableOpacity style={styles.button} onPress={checkUserInStorage}>
+        <Text>Check if User is in AsyncStorage</Text>
       </TouchableOpacity>
     </View>
   );
