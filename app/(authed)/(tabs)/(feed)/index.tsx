@@ -3,12 +3,13 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 import { Auth } from "aws-amplify";
 import { useAuth } from "@/context/AuthContext";
+import { styles } from "./feed.styles";
 
 export default function FeedScreen() {
   const navigation = useNavigation();
   const { user } = useAuth(); // Access authenticated user
 
-  console.log("current user:", user);
+  console.log("current user in feed:", user);
 
   const router = useRouter();
   useEffect(() => {
@@ -32,13 +33,19 @@ export default function FeedScreen() {
       }}
     >
       <Text>Hello Feed</Text>
-      <TouchableOpacity onPress={() => router.push("/onboard/auth/login")}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("/onboard/auth/login")}
+      >
         <Text>Login</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.push("/onboard/auth/register")}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("/onboard/auth/register")}
+      >
         <Text>Register</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={handleSignOut}>
+      <TouchableOpacity style={styles.button} onPress={handleSignOut}>
         <Text>Sign out</Text>
       </TouchableOpacity>
     </View>

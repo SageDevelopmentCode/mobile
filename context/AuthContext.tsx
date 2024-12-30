@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           username: currentUser.username,
           attributes: currentUser.attributes,
         });
-        console.log("current user:", user);
       } catch (err) {
         console.log("No user is logged in:", err);
         router.replace("/onboard/auth/login"); // Redirect to login if not authenticated
