@@ -32,7 +32,7 @@ const RegisterScreen = () => {
         Alert.alert("Success", `We've sent a confirmation code to ${email}`);
         // Navigate to next screen after successful registration
         router.push({
-          pathname: "/onboard/[emailConfirmation]",
+          pathname: "/onboard/emailConfirmation/[emailConfirmation]",
           params: { emailConfirmation: email },
         });
       } catch (error: any) {
