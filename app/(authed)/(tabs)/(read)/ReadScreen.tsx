@@ -12,6 +12,7 @@ import { styles } from "./ReadScreen.styles";
 import { ButtonText, Title } from "@/components/Text/TextComponents";
 import colors from "@/constants/colors";
 import { FontAwesome5 } from "@/utils/icons";
+import { BIBLE_API_URL } from "@/utils/constants";
 
 export default function ReadScreen() {
   const navigation = useNavigation();
@@ -21,21 +22,24 @@ export default function ReadScreen() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = async () => {
-    if (!searchTerm.trim()) {
+    if (!searchTerm.trim().toLowerCase()) {
       Alert.alert("Error", "Please enter a search term.");
       return;
     }
 
-    const apiUrl = `https://bible-go-api.rkeplin.com/v1/search?query=${encodeURIComponent(
-      searchTerm
-    )}`;
+    console.log("search term: ", searchTerm.trim().toLowerCase());
+
+    const apiUrl = `${BIBLE_API_URL}/search?query=${searchTerm
+      .trim()
+      .toLowerCase()}&translation=NIV&offset=0&limit=100`;
+
     try {
       const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error("Failed to fetch data");
       }
       const data = await response.json();
-      console.log(data); // Handle the search results here
+      console.log("search data: ", data); // Handle the search results here
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Something went wrong while fetching data.");
@@ -99,18 +103,22 @@ export default function ReadScreen() {
             marginTop: 20, // Added margin here instead of inside searchBar
           }}
         >
-          <FontAwesome5
-            style={{
-              marginRight: 10,
-            }}
-            name="search"
-            size={25}
-            color={colors.DarkPrimaryText}
-          />
+          <TouchableOpacity onPress={handleSearch}>
+            <FontAwesome5
+              style={{
+                marginRight: 10,
+              }}
+              name="search"
+              size={25}
+              color={colors.DarkPrimaryText}
+            />
+          </TouchableOpacity>
           <TextInput
             style={styles.searchBar}
             placeholder="Search Word, Book, Character"
             placeholderTextColor={colors.GrayText}
+            value={searchTerm}
+            onChangeText={setSearchTerm}
           ></TextInput>
         </View>
       </View>

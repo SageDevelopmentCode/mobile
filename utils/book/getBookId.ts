@@ -1,4 +1,4 @@
-import { books } from "./data/books";
+import { books } from "../data/books";
 
 // Create a mapping object
 const bookToIdMap: { [key: string]: number } = {};
