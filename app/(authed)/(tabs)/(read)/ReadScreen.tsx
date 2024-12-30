@@ -13,6 +13,7 @@ import { ButtonText, Title } from "@/components/Text/TextComponents";
 import colors from "@/constants/colors";
 import { FontAwesome5 } from "@/utils/icons";
 import { BIBLE_API_URL } from "@/utils/constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ReadScreen() {
   const navigation = useNavigation();
@@ -20,6 +21,25 @@ export default function ReadScreen() {
   const options = ["NIV", "ESV", "KJV"];
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [cachedResults, setCachedResults] = useState<{ [key: string]: string }>(
+    {}
+  );
+
+  // Load cache from AsyncStorage on mount
+  useEffect(() => {
+    const loadCache = async () => {
+      try {
+        const storedCache = await AsyncStorage.getItem("searchCache");
+        if (storedCache) {
+          setCachedResults(JSON.parse(storedCache));
+        }
+      } catch (error) {
+        console.error("Error loading cache:", error);
+      }
+    };
+
+    loadCache();
+  }, []);
 
   const handleSearch = async () => {
     if (!searchTerm.trim().toLowerCase()) {
@@ -27,11 +47,17 @@ export default function ReadScreen() {
       return;
     }
 
+    const editedSearchTerm = searchTerm.trim().toLowerCase();
+
+    // Check cache first
+    if (cachedResults[editedSearchTerm]) {
+      console.log("From Search Cache:", cachedResults[editedSearchTerm]);
+      return;
+    }
+
     console.log("search term: ", searchTerm.trim().toLowerCase());
 
-    const apiUrl = `${BIBLE_API_URL}/search?query=${searchTerm
-      .trim()
-      .toLowerCase()}&translation=NIV&offset=0&limit=100`;
+    const apiUrl = `${BIBLE_API_URL}/search?query=${editedSearchTerm}&translation=NIV&offset=0&limit=100`;
 
     try {
       const response = await fetch(apiUrl);
@@ -40,6 +66,13 @@ export default function ReadScreen() {
       }
       const data = await response.json();
       console.log("search data: ", data); // Handle the search results here
+
+      // Update cache
+      const updatedCache = { ...cachedResults, [editedSearchTerm]: data };
+      setCachedResults(updatedCache);
+
+      // Save to AsyncStorage
+      await AsyncStorage.setItem("searchCache", JSON.stringify(updatedCache));
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Something went wrong while fetching data.");
