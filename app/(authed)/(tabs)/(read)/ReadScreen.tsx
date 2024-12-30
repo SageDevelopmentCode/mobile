@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   FlatList,
   TextInput,
+  Alert,
 } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 import { styles } from "./ReadScreen.styles";
@@ -16,6 +17,30 @@ export default function ReadScreen() {
   const navigation = useNavigation();
   const router = useRouter();
   const options = ["NIV", "ESV", "KJV"];
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = async () => {
+    if (!searchTerm.trim()) {
+      Alert.alert("Error", "Please enter a search term.");
+      return;
+    }
+
+    const apiUrl = `https://bible-go-api.rkeplin.com/v1/search?query=${encodeURIComponent(
+      searchTerm
+    )}`;
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await response.json();
+      console.log(data); // Handle the search results here
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Something went wrong while fetching data.");
+    }
+  };
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
@@ -84,7 +109,7 @@ export default function ReadScreen() {
           />
           <TextInput
             style={styles.searchBar}
-            placeholder="Search book"
+            placeholder="Search Word, Book, Character"
             placeholderTextColor={colors.GrayText}
           ></TextInput>
         </View>
