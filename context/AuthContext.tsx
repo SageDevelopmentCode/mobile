@@ -5,15 +5,15 @@ import React, {
   useContext,
   ReactNode,
 } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Auth } from "aws-amplify";
 import { useRouter } from "expo-router";
 
-// Define types for the user and context
 interface AuthUser {
   username: string;
   attributes: {
     email: string;
-    [key: string]: any; // Handle additional attributes
+    [key: string]: any;
   };
 }
 
@@ -23,7 +23,6 @@ interface AuthContextType {
   logout: () => Promise<void>;
 }
 
-// Context with default values
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
@@ -34,39 +33,74 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-// AuthProvider Component
+const STORAGE_KEY = "auth_user";
+
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
-    const checkUser = async () => {
+    const initializeAuth = async () => {
       setIsLoading(true);
+
       try {
-        const currentUser = await Auth.currentAuthenticatedUser();
-        setUser({
-          username: currentUser.username,
-          attributes: currentUser.attributes,
-        });
+        // Check AsyncStorage for cached user
+        const cachedUser = await AsyncStorage.getItem(STORAGE_KEY);
+        if (cachedUser) {
+          console.log("User data was in cache");
+          const parsedUser = JSON.parse(cachedUser);
+          setUser(parsedUser);
+
+          // Optionally, verify token validity
+          const isSessionValid = await Auth.currentSession()
+            .then(() => true)
+            .catch(() => false);
+
+          if (!isSessionValid) {
+            await clearUserCache();
+            router.replace("/onboard/auth/login");
+            return;
+          }
+        } else {
+          // Fallback to AWS Auth check
+          const currentUser = await Auth.currentAuthenticatedUser();
+          const userData: AuthUser = {
+            username: currentUser.username,
+            attributes: currentUser.attributes,
+          };
+          setUser(userData);
+
+          // Cache the user
+          await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+        }
       } catch (err) {
-        console.log("No user is logged in:", err);
-        router.replace("/onboard/auth/login"); // Redirect to login if not authenticated
+        console.log("Error during auth initialization:", err);
+        router.replace("/onboard/auth/login");
       } finally {
         setIsLoading(false);
       }
     };
 
-    checkUser();
+    initializeAuth();
   }, [router]);
 
   const logout = async () => {
     try {
       await Auth.signOut();
       setUser(null);
+      await clearUserCache();
       router.replace("/onboard/auth/login");
     } catch (err) {
       console.log("Error signing out:", err);
+    }
+  };
+
+  const clearUserCache = async () => {
+    try {
+      await AsyncStorage.removeItem(STORAGE_KEY);
+    } catch (err) {
+      console.log("Error clearing user cache:", err);
     }
   };
 
@@ -77,5 +111,4 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 };
 
-// Custom Hook to use the AuthContext
 export const useAuth = () => useContext(AuthContext);
