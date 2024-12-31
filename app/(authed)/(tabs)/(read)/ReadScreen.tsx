@@ -15,6 +15,7 @@ import colors from "@/constants/colors";
 import { FontAwesome5, Ionicons } from "@/utils/icons";
 import { BIBLE_API_URL } from "@/utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SearchResults } from "@/types/SearchResults";
 
 export default function ReadScreen() {
   const navigation = useNavigation();
@@ -22,11 +23,13 @@ export default function ReadScreen() {
   const options = ["NIV", "ESV", "KJV"];
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [cachedResults, setCachedResults] = useState<{ [key: string]: string }>(
-    {}
-  );
+  const [cachedResults, setCachedResults] = useState<{
+    [key: string]: SearchResults;
+  }>({});
+
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchResultsOpen, setSearchResultsOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState<SearchResults>();
 
   // Load cache from AsyncStorage on mount
   useEffect(() => {
@@ -58,6 +61,7 @@ export default function ReadScreen() {
     // Check cache first
     if (cachedResults[editedSearchTerm]) {
       console.log("From Search Cache:", cachedResults[editedSearchTerm]);
+      setSearchResults(cachedResults[editedSearchTerm]);
       return;
     }
 
@@ -72,6 +76,8 @@ export default function ReadScreen() {
       }
       const data = await response.json();
       console.log("search data: ", data); // Handle the search results here
+
+      setSearchResults(data);
 
       // Update cache
       const updatedCache = { ...cachedResults, [editedSearchTerm]: data };
@@ -105,6 +111,8 @@ export default function ReadScreen() {
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
+
+  console.log("search results:", searchResults);
 
   return (
     <View style={styles.container}>
@@ -167,7 +175,23 @@ export default function ReadScreen() {
       {searchResultsOpen && (
         <View style={styles.searchResults}>
           <ScrollView style={styles.scrollSearch}>
-            <Text>Hello</Text>
+            {searchResults?.items.map((item: any) => {
+              const isOldTestament = item.book.testament === "Old Testament";
+              return (
+                <View
+                  key={item.id}
+                  style={[
+                    styles.resultItem,
+                    { backgroundColor: isOldTestament ? "#f0f0f0" : "#d0f0d0" }, // Change background based on testament
+                  ]}
+                >
+                  <Text style={styles.verse}>
+                    {item.book.name} {item.chapterId}:{item.verseId}
+                  </Text>
+                  <Text style={styles.verseText}>{item.verse}</Text>
+                </View>
+              );
+            })}
           </ScrollView>
           <TouchableOpacity onPress={() => setSearchResultsOpen(false)}>
             <Ionicons

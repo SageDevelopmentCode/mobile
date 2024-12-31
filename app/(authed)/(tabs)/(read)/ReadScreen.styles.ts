@@ -86,4 +86,17 @@ export const styles = StyleSheet.create({
   scrollSearch: {
     flex: 0.9,
   },
+  resultItem: {
+    marginBottom: 10,
+    padding: 10,
+    borderRadius: 5,
+  },
+  verse: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  verseText: {
+    fontSize: 14,
+    marginTop: 5,
+  },
 });
