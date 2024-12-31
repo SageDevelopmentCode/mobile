@@ -60,4 +60,30 @@ export const styles = StyleSheet.create({
     backgroundColor: "transparent",
     fontWeight: 600,
   },
+  searchResults: {
+    flex: 1,
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    position: "absolute",
+    top: "24%",
+    height: "60%",
+    width: "90%",
+    backgroundColor: colors.PrimaryWhite,
+    shadowColor: "#000", // Shadow color
+    shadowOffset: {
+      width: 0, // Horizontal shadow offset
+      height: 4, // Vertical shadow offset
+    },
+    borderRadius: 10,
+    shadowOpacity: 0.25, // Shadow opacity
+    shadowRadius: 4, // Shadow blur radius
+    elevation: 5, // Elevation for Android shadow
+    left: "5%", // Move to the center of the screen
+    transform: [{ translateX: -"5%" }], // Adjust to center by half its width
+  },
+  scrollSearch: {
+    flex: 0.9,
+  },
 });

@@ -6,12 +6,13 @@ import {
   FlatList,
   TextInput,
   Alert,
+  ScrollView,
 } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 import { styles } from "./ReadScreen.styles";
 import { ButtonText, Title } from "@/components/Text/TextComponents";
 import colors from "@/constants/colors";
-import { FontAwesome5 } from "@/utils/icons";
+import { FontAwesome5, Ionicons } from "@/utils/icons";
 import { BIBLE_API_URL } from "@/utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -24,6 +25,8 @@ export default function ReadScreen() {
   const [cachedResults, setCachedResults] = useState<{ [key: string]: string }>(
     {}
   );
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchResultsOpen, setSearchResultsOpen] = useState(false);
 
   // Load cache from AsyncStorage on mount
   useEffect(() => {
@@ -42,6 +45,9 @@ export default function ReadScreen() {
   }, []);
 
   const handleSearch = async () => {
+    setSearchLoading(true);
+    setSearchResultsOpen(true);
+
     if (!searchTerm.trim().toLowerCase()) {
       Alert.alert("Error", "Please enter a search term.");
       return;
@@ -76,6 +82,8 @@ export default function ReadScreen() {
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Something went wrong while fetching data.");
+    } finally {
+      setSearchLoading(false);
     }
   };
 
@@ -134,6 +142,7 @@ export default function ReadScreen() {
             flexDirection: "row",
             alignItems: "center", // Ensures vertical alignment
             marginTop: 20, // Added margin here instead of inside searchBar
+            position: "relative",
           }}
         >
           <TouchableOpacity onPress={handleSearch}>
@@ -155,6 +164,23 @@ export default function ReadScreen() {
           ></TextInput>
         </View>
       </View>
+      {searchResultsOpen && (
+        <View style={styles.searchResults}>
+          <ScrollView style={styles.scrollSearch}>
+            <Text>Hello</Text>
+          </ScrollView>
+          <TouchableOpacity onPress={() => setSearchResultsOpen(false)}>
+            <Ionicons
+              style={{
+                marginRight: 10,
+              }}
+              name="close"
+              size={25}
+              color={colors.DarkPrimaryText}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }
