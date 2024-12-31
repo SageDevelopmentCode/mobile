@@ -16,6 +16,7 @@ import { FontAwesome5, Ionicons } from "@/utils/icons";
 import { BIBLE_API_URL } from "@/utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SearchResults } from "@/types/SearchResults";
+import { parseHTML } from "@/utils/search/parseHighlightedVerse";
 
 export default function ReadScreen() {
   const navigation = useNavigation();
@@ -175,23 +176,31 @@ export default function ReadScreen() {
       {searchResultsOpen && (
         <View style={styles.searchResults}>
           <ScrollView style={styles.scrollSearch}>
-            {searchResults?.items.map((item: any) => {
-              const isOldTestament = item.book.testament === "Old Testament";
-              return (
-                <View
-                  key={item.id}
-                  style={[
-                    styles.resultItem,
-                    { backgroundColor: isOldTestament ? "#f0f0f0" : "#d0f0d0" }, // Change background based on testament
-                  ]}
-                >
-                  <Text style={styles.verse}>
-                    {item.book.name} {item.chapterId}:{item.verseId}
-                  </Text>
-                  <Text style={styles.verseText}>{item.verse}</Text>
-                </View>
-              );
-            })}
+            {searchResults !== null ? (
+              searchResults?.items.map((item: any) => {
+                const isOldTestament = item.book.testament === "Old Testament";
+                return (
+                  <View
+                    key={item.id}
+                    style={[
+                      styles.resultItem,
+                      {
+                        backgroundColor: isOldTestament ? "#f0f0f0" : "#d0f0d0",
+                      }, // Change background based on testament
+                    ]}
+                  >
+                    <Text style={styles.verse}>
+                      {item.book.name} {item.chapterId}:{item.verseId}
+                    </Text>
+                    <Text style={styles.verseText}>
+                      {parseHTML(item.verse)}
+                    </Text>
+                  </View>
+                );
+              })
+            ) : (
+              <Text>No results found.</Text>
+            )}
           </ScrollView>
           <TouchableOpacity onPress={() => setSearchResultsOpen(false)}>
             <Ionicons
