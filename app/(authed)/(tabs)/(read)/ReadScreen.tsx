@@ -176,7 +176,7 @@ export default function ReadScreen() {
       {searchResultsOpen && (
         <View style={styles.searchResults}>
           <ScrollView style={styles.scrollSearch}>
-            {searchResults !== null ? (
+            {searchResults?.items !== null ? (
               searchResults?.items.map((item: any) => {
                 const isOldTestament = item.book.testament === "Old Testament";
                 return (
@@ -199,7 +199,7 @@ export default function ReadScreen() {
                 );
               })
             ) : (
-              <Text>No results found.</Text>
+              <Text>No results found for {searchTerm}</Text>
             )}
           </ScrollView>
           <TouchableOpacity onPress={() => setSearchResultsOpen(false)}>
