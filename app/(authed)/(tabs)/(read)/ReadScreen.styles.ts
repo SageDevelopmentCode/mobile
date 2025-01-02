@@ -44,6 +44,7 @@ export const styles = StyleSheet.create({
     position: "absolute",
     bottom: "-350%",
     right: 0,
+    zIndex: 3,
   },
   dropdownItem: {
     padding: 15,
@@ -56,7 +57,6 @@ export const styles = StyleSheet.create({
   searchBar: {
     flex: 1,
     height: 40,
-    paddingHorizontal: 10,
     backgroundColor: "transparent",
     fontWeight: 600,
   },

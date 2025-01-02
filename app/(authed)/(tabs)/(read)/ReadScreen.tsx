@@ -17,6 +17,8 @@ import { BIBLE_API_URL } from "@/utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SearchResults } from "@/types/SearchResults";
 import { parseHTML } from "@/utils/search/parseHighlightedVerse";
+import { getBookId } from "@/utils/book/getBookId";
+import { convertAbbreviationToFullName } from "@/utils/book/convertAbbreviationToFullName";
 
 export default function ReadScreen() {
   const navigation = useNavigation();
@@ -31,6 +33,7 @@ export default function ReadScreen() {
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchResultsOpen, setSearchResultsOpen] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResults>();
+  const [bookSearchResults, setBookSearchResults] = useState();
 
   // Load cache from AsyncStorage on mount
   useEffect(() => {
@@ -52,6 +55,27 @@ export default function ReadScreen() {
     setSearchLoading(true);
     setSearchResultsOpen(true);
 
+    // TODO: Book Search w optional chapter, verse
+    const regex = /^([\d\w\s]+?)(\d+)?(?:[:\s](\d+))?(?:-(\d+))?$/;
+    const match = searchTerm.match(regex);
+
+    if (match) {
+      const bookId = getBookId(convertAbbreviationToFullName(match[1].trim())); // Extract book name
+      const chapter = match[2] ? parseInt(match[2], 10) : null; // Extract chapter number
+      const startVerse = match[3] ? parseInt(match[3], 10) : null; // Extract starting verse
+      const endVerse = match[4] ? parseInt(match[4], 10) : null; // Extract ending verse
+
+      if (bookId) {
+        if (cachedResults[bookId]) {
+          console.log("From Search Cache:", cachedResults[bookId]);
+          setSearchResults(cachedResults[bookId]);
+          return;
+        }
+        const bookApiUrl = `${BIBLE_API_URL}/books/${bookId}`;
+      }
+    }
+
+    // TODO: Word Search Term
     if (!searchTerm.trim().toLowerCase()) {
       Alert.alert("Error", "Please enter a search term.");
       return;
@@ -154,16 +178,6 @@ export default function ReadScreen() {
             position: "relative",
           }}
         >
-          <TouchableOpacity onPress={handleSearch}>
-            <FontAwesome5
-              style={{
-                marginRight: 10,
-              }}
-              name="search"
-              size={25}
-              color={colors.DarkPrimaryText}
-            />
-          </TouchableOpacity>
           <TextInput
             style={styles.searchBar}
             placeholder="Search Word, Book, Character"
@@ -171,6 +185,16 @@ export default function ReadScreen() {
             value={searchTerm}
             onChangeText={setSearchTerm}
           ></TextInput>
+          <TouchableOpacity onPress={handleSearch}>
+            <FontAwesome5
+              style={{
+                marginLeft: 10,
+              }}
+              name="search"
+              size={25}
+              color={colors.DarkPrimaryText}
+            />
+          </TouchableOpacity>
         </View>
       </View>
       {searchResultsOpen && (
