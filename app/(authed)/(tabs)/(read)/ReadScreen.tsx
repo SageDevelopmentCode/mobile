@@ -30,10 +30,11 @@ export default function ReadScreen() {
     [key: string]: SearchResults;
   }>({});
 
-  const [searchLoading, setSearchLoading] = useState(false);
-  const [searchResultsOpen, setSearchResultsOpen] = useState(false);
+  const [searchLoading, setSearchLoading] = useState<boolean>(false);
+  const [bookSearchLoading, setBookSearchLoading] = useState<boolean>(false);
+  const [searchResultsOpen, setSearchResultsOpen] = useState<boolean>(false);
   const [searchResults, setSearchResults] = useState<SearchResults>();
-  const [bookSearchResults, setBookSearchResults] = useState();
+  const [bookSearchResults, setBookSearchResults] = useState<any>();
 
   // Load cache from AsyncStorage on mount
   useEffect(() => {
@@ -54,26 +55,6 @@ export default function ReadScreen() {
   const handleSearch = async () => {
     setSearchLoading(true);
     setSearchResultsOpen(true);
-
-    // TODO: Book Search w optional chapter, verse
-    const regex = /^([\d\w\s]+?)(\d+)?(?:[:\s](\d+))?(?:-(\d+))?$/;
-    const match = searchTerm.match(regex);
-
-    if (match) {
-      const bookId = getBookId(convertAbbreviationToFullName(match[1].trim())); // Extract book name
-      const chapter = match[2] ? parseInt(match[2], 10) : null; // Extract chapter number
-      const startVerse = match[3] ? parseInt(match[3], 10) : null; // Extract starting verse
-      const endVerse = match[4] ? parseInt(match[4], 10) : null; // Extract ending verse
-
-      if (bookId) {
-        if (cachedResults[bookId]) {
-          console.log("From Search Cache:", cachedResults[bookId]);
-          setSearchResults(cachedResults[bookId]);
-          return;
-        }
-        const bookApiUrl = `${BIBLE_API_URL}/books/${bookId}`;
-      }
-    }
 
     // TODO: Word Search Term
     if (!searchTerm.trim().toLowerCase()) {
@@ -115,6 +96,65 @@ export default function ReadScreen() {
       Alert.alert("Error", "Something went wrong while fetching data.");
     } finally {
       setSearchLoading(false);
+    }
+  };
+
+  const handleSpecificSearch = async () => {
+    // TODO: Book Search w optional chapter, verse
+    setBookSearchLoading(true);
+    const regex = /^([\d\w\s]+?)(\d+)?(?:[:\s](\d+))?(?:-(\d+))?$/;
+    const match = searchTerm.match(regex);
+
+    if (match) {
+      const bookId = getBookId(convertAbbreviationToFullName(match[1].trim())); // Extract book name
+      const chapter = match[2] ? parseInt(match[2], 10) : null; // Extract chapter number
+      const startVerse = match[3] ? parseInt(match[3], 10) : null; // Extract starting verse
+      const endVerse = match[4] ? parseInt(match[4], 10) : null; // Extract ending verse
+
+      if (bookId) {
+        if (cachedResults[bookId]) {
+          console.log("From Search Cache:", cachedResults[bookId]);
+          setBookSearchResults(cachedResults["book" + bookId]);
+          return;
+        }
+        const bookApiUrl = `${BIBLE_API_URL}/books/${bookId}`;
+
+        try {
+          const response = await fetch(bookApiUrl);
+          if (!response.ok) {
+            throw new Error("Failed to fetch data");
+          }
+          const data = await response.json();
+          console.log("search data: ", data); // Handle the search results here
+
+          setBookSearchResults(data);
+
+          // Update cache
+          const updatedCache = { ...cachedResults, ["book" + bookId]: data };
+          setCachedResults(updatedCache);
+
+          // Save to AsyncStorage
+          await AsyncStorage.setItem(
+            "searchCache",
+            JSON.stringify(updatedCache)
+          );
+        } catch (error) {
+          console.error(error);
+          Alert.alert("Error", "Something went wrong while fetching data.");
+        } finally {
+          setBookSearchLoading(false);
+        }
+      } else if (bookId && chapter) {
+        if (cachedResults[bookId]) {
+          console.log(
+            "From Search Cache:",
+            cachedResults[bookId + ":" + chapter]
+          );
+          setSearchResults(cachedResults[bookId + "+" + chapter]);
+          return;
+        }
+        const bookApiUrl = `${BIBLE_API_URL}/books/${bookId}/chapters/${chapter}`;
+      }
     }
   };
 
