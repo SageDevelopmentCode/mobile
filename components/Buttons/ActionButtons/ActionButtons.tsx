@@ -6,21 +6,13 @@ import {
   ViewStyle,
   TextStyle,
 } from "react-native";
-import { styles } from "../ActionButtons/ActionButton.styles";
+import { styles } from "../ActionButtons/ActionButtons.styles";
 import { useCustomFonts } from "@/constants/fonts";
 
 interface ActionButtonProps {
   title: string; // Button text
   onPress: () => void; // Click handler
-  type?:
-    | "primary"
-    | "BrightGreen"
-    | "LightBrown"
-    | "PrimaryBlue"
-    | "PrimaryPurple"
-    | "PrimaryGreen"
-    | "TransparentBlue"
-    | "PrimaryGray";
+  type?: "PrimaryBrown" | "LightBrown" | "PrimaryPurple" | "PrimaryGray";
   style?: ViewStyle; // Additional container styles
   textStyle?: TextStyle; // Additional text styles
   disabled?: boolean; // Disable the button
@@ -29,7 +21,7 @@ interface ActionButtonProps {
 function ActionButton({
   title,
   onPress,
-  type = "primary",
+  type = "PrimaryBrown",
   style,
   textStyle,
   disabled = false,
@@ -42,22 +34,16 @@ function ActionButton({
 
   const getButtonStyle = () => {
     switch (type) {
-      case "BrightGreen":
-        return [styles.BrightGreenButton, disabled && styles.disabled];
-      case "PrimaryGreen":
-        return [styles.PrimaryGreenButton, disabled && styles.disabled];
+      case "PrimaryBrown":
+        return [styles.PrimaryBrownButton, disabled && styles.disabled];
       case "LightBrown":
         return [styles.LightBrownButton, disabled && styles.disabled];
-      case "PrimaryBlue":
-        return [styles.PrimaryBlueButton, disabled && styles.disabled];
       case "PrimaryPurple":
         return [styles.PrimaryPurpleButton, disabled && styles.disabled];
-      case "TransparentBlue":
-        return [styles.TransparentButton, disabled && styles.disabled];
       case "PrimaryGray":
         return [styles.PrimaryGrayButton, disabled && styles.disabled];
       default:
-        return [styles.BrightGreenButton, disabled && styles.disabled];
+        return [styles.PrimaryBrownButton, disabled && styles.disabled];
     }
   };
 
@@ -66,18 +52,12 @@ function ActionButton({
       return styles.DisabledText; // Use a specific style for disabled state
     }
     switch (type) {
-      case "BrightGreen":
+      case "PrimaryBrown":
         return styles.WhiteText;
       case "LightBrown":
         return styles.DarkBrownText;
-      case "PrimaryBlue":
-        return styles.WhiteText;
       case "PrimaryPurple":
         return styles.WhiteText;
-      case "PrimaryGreen":
-        return styles.WhiteText;
-      case "TransparentBlue":
-        return styles.BlueText;
       case "PrimaryGray":
         return styles.WhiteText;
       default:
