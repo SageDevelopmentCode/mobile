@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  ViewStyle,
-  TextStyle,
-} from "react-native";
+import { TouchableOpacity, Text, ViewStyle, TextStyle } from "react-native";
 import { styles } from "../ActionButtons/ActionButtons.styles";
 import { useCustomFonts } from "@/constants/fonts";
 
@@ -35,7 +29,7 @@ function ActionButton({
   const getButtonStyle = () => {
     switch (type) {
       case "PrimaryBrown":
-        return [styles.PrimaryBrownButton, disabled && styles.disabled];
+        return [styles.DarkBrownButton, disabled && styles.disabled];
       case "LightBrown":
         return [styles.LightBrownButton, disabled && styles.disabled];
       case "PrimaryPurple":
@@ -43,7 +37,7 @@ function ActionButton({
       case "PrimaryGray":
         return [styles.PrimaryGrayButton, disabled && styles.disabled];
       default:
-        return [styles.PrimaryBrownButton, disabled && styles.disabled];
+        return [styles.LightBrownButton, disabled && styles.disabled];
     }
   };
 
@@ -59,7 +53,7 @@ function ActionButton({
       case "PrimaryPurple":
         return styles.WhiteText;
       case "PrimaryGray":
-        return styles.WhiteText;
+        return styles.DarkNavyText;
       default:
         return styles.WhiteText;
     }
