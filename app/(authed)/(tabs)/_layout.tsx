@@ -4,10 +4,10 @@ export default function TabLayout() {
   return (
     <Tabs>
       <Tabs.Screen
-        name="(dashboard)"
+        name="(home)"
         options={{
           headerShown: false,
-          title: "Flush",
+          title: "Home",
         }}
       />
       <Tabs.Screen
