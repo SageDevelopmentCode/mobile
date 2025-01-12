@@ -36,7 +36,7 @@ const Title = ({ style, children, color, ...props }: BaseTextProps) => {
         styles.title,
         color ? { color } : {},
         style,
-        { fontFamily: "Nunito_900Black" },
+        { fontFamily: "Nunito_800ExtraBold" },
       ]}
       {...props}
     >
@@ -64,7 +64,7 @@ const Heading = ({ style, children, color, ...props }: BaseTextProps) => {
         styles.heading,
         color ? { color } : {},
         style,
-        { fontFamily: "Nunito_900Black" },
+        { fontFamily: "Nunito_800ExtraBold" },
       ]}
       {...props}
     >
@@ -90,7 +90,7 @@ const SubHeading = ({ style, children, color, ...props }: BaseTextProps) => {
       style={[
         styles.subheading,
         color ? { color } : {}, // Apply color if provided
-        { fontFamily: "Nunito_800ExtraBold" },
+        { fontFamily: "Nunito_700Bold" },
         style,
       ]}
       {...props}
@@ -117,7 +117,7 @@ const ButtonText = ({ style, children, color, ...props }: BaseTextProps) => {
         styles.buttonText,
         color ? { color } : {}, // Apply color if provided
         style,
-        { fontFamily: "Nunito_800ExtraBold" },
+        { fontFamily: "Nunito_700Bold" },
       ]}
       {...props}
     >

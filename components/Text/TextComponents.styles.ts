@@ -4,12 +4,12 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   title: {
     fontSize: 24,
-    fontWeight: 900,
+    fontWeight: 800,
     color: colors.DarkPrimaryText,
   },
   heading: {
     fontSize: 16,
-    fontWeight: 900,
+    fontWeight: 800,
     color: colors.DarkPrimaryText,
   },
   subheading: {
