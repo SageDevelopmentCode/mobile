@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   imageContainer: {
-    flex: 0.7,
+    flex: 0.6,
     alignItems: "center",
     width: "100%",
   },
@@ -22,10 +22,10 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     paddingTop: "15%",
-    paddingHorizontal: "5%",
+    paddingHorizontal: "4%",
   },
   contentContainer: {
-    flex: 0.3,
+    flex: 0.4,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -38,11 +38,16 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center", // Align items vertically in the center
+    marginBottom: 25,
   },
   actions: {
     width: "50%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  characterImage: {
+    height: "70%",
+    alignSelf: "center",
   },
 });

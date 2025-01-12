@@ -1,18 +1,16 @@
 import React, { useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ImageBackground,
-} from "react-native";
+import { View, Text, ImageBackground, Image } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
-import { styles } from "./HomeScreen.styles";
-import Background from "./assets/BackgroundOne.jpg"; // Updated import path
-import { Title } from "@/components/Text/TextComponents";
-import colors from "@/constants/colors";
-import SquareActionButton from "@/components/Buttons/SquareActionButtons/SquareActionButtons";
+
 import { Octicons } from "@/utils/icons";
+import colors from "@/constants/colors";
+
+import Background from "./assets/BackgroundOne.jpg"; // Updated import path
+import Deborah from "./assets/Deborah.png";
+import { Title } from "@/components/Text/TextComponents";
+import SquareActionButton from "@/components/Buttons/SquareActionButtons/SquareActionButtons";
+
+import { styles } from "./HomeScreen.styles";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -36,11 +34,11 @@ export default function HomeScreen() {
               <View style={styles.actions}>
                 <SquareActionButton
                   onPress={() => console.log("Icon Button Pressed")}
-                  icon={<Octicons name="arrow-switch" size={20} />}
+                  title="✅"
                 />
                 <SquareActionButton
                   onPress={() => console.log("Icon Button Pressed")}
-                  title="✅"
+                  title="🌱"
                 />
                 <SquareActionButton
                   onPress={() => console.log("Icon Button Pressed")}
@@ -48,6 +46,11 @@ export default function HomeScreen() {
                 />
               </View>
             </View>
+            <Image
+              source={Deborah}
+              style={styles.characterImage}
+              resizeMode="contain"
+            />
           </View>
         </ImageBackground>
       </View>
