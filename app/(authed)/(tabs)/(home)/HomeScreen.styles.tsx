@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   imageContainer: {
-    flex: 0.6,
+    flex: 0.57,
     alignItems: "center",
     width: "100%",
   },
@@ -25,8 +25,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: "4%",
   },
   contentContainer: {
-    flex: 0.4,
-    justifyContent: "center",
+    flex: 0.43,
     alignItems: "center",
   },
   heroBar: {

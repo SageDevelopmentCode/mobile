@@ -7,7 +7,7 @@ import colors from "@/constants/colors";
 
 import Background from "./assets/BackgroundOne.jpg"; // Updated import path
 import Deborah from "./assets/Deborah.png";
-import { Title } from "@/components/Text/TextComponents";
+import { Heading, Title } from "@/components/Text/TextComponents";
 import SquareActionButton from "@/components/Buttons/SquareActionButtons/SquareActionButtons";
 
 import { styles } from "./HomeScreen.styles";
@@ -55,7 +55,7 @@ export default function HomeScreen() {
         </ImageBackground>
       </View>
       <View style={styles.contentContainer}>
-        <Text>Hello World</Text>
+        <Heading color={colors.PrimaryWhite}>Hello World</Heading>
       </View>
     </View>
   );

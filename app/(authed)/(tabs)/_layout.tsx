@@ -1,6 +1,6 @@
 import colors from "@/constants/colors";
 import { Tabs } from "expo-router";
-import { FontAwesome5, FontAwesome6, Ionicons } from "@/utils/icons";
+import { FontAwesome5, Ionicons } from "@/utils/icons";
 
 export default function TabLayout() {
   return (
@@ -14,7 +14,7 @@ export default function TabLayout() {
           borderRadius: 15,
           height: 70, // Adjust height to give space
           marginHorizontal: 20, // Adds padding on the sides
-          bottom: 40, // Floats the tab bar higher from the bottom
+          bottom: 35, // Floats the tab bar higher from the bottom
           paddingVertical: 10, // Adds vertical padding to center content
           alignItems: "center",
           justifyContent: "center", // Ensures content is centered vertically
