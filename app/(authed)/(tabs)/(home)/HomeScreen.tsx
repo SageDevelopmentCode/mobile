@@ -1,13 +1,23 @@
 import React, { useEffect } from "react";
-import { View, Text, ImageBackground, Image } from "react-native";
+import {
+  View,
+  Text,
+  ImageBackground,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 
-import { Octicons } from "@/utils/icons";
+import { Ionicons, Octicons } from "@/utils/icons";
 import colors from "@/constants/colors";
 
 import Background from "./assets/BackgroundOne.jpg"; // Updated import path
 import Deborah from "./assets/Deborah.png";
-import { Heading, Title } from "@/components/Text/TextComponents";
+import Goal from "./assets/Goal.png";
+import ShardGem from "./assets/ShardGem.png";
+import Star from "./assets/Star.png";
+import XPGem from "./assets/XPGem.png";
+import { Heading, StatText, Title } from "@/components/Text/TextComponents";
 import SquareActionButton from "@/components/Buttons/SquareActionButtons/SquareActionButtons";
 
 import { styles } from "./HomeScreen.styles";
@@ -29,6 +39,48 @@ export default function HomeScreen() {
           resizeMode="cover"
         >
           <View style={styles.heroContent}>
+            <View style={styles.statsBar}>
+              <TouchableOpacity
+                onPress={() => console.log("Menu icon pressed")}
+              >
+                <Ionicons name="menu" size={30} color={colors.PrimaryWhite} />
+              </TouchableOpacity>
+              <View style={styles.statsContainer}>
+                <View style={styles.statBox}>
+                  <Image
+                    source={XPGem}
+                    style={styles.statImage}
+                    resizeMode="contain"
+                  />
+                  <StatText>1.3k</StatText>
+                </View>
+                <View style={styles.statBox}>
+                  <Image
+                    source={ShardGem}
+                    style={styles.statImage}
+                    resizeMode="contain"
+                  />
+                  <StatText>1.3k</StatText>
+                </View>
+                <View style={styles.statBox}>
+                  <Image
+                    source={Star}
+                    style={styles.statImage}
+                    resizeMode="contain"
+                  />
+                  <StatText>1.3k</StatText>
+                </View>
+              </View>
+              <TouchableOpacity
+                onPress={() => console.log("Goal icon pressed")}
+              >
+                <Image
+                  source={Goal}
+                  style={styles.goalImage}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </View>
             <View style={styles.heroBar}>
               <Title color={colors.PrimaryWhite}>Deborah</Title>
               <View style={styles.actions}>
@@ -46,11 +98,16 @@ export default function HomeScreen() {
                 />
               </View>
             </View>
-            <Image
-              source={Deborah}
+            <TouchableOpacity
+              onPress={() => console.log("Character Image Pressed")}
               style={styles.characterImage}
-              resizeMode="contain"
-            />
+            >
+              <Image
+                source={Deborah}
+                style={styles.character}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
           </View>
         </ImageBackground>
       </View>

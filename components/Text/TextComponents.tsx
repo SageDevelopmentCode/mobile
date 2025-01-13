@@ -126,6 +126,32 @@ const ButtonText = ({ style, children, color, ...props }: BaseTextProps) => {
   );
 };
 
+const StatText = ({ style, children, color, ...props }: BaseTextProps) => {
+  const [fontsLoaded] = useFonts({
+    Nunito_800ExtraBold,
+    Nunito_700Bold,
+    NunitoSans_600SemiBold,
+  });
+
+  if (!fontsLoaded) {
+    return <Text>Loading...</Text>;
+  }
+
+  return (
+    <Text
+      style={[
+        styles.statText,
+        color ? { color } : {}, // Apply color if provided
+        style,
+        { fontFamily: "Nunito_700Bold" },
+      ]}
+      {...props}
+    >
+      {children}
+    </Text>
+  );
+};
+
 // Paragraph component
 const Paragraph = ({ style, children, color, ...props }: BaseTextProps) => {
   const [fontsLoaded] = useFonts({
@@ -154,4 +180,4 @@ const Paragraph = ({ style, children, color, ...props }: BaseTextProps) => {
   );
 };
 
-export { Heading, SubHeading, Paragraph, ButtonText, Title };
+export { Heading, SubHeading, Paragraph, ButtonText, Title, StatText };

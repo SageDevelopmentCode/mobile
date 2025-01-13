@@ -25,4 +25,8 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.DarkPrimaryText,
   },
+  statText: {
+    fontSize: 13,
+    color: colors.PrimaryWhite,
+  },
 });
