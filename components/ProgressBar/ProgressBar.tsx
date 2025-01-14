@@ -18,16 +18,18 @@ function ProgressBar(props: ProgressBarProps) {
   } = props;
 
   return (
-    <View style={[styles.container, { height, backgroundColor }]}>
-      <View
-        style={[
-          styles.progress,
-          {
-            width: `${progress}%`,
-            backgroundColor: progressColor,
-          },
-        ]}
-      />
+    <View style={styles.outerContainer}>
+      <View style={[styles.container, { height, backgroundColor }]}>
+        <View
+          style={[
+            styles.progress,
+            {
+              width: `${progress}%`,
+              backgroundColor: progressColor,
+            },
+          ]}
+        />
+      </View>
     </View>
   );
 }
