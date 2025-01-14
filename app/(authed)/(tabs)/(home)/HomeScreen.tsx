@@ -112,6 +112,11 @@ export default function HomeScreen() {
         </ImageBackground>
       </View>
       <View style={styles.contentContainer}>
+        <View style={styles.chestRow}>
+          <View style={styles.chestContainer}>
+            <View style={styles.chest}></View>
+          </View>
+        </View>
         <Heading color={colors.PrimaryWhite}>Hello World</Heading>
       </View>
     </View>

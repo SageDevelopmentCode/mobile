@@ -64,7 +64,7 @@ export const styles = StyleSheet.create({
   heroBar: {
     backgroundColor: "rgba(255, 255, 255, 0.3)",
     width: "100%",
-    paddingVertical: 13,
+    paddingVertical: 10,
     paddingHorizontal: 20, // Use paddingHorizontal instead of padding to avoid unnecessary vertical padding
     borderRadius: 10,
     flexDirection: "row",
@@ -84,5 +84,23 @@ export const styles = StyleSheet.create({
   },
   character: {
     height: "100%",
+  },
+  chestRow: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  chestContainer: {
+    width: "45%",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  chest: {
+    width: 50,
+    height: 50,
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
