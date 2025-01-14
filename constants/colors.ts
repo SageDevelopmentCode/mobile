@@ -17,6 +17,7 @@ const colors = {
   DarkPurpleBackground: "#1E1F33",
   DarkPurpleButton: "#2C2E4B",
   DarkPurpleButtonDropShadow: "#001123",
+  PrimaryBlue: "#68AFFF",
 } as const;
 
 export type Colors = typeof colors; // Extract the type for the colors object

@@ -5,6 +5,7 @@ import {
   ImageBackground,
   Image,
   TouchableOpacity,
+  Touchable,
 } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 
@@ -17,7 +18,15 @@ import Goal from "./assets/Goal.png";
 import ShardGem from "./assets/ShardGem.png";
 import Star from "./assets/Star.png";
 import XPGem from "./assets/XPGem.png";
-import { Heading, StatText, Title } from "@/components/Text/TextComponents";
+import NormalChest from "../../../../assets/images/chests/NormalChest.png";
+import UncommonChest from "../../../../assets/images/chests/UncommonChest.png";
+import {
+  Heading,
+  Paragraph,
+  StatText,
+  SubHeading,
+  Title,
+} from "@/components/Text/TextComponents";
 import SquareActionButton from "@/components/Buttons/SquareActionButtons/SquareActionButtons";
 
 import { styles } from "./HomeScreen.styles";
@@ -113,11 +122,43 @@ export default function HomeScreen() {
       </View>
       <View style={styles.contentContainer}>
         <View style={styles.chestRow}>
-          <View style={styles.chestContainer}>
-            <View style={styles.chest}></View>
-          </View>
+          <TouchableOpacity
+            onPress={() => {
+              console.log("Daily Chest Opened");
+            }}
+            style={styles.chestContainer}
+          >
+            <View style={styles.chest}>
+              <Image
+                source={NormalChest}
+                style={styles.chestImage}
+                resizeMode="contain"
+              />
+            </View>
+            <View>
+              <SubHeading color={colors.PrimaryWhite}>Daily Chest</SubHeading>
+              <StatText color={colors.GrayText}>04:06</StatText>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              console.log("Weekly Chest opened");
+            }}
+            style={styles.chestContainer}
+          >
+            <View style={styles.weeklyChest}>
+              <Image
+                source={NormalChest}
+                style={styles.chestImage}
+                resizeMode="contain"
+              />
+            </View>
+            <View>
+              <SubHeading color={colors.PrimaryWhite}>Weekly Chest</SubHeading>
+              <StatText color={colors.GrayText}>05:10:04</StatText>
+            </View>
+          </TouchableOpacity>
         </View>
-        <Heading color={colors.PrimaryWhite}>Hello World</Heading>
       </View>
     </View>
   );

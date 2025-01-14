@@ -36,6 +36,7 @@ export const styles = StyleSheet.create({
   contentContainer: {
     flex: 0.43,
     alignItems: "center",
+    paddingHorizontal: "4%",
   },
   statsBar: {
     width: "100%",
@@ -92,15 +93,34 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   chestContainer: {
-    width: "45%",
+    width: "48%",
     flexDirection: "row",
     alignItems: "center",
   },
   chest: {
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: colors.DarkPurpleBackground,
+    borderWidth: 3,
+    borderColor: colors.PrimaryPurpleBackground,
+    marginRight: 10,
+  },
+  weeklyChest: {
+    width: 60,
+    height: 60,
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.DarkPurpleBackground,
+    borderWidth: 3,
+    borderColor: colors.PrimaryBlue,
+    marginRight: 10,
+  },
+  chestImage: {
+    width: "95%",
+    height: "95%",
   },
 });

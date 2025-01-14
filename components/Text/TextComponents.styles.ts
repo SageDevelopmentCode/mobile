@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     color: colors.DarkPrimaryText,
   },
   subheading: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: "600",
     color: colors.DarkPrimaryText,
   },
