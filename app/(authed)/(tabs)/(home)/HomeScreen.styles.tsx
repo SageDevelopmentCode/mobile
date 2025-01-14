@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
     alignItems: "center", // Align items vertically in the center
   },
   statBox: {
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
     borderRadius: 10,
     paddingHorizontal: 7,
     paddingVertical: 5,
@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   heroBar: {
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
     width: "100%",
     paddingVertical: 10,
     paddingHorizontal: 20, // Use paddingHorizontal instead of padding to avoid unnecessary vertical padding
@@ -91,6 +91,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: 20,
   },
   chestContainer: {
     width: "48%",
@@ -98,8 +99,8 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   chest: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
@@ -109,8 +110,8 @@ export const styles = StyleSheet.create({
     marginRight: 10,
   },
   weeklyChest: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",

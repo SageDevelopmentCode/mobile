@@ -20,14 +20,9 @@ import Star from "./assets/Star.png";
 import XPGem from "./assets/XPGem.png";
 import NormalChest from "../../../../assets/images/chests/NormalChest.png";
 import UncommonChest from "../../../../assets/images/chests/UncommonChest.png";
-import {
-  Heading,
-  Paragraph,
-  StatText,
-  SubHeading,
-  Title,
-} from "@/components/Text/TextComponents";
+import { StatText, SubHeading, Title } from "@/components/Text/TextComponents";
 import SquareActionButton from "@/components/Buttons/SquareActionButtons/SquareActionButtons";
+import ProgressBar from "@/components/ProgressBar/ProgressBar";
 
 import { styles } from "./HomeScreen.styles";
 
@@ -148,7 +143,7 @@ export default function HomeScreen() {
           >
             <View style={styles.weeklyChest}>
               <Image
-                source={NormalChest}
+                source={UncommonChest}
                 style={styles.chestImage}
                 resizeMode="contain"
               />
@@ -159,6 +154,12 @@ export default function HomeScreen() {
             </View>
           </TouchableOpacity>
         </View>
+        <ProgressBar
+          height={15}
+          progress={40}
+          backgroundColor={colors.PrimaryWhite}
+          progressColor={colors.PrimaryPurpleBackground}
+        />
       </View>
     </View>
   );
