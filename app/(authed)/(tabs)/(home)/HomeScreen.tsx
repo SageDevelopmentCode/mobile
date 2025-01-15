@@ -18,7 +18,8 @@ import Goal from "./assets/Goal.png";
 import ShardGem from "./assets/ShardGem.png";
 import Star from "./assets/Star.png";
 import XPGem from "./assets/XPGem.png";
-import NormalChest from "../../../../assets/images/chests/NormalChest.png";
+import CommonChest from "../../../../assets/images/chests/CommonChest.png";
+import RareChest from "../../../../assets/images/chests/RareChest.png";
 import UncommonChest from "../../../../assets/images/chests/UncommonChest.png";
 import { StatText, SubHeading, Title } from "@/components/Text/TextComponents";
 import SquareActionButton from "@/components/Buttons/SquareActionButtons/SquareActionButtons";
@@ -125,7 +126,7 @@ export default function HomeScreen() {
           >
             <View style={styles.chest}>
               <Image
-                source={NormalChest}
+                source={CommonChest}
                 style={styles.chestImage}
                 resizeMode="contain"
               />
@@ -159,6 +160,7 @@ export default function HomeScreen() {
           progress={40}
           backgroundColor={colors.PrimaryWhite}
           progressColor={colors.PrimaryPurpleBackground}
+          imageSrc={RareChest}
         />
       </View>
     </View>
