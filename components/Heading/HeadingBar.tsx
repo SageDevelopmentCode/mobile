@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, View } from "react-native";
+import { View } from "react-native";
 import { styles } from "./HeadingBar.styles";
 import { Heading } from "../Text/TextComponents";
 import colors from "@/constants/colors";
@@ -13,7 +13,11 @@ function HeadingBar(props: HeadingBarProps) {
 
   return (
     <View style={styles.headingContainer}>
-      <Heading color={colors.PrimaryWhite}>{headingText}</Heading>
+      <View style={styles.line} />
+      <Heading style={styles.headingText} color={colors.PrimaryWhite}>
+        {headingText}
+      </Heading>
+      <View style={styles.line} />
     </View>
   );
 }
