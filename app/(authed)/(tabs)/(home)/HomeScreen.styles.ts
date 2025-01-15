@@ -33,9 +33,12 @@ export const styles = StyleSheet.create({
     height: 40,
     width: 40,
   },
+  scrollViewContainer: {
+    flex: 0.43, // or adjust this as needed
+  },
   contentContainer: {
     flex: 0.43,
-    alignItems: "center",
+    alignItems: "center", // Layout-related styles moved here
     paddingHorizontal: "4%",
   },
   statsBar: {
@@ -91,7 +94,6 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
   },
   chestContainer: {
     width: "48%",

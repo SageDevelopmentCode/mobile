@@ -6,13 +6,14 @@ import colors from "@/constants/colors";
 
 interface HeadingBarProps {
   headingText: string;
+  style?: any;
 }
 
 function HeadingBar(props: HeadingBarProps) {
-  const { headingText } = props;
+  const { headingText, style } = props;
 
   return (
-    <View style={styles.headingContainer}>
+    <View style={[styles.headingContainer, style]}>
       <View style={styles.line} />
       <Heading style={styles.headingText} color={colors.PrimaryWhite}>
         {headingText}

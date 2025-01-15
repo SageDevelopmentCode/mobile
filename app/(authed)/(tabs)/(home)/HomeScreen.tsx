@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Touchable,
+  ScrollView,
 } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 
@@ -27,6 +28,7 @@ import SquareActionButton from "@/components/Buttons/SquareActionButtons/SquareA
 import ProgressBar from "@/components/ProgressBar/ProgressBar";
 
 import { styles } from "./HomeScreen.styles";
+import HeadingBar from "@/components/Heading/HeadingBar";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -38,6 +40,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      {/* Image Container with Background Image */}
       <View style={styles.imageContainer}>
         <ImageBackground
           source={Background}
@@ -45,6 +48,7 @@ export default function HomeScreen() {
           resizeMode="cover"
         >
           <View style={styles.heroContent}>
+            {/* Stats Bar */}
             <View style={styles.statsBar}>
               <TouchableOpacity
                 onPress={() => console.log("Menu icon pressed")}
@@ -87,6 +91,8 @@ export default function HomeScreen() {
                 />
               </TouchableOpacity>
             </View>
+
+            {/* Hero Bar with Title and Action Buttons */}
             <View style={styles.heroBar}>
               <Title color={colors.PrimaryWhite}>Deborah</Title>
               <View style={styles.actions}>
@@ -104,6 +110,8 @@ export default function HomeScreen() {
                 />
               </View>
             </View>
+
+            {/* Character Image */}
             <TouchableOpacity
               onPress={() => console.log("Character Image Pressed")}
               style={styles.characterImage}
@@ -117,8 +125,14 @@ export default function HomeScreen() {
           </View>
         </ImageBackground>
       </View>
-      <View style={styles.contentContainer}>
+
+      {/* Scrollable Content */}
+      <View
+        style={styles.contentContainer}
+        // contentContainerStyle={styles.contentContainer}
+      >
         <View style={styles.chestRow}>
+          {/* Daily Chest */}
           <TouchableOpacity
             onPress={() => {
               console.log("Daily Chest Opened");
@@ -137,6 +151,8 @@ export default function HomeScreen() {
               <StatText color={colors.GrayText}>04:06</StatText>
             </View>
           </TouchableOpacity>
+
+          {/* Weekly Chest */}
           <TouchableOpacity
             onPress={() => {
               console.log("Weekly Chest opened");
@@ -156,6 +172,8 @@ export default function HomeScreen() {
             </View>
           </TouchableOpacity>
         </View>
+
+        {/* Progress Bar */}
         <ProgressBar
           height={15}
           progress={40}
@@ -163,6 +181,9 @@ export default function HomeScreen() {
           progressColor={colors.PrimaryPurpleBackground}
           imageSrc={UncommonChest}
         />
+
+        {/* Heading for Goals */}
+        <HeadingBar headingText="Goals for today" />
       </View>
     </View>
   );

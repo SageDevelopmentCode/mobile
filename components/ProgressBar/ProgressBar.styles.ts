@@ -19,6 +19,8 @@ export const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: colors.DarkPrimaryText,
     position: "relative",
+    marginTop: 20,
+    marginBottom: 40,
   },
   circleResult: {
     position: "absolute",
