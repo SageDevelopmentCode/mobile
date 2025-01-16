@@ -8,7 +8,7 @@ export default function TabLayout() {
       screenOptions={{
         tabBarStyle: {
           position: "absolute", // Makes the tab bar float
-          backgroundColor: "rgba(255, 255, 255, 0.05)", // Semi-transparent background
+          backgroundColor: "rgba(30, 31, 51, 0.98)", // Semi-transparent background
           borderTopWidth: 0, // Removes the default border
           elevation: 0, // Removes shadow on Android
           borderRadius: 15,
