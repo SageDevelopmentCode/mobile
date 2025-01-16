@@ -14,7 +14,7 @@ export default function TabLayout() {
           borderRadius: 15,
           height: 70, // Adjust height to give space
           marginHorizontal: 20, // Adds padding on the sides
-          bottom: 35, // Floats the tab bar higher from the bottom
+          bottom: 30, // Floats the tab bar higher from the bottom
           paddingVertical: 10, // Adds vertical padding to center content
           alignItems: "center",
           justifyContent: "center", // Ensures content is centered vertically

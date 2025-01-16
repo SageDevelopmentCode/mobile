@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
   },
   scrollViewContainer: {
     flexGrow: 1,
+    paddingBottom: 100,
   },
   imageContainer: {
     flex: 0.57,
