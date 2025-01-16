@@ -1,23 +1,32 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import colors from "@/constants/colors";
 
+const { height } = Dimensions.get("window");
+
 export const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-    paddingTop: 50,
-  },
   container: {
     backgroundColor: colors.DarkPurpleBackground,
     flex: 1,
+  },
+  scrollViewContainer: {
+    flexGrow: 1,
   },
   imageContainer: {
     flex: 0.57,
     alignItems: "center",
     width: "100%",
     position: "relative",
+  },
+  imageBackground: {
+    // flex: 0.57,
+    height: height * 0.57, // Convert flex ratio to fixed height
+    width: "100%",
+    // height: "100%",
+    paddingTop: 50,
+    alignItems: "center",
+    position: "relative",
+    // borderColor: "green",
+    // borderWidth: 2,
   },
   heroContent: {
     flex: 1,
@@ -35,13 +44,13 @@ export const styles = StyleSheet.create({
     height: 40,
     width: 40,
   },
-  scrollViewContainer: {
-    flex: 1, // or adjust this as needed
-  },
+
   contentContainer: {
     flex: 0.43,
     alignItems: "center", // Layout-related styles moved here
     paddingHorizontal: "4%",
+    // borderColor: "purple",
+    // borderWidth: 2,
   },
   statsBar: {
     width: "100%",

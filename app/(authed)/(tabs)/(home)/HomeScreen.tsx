@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Touchable,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 
@@ -84,49 +85,50 @@ export default function HomeScreen() {
       <ScrollView
         scrollEnabled={true}
         contentContainerStyle={styles.scrollViewContainer}
+        // showsVerticalScrollIndicator={true} // Add this to make scrollbar visible
       >
-        <View style={styles.imageContainer}>
-          <ImageBackground
-            source={Background}
-            style={styles.background}
-            resizeMode="cover"
-          >
-            <View style={styles.heroContent}>
-              {/* Stats Bar */}
+        {/* <View style={styles.imageContainer}> */}
+        <ImageBackground
+          source={Background}
+          style={styles.imageBackground}
+          resizeMode="cover"
+        >
+          <View style={styles.heroContent}>
+            {/* Stats Bar */}
 
-              {/* Hero Bar with Title and Action Buttons */}
-              <View style={styles.heroBar}>
-                <Title color={colors.PrimaryWhite}>Deborah</Title>
-                <View style={styles.actions}>
-                  <SquareActionButton
-                    onPress={() => console.log("Icon Button Pressed")}
-                    title="✅"
-                  />
-                  <SquareActionButton
-                    onPress={() => console.log("Icon Button Pressed")}
-                    title="🌱"
-                  />
-                  <SquareActionButton
-                    onPress={() => console.log("Icon Button Pressed")}
-                    icon={<Octicons name="arrow-switch" size={20} />}
-                  />
-                </View>
-              </View>
-
-              {/* Character Image */}
-              <TouchableOpacity
-                onPress={() => console.log("Character Image Pressed")}
-                style={styles.characterImage}
-              >
-                <Image
-                  source={Deborah}
-                  style={styles.character}
-                  resizeMode="contain"
+            {/* Hero Bar with Title and Action Buttons */}
+            <View style={styles.heroBar}>
+              <Title color={colors.PrimaryWhite}>Deborah</Title>
+              <View style={styles.actions}>
+                <SquareActionButton
+                  onPress={() => console.log("Icon Button Pressed")}
+                  title="✅"
                 />
-              </TouchableOpacity>
+                <SquareActionButton
+                  onPress={() => console.log("Icon Button Pressed")}
+                  title="🌱"
+                />
+                <SquareActionButton
+                  onPress={() => console.log("Icon Button Pressed")}
+                  icon={<Octicons name="arrow-switch" size={20} />}
+                />
+              </View>
             </View>
-          </ImageBackground>
-        </View>
+
+            {/* Character Image */}
+            <TouchableOpacity
+              onPress={() => console.log("Character Image Pressed")}
+              style={styles.characterImage}
+            >
+              <Image
+                source={Deborah}
+                style={styles.character}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
+        </ImageBackground>
+        {/* </View> */}
 
         <View
           style={styles.contentContainer}
