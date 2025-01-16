@@ -40,6 +40,16 @@ import HeadingBar from "@/components/Heading/HeadingBar";
 export default function HomeScreen() {
   const navigation = useNavigation();
 
+  const goals = [
+    {
+      emoji: "📖",
+      title: "Devotional",
+      description: "Read today's devotional",
+    },
+    { emoji: "🏋️", title: "Workout", description: "Complete today's session" },
+    // Add more goals here
+  ];
+
   const router = useRouter();
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -47,7 +57,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.statsBar}>
+      <View style={styles.statsHeader}>
         <TouchableOpacity onPress={() => console.log("Menu icon pressed")}>
           <Ionicons name="menu" size={30} color={colors.PrimaryWhite} />
         </TouchableOpacity>
@@ -157,6 +167,8 @@ export default function HomeScreen() {
 
             {/* Weekly Chest */}
             <TouchableOpacity
+              accessible
+              accessibilityLabel="Weekly Chest"
               onPress={() => {
                 console.log("Weekly Chest opened");
               }}

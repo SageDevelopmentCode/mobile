@@ -52,7 +52,7 @@ export const styles = StyleSheet.create({
     // borderColor: "purple",
     // borderWidth: 2,
   },
-  statsBar: {
+  statsHeader: {
     width: "100%",
     paddingVertical: 5,
     flexDirection: "row",
