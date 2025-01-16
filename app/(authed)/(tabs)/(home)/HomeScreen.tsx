@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 
-import { Ionicons, Octicons } from "@/utils/icons";
+import { FontAwesome5, FontAwesome6, Ionicons, Octicons } from "@/utils/icons";
 import colors from "@/constants/colors";
 
 import Background from "./assets/BackgroundOne.jpg"; // Updated import path
@@ -23,7 +23,13 @@ import XPGem from "./assets/XPGem.png";
 import CommonChest from "../../../../assets/images/chests/CommonChest.png";
 import RareChest from "../../../../assets/images/chests/RareChest.png";
 import UncommonChest from "../../../../assets/images/chests/UncommonChest.png";
-import { StatText, SubHeading, Title } from "@/components/Text/TextComponents";
+import {
+  Heading,
+  Paragraph,
+  StatText,
+  SubHeading,
+  Title,
+} from "@/components/Text/TextComponents";
 import SquareActionButton from "@/components/Buttons/SquareActionButtons/SquareActionButtons";
 import ProgressBar from "@/components/ProgressBar/ProgressBar";
 
@@ -178,6 +184,32 @@ export default function HomeScreen() {
 
           {/* Heading for Goals */}
           <HeadingBar headingText="Goals for today" />
+          <TouchableOpacity
+            onPress={() => console.log("Click Goal")}
+            style={styles.goalContainer}
+          >
+            <View style={styles.goalLeftContainer}>
+              <View style={styles.goalEmoji}>
+                <Heading>📖</Heading>
+              </View>
+              <View style={{ marginLeft: 15 }}>
+                <Heading color={colors.PrimaryWhite}>Devotional</Heading>
+                <StatText color="#AAAAAA">Read today's devotional</StatText>
+              </View>
+            </View>
+            <View style={styles.goalRightContainer}>
+              <SquareActionButton
+                onPress={() => console.log("Icon Button Pressed")}
+                icon={
+                  <FontAwesome6
+                    color={colors.PrimaryBlue}
+                    name="play"
+                    size={20}
+                  />
+                }
+              />
+            </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
