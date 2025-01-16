@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     resizeMode: "cover",
+    paddingTop: 50,
   },
   container: {
     backgroundColor: colors.DarkPurpleBackground,
@@ -16,6 +17,7 @@ export const styles = StyleSheet.create({
     flex: 0.57,
     alignItems: "center",
     width: "100%",
+    position: "relative",
   },
   heroContent: {
     flex: 1,
@@ -34,7 +36,7 @@ export const styles = StyleSheet.create({
     width: 40,
   },
   scrollViewContainer: {
-    flex: 0.43, // or adjust this as needed
+    flex: 1, // or adjust this as needed
   },
   contentContainer: {
     flex: 0.43,
@@ -44,11 +46,17 @@ export const styles = StyleSheet.create({
   statsBar: {
     width: "100%",
     paddingVertical: 5,
-    paddingHorizontal: 0, // Use paddingHorizontal instead of padding to avoid unnecessary vertical padding
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center", // Align items vertically in the center
     marginBottom: 5,
+    position: "absolute",
+    top: 45,
+    paddingHorizontal: "4%",
+    zIndex: 1,
+  },
+  scrollableContainer: {
+    marginTop: 60, // Adjust for statsBar height
   },
   statsContainer: {
     width: "63%",
@@ -83,7 +91,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   characterImage: {
-    height: "70%",
+    height: "75%",
     alignSelf: "center",
   },
   character: {

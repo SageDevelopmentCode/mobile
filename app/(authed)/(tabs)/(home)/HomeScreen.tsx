@@ -40,151 +40,146 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.statsBar}>
+        <TouchableOpacity onPress={() => console.log("Menu icon pressed")}>
+          <Ionicons name="menu" size={30} color={colors.PrimaryWhite} />
+        </TouchableOpacity>
+        <View style={styles.statsContainer}>
+          <View style={styles.statBox}>
+            <Image
+              source={XPGem}
+              style={styles.statImage}
+              resizeMode="contain"
+            />
+            <StatText>1.3k</StatText>
+          </View>
+          <View style={styles.statBox}>
+            <Image
+              source={ShardGem}
+              style={styles.statImage}
+              resizeMode="contain"
+            />
+            <StatText>1.3k</StatText>
+          </View>
+          <View style={styles.statBox}>
+            <Image
+              source={Star}
+              style={styles.statImage}
+              resizeMode="contain"
+            />
+            <StatText>1.3k</StatText>
+          </View>
+        </View>
+        <TouchableOpacity onPress={() => console.log("Goal icon pressed")}>
+          <Image source={Goal} style={styles.goalImage} resizeMode="contain" />
+        </TouchableOpacity>
+      </View>
       {/* Image Container with Background Image */}
-      <View style={styles.imageContainer}>
-        <ImageBackground
-          source={Background}
-          style={styles.background}
-          resizeMode="cover"
-        >
-          <View style={styles.heroContent}>
-            {/* Stats Bar */}
-            <View style={styles.statsBar}>
-              <TouchableOpacity
-                onPress={() => console.log("Menu icon pressed")}
-              >
-                <Ionicons name="menu" size={30} color={colors.PrimaryWhite} />
-              </TouchableOpacity>
-              <View style={styles.statsContainer}>
-                <View style={styles.statBox}>
-                  <Image
-                    source={XPGem}
-                    style={styles.statImage}
-                    resizeMode="contain"
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        <View style={styles.imageContainer}>
+          <ImageBackground
+            source={Background}
+            style={styles.background}
+            resizeMode="cover"
+          >
+            <View style={styles.heroContent}>
+              {/* Stats Bar */}
+
+              {/* Hero Bar with Title and Action Buttons */}
+              <View style={styles.heroBar}>
+                <Title color={colors.PrimaryWhite}>Deborah</Title>
+                <View style={styles.actions}>
+                  <SquareActionButton
+                    onPress={() => console.log("Icon Button Pressed")}
+                    title="✅"
                   />
-                  <StatText>1.3k</StatText>
-                </View>
-                <View style={styles.statBox}>
-                  <Image
-                    source={ShardGem}
-                    style={styles.statImage}
-                    resizeMode="contain"
+                  <SquareActionButton
+                    onPress={() => console.log("Icon Button Pressed")}
+                    title="🌱"
                   />
-                  <StatText>1.3k</StatText>
-                </View>
-                <View style={styles.statBox}>
-                  <Image
-                    source={Star}
-                    style={styles.statImage}
-                    resizeMode="contain"
+                  <SquareActionButton
+                    onPress={() => console.log("Icon Button Pressed")}
+                    icon={<Octicons name="arrow-switch" size={20} />}
                   />
-                  <StatText>1.3k</StatText>
                 </View>
               </View>
+
+              {/* Character Image */}
               <TouchableOpacity
-                onPress={() => console.log("Goal icon pressed")}
+                onPress={() => console.log("Character Image Pressed")}
+                style={styles.characterImage}
               >
                 <Image
-                  source={Goal}
-                  style={styles.goalImage}
+                  source={Deborah}
+                  style={styles.character}
                   resizeMode="contain"
                 />
               </TouchableOpacity>
             </View>
-
-            {/* Hero Bar with Title and Action Buttons */}
-            <View style={styles.heroBar}>
-              <Title color={colors.PrimaryWhite}>Deborah</Title>
-              <View style={styles.actions}>
-                <SquareActionButton
-                  onPress={() => console.log("Icon Button Pressed")}
-                  title="✅"
-                />
-                <SquareActionButton
-                  onPress={() => console.log("Icon Button Pressed")}
-                  title="🌱"
-                />
-                <SquareActionButton
-                  onPress={() => console.log("Icon Button Pressed")}
-                  icon={<Octicons name="arrow-switch" size={20} />}
-                />
-              </View>
-            </View>
-
-            {/* Character Image */}
-            <TouchableOpacity
-              onPress={() => console.log("Character Image Pressed")}
-              style={styles.characterImage}
-            >
-              <Image
-                source={Deborah}
-                style={styles.character}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </View>
-        </ImageBackground>
-      </View>
-
-      {/* Scrollable Content */}
-      <View
-        style={styles.contentContainer}
-        // contentContainerStyle={styles.contentContainer}
-      >
-        <View style={styles.chestRow}>
-          {/* Daily Chest */}
-          <TouchableOpacity
-            onPress={() => {
-              console.log("Daily Chest Opened");
-            }}
-            style={styles.chestContainer}
-          >
-            <View style={styles.chest}>
-              <Image
-                source={CommonChest}
-                style={styles.chestImage}
-                resizeMode="contain"
-              />
-            </View>
-            <View>
-              <SubHeading color={colors.PrimaryWhite}>Daily Chest</SubHeading>
-              <StatText color={colors.GrayText}>04:06</StatText>
-            </View>
-          </TouchableOpacity>
-
-          {/* Weekly Chest */}
-          <TouchableOpacity
-            onPress={() => {
-              console.log("Weekly Chest opened");
-            }}
-            style={styles.chestContainer}
-          >
-            <View style={styles.weeklyChest}>
-              <Image
-                source={RareChest}
-                style={styles.chestImage}
-                resizeMode="contain"
-              />
-            </View>
-            <View>
-              <SubHeading color={colors.PrimaryWhite}>Weekly Chest</SubHeading>
-              <StatText color={colors.GrayText}>05:10:04</StatText>
-            </View>
-          </TouchableOpacity>
+          </ImageBackground>
         </View>
 
-        {/* Progress Bar */}
-        <ProgressBar
-          height={15}
-          progress={40}
-          backgroundColor={colors.PrimaryWhite}
-          progressColor={colors.PrimaryPurpleBackground}
-          imageSrc={UncommonChest}
-        />
+        <View
+          style={styles.contentContainer}
+          // contentContainerStyle={styles.contentContainer}
+        >
+          <View style={styles.chestRow}>
+            {/* Daily Chest */}
+            <TouchableOpacity
+              onPress={() => {
+                console.log("Daily Chest Opened");
+              }}
+              style={styles.chestContainer}
+            >
+              <View style={styles.chest}>
+                <Image
+                  source={CommonChest}
+                  style={styles.chestImage}
+                  resizeMode="contain"
+                />
+              </View>
+              <View>
+                <SubHeading color={colors.PrimaryWhite}>Daily Chest</SubHeading>
+                <StatText color={colors.GrayText}>04:06</StatText>
+              </View>
+            </TouchableOpacity>
 
-        {/* Heading for Goals */}
-        <HeadingBar headingText="Goals for today" />
-      </View>
+            {/* Weekly Chest */}
+            <TouchableOpacity
+              onPress={() => {
+                console.log("Weekly Chest opened");
+              }}
+              style={styles.chestContainer}
+            >
+              <View style={styles.weeklyChest}>
+                <Image
+                  source={RareChest}
+                  style={styles.chestImage}
+                  resizeMode="contain"
+                />
+              </View>
+              <View>
+                <SubHeading color={colors.PrimaryWhite}>
+                  Weekly Chest
+                </SubHeading>
+                <StatText color={colors.GrayText}>05:10:04</StatText>
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          {/* Progress Bar */}
+          <ProgressBar
+            height={15}
+            progress={40}
+            backgroundColor={colors.PrimaryWhite}
+            progressColor={colors.PrimaryPurpleBackground}
+            imageSrc={UncommonChest}
+          />
+
+          {/* Heading for Goals */}
+          <HeadingBar headingText="Goals for today" />
+        </View>
+      </ScrollView>
     </View>
   );
 }
