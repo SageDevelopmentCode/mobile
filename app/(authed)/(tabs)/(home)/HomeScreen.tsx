@@ -36,6 +36,7 @@ import ProgressBar from "@/components/ProgressBar/ProgressBar";
 
 import { styles } from "./HomeScreen.styles";
 import HeadingBar from "@/components/Heading/HeadingBar";
+import { GoalItem } from "@/components/Goal/GoalItem";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -201,136 +202,22 @@ export default function HomeScreen() {
 
           {/* Heading for Goals */}
           <HeadingBar headingText="Goals for today" />
-          <TouchableOpacity
-            onPress={() => console.log("Click Goal")}
-            style={styles.goalContainer}
-          >
-            <View style={styles.goalLeftContainer}>
-              <View style={styles.goalEmoji}>
-                <Heading>📖</Heading>
-              </View>
-              <View style={{ marginLeft: 15 }}>
-                <Heading color={colors.PrimaryWhite}>Devotional</Heading>
-                <StatText color="#AAAAAA">Read today's devotional</StatText>
-              </View>
-            </View>
-            <View style={styles.goalRightContainer}>
-              <SquareActionButton
-                onPress={() => console.log("Icon Button Pressed")}
-                icon={
-                  <FontAwesome6
-                    color={colors.PrimaryBlue}
-                    name="play"
-                    size={20}
-                  />
-                }
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => console.log("Click Goal")}
-            style={styles.goalContainer}
-          >
-            <View style={styles.goalLeftContainer}>
-              <View style={styles.goalEmoji}>
-                <Heading>📖</Heading>
-              </View>
-              <View style={{ marginLeft: 15 }}>
-                <Heading color={colors.PrimaryWhite}>Devotional</Heading>
-                <StatText color="#AAAAAA">Read today's devotional</StatText>
-              </View>
-            </View>
-            <View style={styles.goalRightContainer}>
-              <SquareActionButton
-                onPress={() => console.log("Icon Button Pressed")}
-                icon={
-                  <FontAwesome6
-                    color={colors.PrimaryBlue}
-                    name="play"
-                    size={20}
-                  />
-                }
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => console.log("Click Goal")}
-            style={styles.goalContainer}
-          >
-            <View style={styles.goalLeftContainer}>
-              <View style={styles.goalEmoji}>
-                <Heading>📖</Heading>
-              </View>
-              <View style={{ marginLeft: 15 }}>
-                <Heading color={colors.PrimaryWhite}>Devotional</Heading>
-                <StatText color="#AAAAAA">Read today's devotional</StatText>
-              </View>
-            </View>
-            <View style={styles.goalRightContainer}>
-              <SquareActionButton
-                onPress={() => console.log("Icon Button Pressed")}
-                icon={
-                  <FontAwesome6
-                    color={colors.PrimaryBlue}
-                    name="play"
-                    size={20}
-                  />
-                }
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => console.log("Click Goal")}
-            style={styles.goalContainer}
-          >
-            <View style={styles.goalLeftContainer}>
-              <View style={styles.goalEmoji}>
-                <Heading>📖</Heading>
-              </View>
-              <View style={{ marginLeft: 15 }}>
-                <Heading color={colors.PrimaryWhite}>Devotional</Heading>
-                <StatText color="#AAAAAA">Read today's devotional</StatText>
-              </View>
-            </View>
-            <View style={styles.goalRightContainer}>
-              <SquareActionButton
-                onPress={() => console.log("Icon Button Pressed")}
-                icon={
-                  <FontAwesome6
-                    color={colors.PrimaryBlue}
-                    name="play"
-                    size={20}
-                  />
-                }
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => console.log("Click Goal")}
-            style={styles.goalContainer}
-          >
-            <View style={styles.goalLeftContainer}>
-              <View style={styles.goalEmoji}>
-                <Heading>📖</Heading>
-              </View>
-              <View style={{ marginLeft: 15 }}>
-                <Heading color={colors.PrimaryWhite}>Devotional</Heading>
-                <StatText color="#AAAAAA">Read today's devotional</StatText>
-              </View>
-            </View>
-            <View style={styles.goalRightContainer}>
-              <SquareActionButton
-                onPress={() => console.log("Icon Button Pressed")}
-                icon={
-                  <FontAwesome6
-                    color={colors.PrimaryBlue}
-                    name="play"
-                    size={20}
-                  />
-                }
-              />
-            </View>
-          </TouchableOpacity>
+          <GoalItem
+            title="Test Test"
+            emoji="📖"
+            description="Read today's devotional"
+            onPress={() => console.log("Icon Button Pressed")}
+            onIconPress={() => console.log("Icon Button Pressed")}
+            newGoal={false}
+          />
+          <GoalItem
+            title="Test Test"
+            emoji="📖"
+            description="Read today's devotional"
+            onPress={() => console.log("Icon Button Pressed")}
+            onIconPress={() => console.log("Icon Button Pressed")}
+            newGoal={true}
+          />
         </View>
       </ScrollView>
     </View>
