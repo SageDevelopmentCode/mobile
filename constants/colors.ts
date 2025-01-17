@@ -19,7 +19,7 @@ const colors = {
   DarkPurpleButtonDropShadow: "#001123",
   PrimaryBlue: "#68AFFF",
   EmojiGrayBackground: "#F0F0F0",
-  // PrimaryBlue: "#518ED2",
+  PrimaryGreenBackground: "#51B778",
 } as const;
 
 export type Colors = typeof colors; // Extract the type for the colors object

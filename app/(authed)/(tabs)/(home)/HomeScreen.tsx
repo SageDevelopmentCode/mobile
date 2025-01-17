@@ -16,7 +16,6 @@ import colors from "@/constants/colors";
 
 import Background from "./assets/BackgroundOne.jpg"; // Updated import path
 import Deborah from "./assets/Deborah.png";
-import DeborahShadow from "./assets/DeborahShadow.png";
 import Goal from "./assets/Goal.png";
 import ShardGem from "./assets/ShardGem.png";
 import Star from "./assets/Star.png";
