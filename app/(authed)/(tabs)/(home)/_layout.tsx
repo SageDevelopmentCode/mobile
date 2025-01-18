@@ -1,9 +1,10 @@
 import { Stack } from "expo-router";
 
-export default function DashboardLayout() {
+export default function HomeLayout() {
   return (
-    <Stack screenOptions={{ headerBackTitle: "Dashboard" }}>
+    <Stack screenOptions={{ headerBackTitle: "Home" }}>
       <Stack.Screen name="index" />
+      <Stack.Screen name="goal/create/[id]" />
     </Stack>
   );
 }

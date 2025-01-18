@@ -9,5 +9,6 @@
 
 ### Setup
 
+- Create env-vars.ts file and add variables
 - `npm install`
 - `npm start`

@@ -5,12 +5,13 @@ import { styles } from "./GoalItem.styles";
 import { Heading, StatText } from "../Text/TextComponents";
 import colors from "@/constants/colors";
 import SquareActionButton from "../Buttons/SquareActionButtons/SquareActionButtons";
+import { router } from "expo-router";
 
 type GoalItemProps = {
   newGoal: boolean;
-  emoji: string;
-  title: string;
-  description: string;
+  emoji?: string;
+  title?: string;
+  description?: string;
   onPress: () => void;
   onIconPress: () => void;
 };
@@ -51,7 +52,12 @@ export const GoalItem = ({
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
-          onPress={onPress}
+          onPress={() =>
+            router.push({
+              pathname: "/(authed)/(home)/goal/create/[id]",
+              params: { id: "12135" },
+            })
+          }
           style={[
             styles.goalContainer,
             {
@@ -68,7 +74,7 @@ export const GoalItem = ({
                 { backgroundColor: colors.PrimaryGrayDropShadow },
               ]}
             >
-              <Heading>{emoji}</Heading>
+              <Heading>🎯</Heading>
             </View>
             <View style={{ marginLeft: 15 }}>
               <Heading color={colors.DarkPrimaryText}>Add a Goal</Heading>
@@ -80,7 +86,12 @@ export const GoalItem = ({
                 backgroundColor: colors.DarkPurpleButton,
                 shadowColor: colors.DarkPurpleButtonDropShadow,
               }}
-              onPress={onIconPress}
+              onPress={() =>
+                router.push({
+                  pathname: "/(authed)/(home)/goal/create/[id]",
+                  params: { id: "12135" },
+                })
+              }
               icon={
                 <FontAwesome6
                   color={colors.PrimaryWhite}

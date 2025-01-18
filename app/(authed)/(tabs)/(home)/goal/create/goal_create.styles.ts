@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.PrimaryGreenBackground,
     flex: 1,
+    paddingTop: "20%",
+    paddingHorizontal: "5%",
   },
-  topSection: {},
 });
