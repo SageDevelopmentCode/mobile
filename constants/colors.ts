@@ -20,6 +20,7 @@ const colors = {
   PrimaryBlue: "#68AFFF",
   EmojiGrayBackground: "#F0F0F0",
   PrimaryGreenBackground: "#51B778",
+  GreenBackdrop: "#3C8F5C",
 } as const;
 
 export type Colors = typeof colors; // Extract the type for the colors object
