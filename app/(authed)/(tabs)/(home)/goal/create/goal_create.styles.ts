@@ -31,4 +31,18 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     fontWeight: "600",
   },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  pickerContainer: {
+    width: "90%",
+    height: "50%",
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 10,
+    justifyContent: "center",
+  },
 });

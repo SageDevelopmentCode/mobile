@@ -1,12 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { useNavigation, useRouter } from "expo-router"; //
-import { Animated, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Animated,
+  Button,
+  Modal,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import colors from "@/constants/colors";
 import { MaterialIcons } from "@/utils/icons";
 import { styles } from "./goal_create.styles";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { Heading, Title } from "@/components/Text/TextComponents";
+import EmojiSelector from "react-native-emoji-selector";
 
 export default function CreateGoalScreen() {
   const navigation = useNavigation();
@@ -27,6 +35,14 @@ export default function CreateGoalScreen() {
   }, [navigation]);
 
   const { id } = useLocalSearchParams();
+  const [isEmojiPickerVisible, setEmojiPickerVisible] =
+    useState<boolean>(false);
+  const [selectedEmoji, setSelectedEmoji] = useState<string>("");
+
+  const onEmojiSelect = (emoji: string): void => {
+    setSelectedEmoji(emoji);
+    setEmojiPickerVisible(false); // Close picker after selection
+  };
 
   console.log("id: ", id);
   return (
@@ -47,9 +63,12 @@ export default function CreateGoalScreen() {
           What's one goal that you want to accomplish?
         </Title>
         <View style={styles.goalInputContainer}>
-          <View style={styles.emojiSelector}>
-            <Title>🎯</Title>
-          </View>
+          <TouchableOpacity
+            onPress={() => setEmojiPickerVisible(true)}
+            style={styles.emojiSelector}
+          >
+            <Title>{selectedEmoji ? selectedEmoji : "🎯"}</Title>
+          </TouchableOpacity>
           <TextInput
             placeholder="Type your goal here"
             placeholderTextColor={colors.PrimaryWhite}
@@ -57,6 +76,22 @@ export default function CreateGoalScreen() {
           />
         </View>
       </View>
+      <Modal
+        visible={isEmojiPickerVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setEmojiPickerVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.pickerContainer}>
+            <Button
+              title="Close"
+              onPress={() => setEmojiPickerVisible(false)}
+            />
+            <EmojiSelector onEmojiSelected={onEmojiSelect} />
+          </View>
+        </View>
+      </Modal>
     </>
   );
 }
