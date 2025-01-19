@@ -61,8 +61,11 @@ export const GoalItem = ({
           style={[
             styles.goalContainer,
             {
-              backgroundColor: colors.EmojiGrayBackground,
-              shadowColor: colors.PrimaryGrayDropShadow,
+              backgroundColor: "rgba(240, 240, 240, 0.05)",
+              shadowColor: "none",
+              shadowOffset: { width: 0, height: 0 },
+              shadowOpacity: 0,
+              elevation: 0,
               paddingVertical: 10,
             },
           ]}
@@ -71,35 +74,26 @@ export const GoalItem = ({
             <View
               style={[
                 styles.goalEmoji,
-                { backgroundColor: colors.PrimaryGrayDropShadow },
+                { backgroundColor: "rgba(217, 217, 217, 0.10)" },
               ]}
             >
               <Heading>🎯</Heading>
             </View>
             <View style={{ marginLeft: 15 }}>
-              <Heading color={colors.DarkPrimaryText}>Add a Goal</Heading>
+              <Heading color={colors.PrimaryWhite}>Add a Goal</Heading>
             </View>
           </View>
           <View style={styles.goalRightContainer}>
-            <SquareActionButton
-              style={{
-                backgroundColor: colors.DarkPurpleButton,
-                shadowColor: colors.DarkPurpleButtonDropShadow,
-              }}
+            <TouchableOpacity
               onPress={() =>
                 router.push({
-                  pathname: "/(authed)/(home)/goal/create/[id]",
+                  pathname: "/(authed)/(tabs)/(home)/goal/create/[id]",
                   params: { id: "12135" },
                 })
               }
-              icon={
-                <FontAwesome6
-                  color={colors.PrimaryWhite}
-                  name="plus"
-                  size={20}
-                />
-              }
-            />
+            >
+              <FontAwesome6 color={colors.PrimaryWhite} name="plus" size={20} />
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
       )}
