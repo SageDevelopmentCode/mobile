@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    marginTop: "25%",
   },
   pickerContainer: {
     width: "90%",
@@ -44,5 +44,6 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     justifyContent: "center",
+    overflow: "hidden",
   },
 });
