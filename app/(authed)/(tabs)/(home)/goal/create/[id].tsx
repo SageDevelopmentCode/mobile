@@ -20,6 +20,9 @@ import {
   Title,
 } from "@/components/Text/TextComponents";
 import EmojiSelector from "react-native-emoji-selector";
+import { GoalItem } from "@/components/Goal/GoalItem";
+import { SuggestionItem } from "@/components/Suggestion/SuggestionItem";
+import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
 
 export default function CreateGoalScreen() {
   const navigation = useNavigation();
@@ -43,6 +46,7 @@ export default function CreateGoalScreen() {
   const [isEmojiPickerVisible, setEmojiPickerVisible] =
     useState<boolean>(false);
   const [selectedEmoji, setSelectedEmoji] = useState<string>("");
+  const [userGoal, setUserGoal] = useState<string>("");
 
   const onEmojiSelect = (emoji: string): void => {
     setSelectedEmoji(emoji);
@@ -75,60 +79,40 @@ export default function CreateGoalScreen() {
             <Title>{selectedEmoji ? selectedEmoji : "🎯"}</Title>
           </TouchableOpacity>
           <TextInput
+            value={userGoal}
+            onChangeText={setUserGoal}
             placeholder="Type your goal here"
             placeholderTextColor={colors.PrimaryWhite}
             style={styles.goalInput}
           />
         </View>
-        <Paragraph color={colors.PrimaryGrayBackground}>Suggestions</Paragraph>
-        <TouchableOpacity
-          onPress={() => console.log("Suggestion")}
-          style={styles.goalContainer}
+        <ActionButton
+          type="PrimaryGray"
+          title="Save"
+          onPress={() => console.log("Hello")}
+          disabled={userGoal.length === 0}
+        />
+        <Paragraph
+          style={{ marginTop: 10 }}
+          color={colors.PrimaryGrayBackground}
         >
-          <View style={styles.goalLeftContainer}>
-            <View style={styles.goalEmoji}>
-              <Heading>📖</Heading>
-            </View>
-            <View style={{ marginLeft: 15 }}>
-              <Heading color={colors.DarkSecondaryText}>Read a Verse</Heading>
-              <StatText color={colors.DarkSecondaryText}>
-                Read and reflect on a specific Bible verse
-              </StatText>
-            </View>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => console.log("Suggestion")}
-          style={styles.goalContainer}
-        >
-          <View style={styles.goalLeftContainer}>
-            <View style={styles.goalEmoji}>
-              <Heading>📖</Heading>
-            </View>
-            <View style={{ marginLeft: 15 }}>
-              <Heading color={colors.DarkSecondaryText}>Read a Verse</Heading>
-              <StatText color={colors.DarkSecondaryText}>
-                Read and reflect on a specific Bible verse
-              </StatText>
-            </View>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => console.log("Suggestion")}
-          style={styles.goalContainer}
-        >
-          <View style={styles.goalLeftContainer}>
-            <View style={styles.goalEmoji}>
-              <Heading>📖</Heading>
-            </View>
-            <View style={{ marginLeft: 15 }}>
-              <Heading color={colors.DarkSecondaryText}>Read a Verse</Heading>
-              <StatText color={colors.DarkSecondaryText}>
-                Read and reflect on a specific Bible verse
-              </StatText>
-            </View>
-          </View>
-        </TouchableOpacity>
+          Suggestions
+        </Paragraph>
+        <SuggestionItem
+          title="Read a Verse"
+          onPress={() => console.log("Read a Verse")}
+          emoji="📖"
+        />
+        <SuggestionItem
+          title="Read a Verse"
+          onPress={() => console.log("Read a Verse")}
+          emoji="📖"
+        />
+        <SuggestionItem
+          title="Read a Verse"
+          onPress={() => console.log("Read a Verse")}
+          emoji="📖"
+        />
       </View>
       <Modal
         visible={isEmojiPickerVisible}

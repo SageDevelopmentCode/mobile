@@ -3,9 +3,10 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   button: {
-    paddingVertical: 12,
+    paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 20,
+    marginVertical: 12,
+    borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
@@ -52,7 +53,7 @@ export const styles = StyleSheet.create({
   disabled: {
     backgroundColor: colors.Disabled,
     shadowColor: colors.DisabledBacking,
-    shadowOffset: { width: 0, height: 7 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 1,
     shadowRadius: 0,
     elevation: 4,
@@ -62,7 +63,7 @@ export const styles = StyleSheet.create({
     color: colors.DisabledText,
   },
   text: {
-    fontSize: 20,
+    fontSize: 14,
     fontWeight: "600",
   },
   WhiteText: {
