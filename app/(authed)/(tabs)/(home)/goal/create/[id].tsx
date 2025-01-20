@@ -13,7 +13,12 @@ import colors from "@/constants/colors";
 import { MaterialIcons } from "@/utils/icons";
 import { styles } from "./goal_create.styles";
 import { tabBarOptions } from "@/constants/tabBarOptions";
-import { Heading, Title } from "@/components/Text/TextComponents";
+import {
+  Heading,
+  Paragraph,
+  StatText,
+  Title,
+} from "@/components/Text/TextComponents";
 import EmojiSelector from "react-native-emoji-selector";
 
 export default function CreateGoalScreen() {
@@ -75,6 +80,55 @@ export default function CreateGoalScreen() {
             style={styles.goalInput}
           />
         </View>
+        <Paragraph color={colors.PrimaryGrayBackground}>Suggestions</Paragraph>
+        <TouchableOpacity
+          onPress={() => console.log("Suggestion")}
+          style={styles.goalContainer}
+        >
+          <View style={styles.goalLeftContainer}>
+            <View style={styles.goalEmoji}>
+              <Heading>📖</Heading>
+            </View>
+            <View style={{ marginLeft: 15 }}>
+              <Heading color={colors.DarkSecondaryText}>Read a Verse</Heading>
+              <StatText color={colors.DarkSecondaryText}>
+                Read and reflect on a specific Bible verse
+              </StatText>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => console.log("Suggestion")}
+          style={styles.goalContainer}
+        >
+          <View style={styles.goalLeftContainer}>
+            <View style={styles.goalEmoji}>
+              <Heading>📖</Heading>
+            </View>
+            <View style={{ marginLeft: 15 }}>
+              <Heading color={colors.DarkSecondaryText}>Read a Verse</Heading>
+              <StatText color={colors.DarkSecondaryText}>
+                Read and reflect on a specific Bible verse
+              </StatText>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => console.log("Suggestion")}
+          style={styles.goalContainer}
+        >
+          <View style={styles.goalLeftContainer}>
+            <View style={styles.goalEmoji}>
+              <Heading>📖</Heading>
+            </View>
+            <View style={{ marginLeft: 15 }}>
+              <Heading color={colors.DarkSecondaryText}>Read a Verse</Heading>
+              <StatText color={colors.DarkSecondaryText}>
+                Read and reflect on a specific Bible verse
+              </StatText>
+            </View>
+          </View>
+        </TouchableOpacity>
       </View>
       <Modal
         visible={isEmojiPickerVisible}

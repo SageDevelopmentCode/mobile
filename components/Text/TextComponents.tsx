@@ -9,6 +9,7 @@ import {
 import {
   NunitoSans_600SemiBold,
   NunitoSans_700Bold,
+  NunitoSans_400Regular,
 } from "@expo-google-fonts/nunito-sans";
 import { useFonts } from "expo-font";
 
@@ -131,6 +132,7 @@ const StatText = ({ style, children, color, ...props }: BaseTextProps) => {
     Nunito_800ExtraBold,
     Nunito_700Bold,
     NunitoSans_600SemiBold,
+    NunitoSans_400Regular,
   });
 
   if (!fontsLoaded) {
