@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     zIndex: 2,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
   tabContainer: {
     paddingVertical: 10,
@@ -100,7 +100,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.PrimaryGreenBackground,
   },
   tabText: {
-    fontSize: 12,
+    fontSize: 14,
     color: colors.PrimaryWhite,
     fontWeight: "bold",
   },
