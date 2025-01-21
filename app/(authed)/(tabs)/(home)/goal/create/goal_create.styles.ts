@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingTop: "20%",
     paddingHorizontal: "5%",
+    position: "relative",
   },
   goalInputContainer: {
     flexDirection: "row",
@@ -21,6 +22,20 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.PrimaryGreenDropShadow,
     borderRadius: 5,
+  },
+  suggestionsContainer: {},
+  suggestionsNavigator: {
+    bottom: 0,
+    backgroundColor: colors.PrimaryGreenDropShadow,
+    height: "10%",
+    flexDirection: "row",
+    alignItems: "flex-start",
+    zIndex: 2,
+    paddingHorizontal: 20,
+  },
+  tabContainer: {
+    paddingVertical: 10,
+    alignItems: "center",
   },
   goalInput: {
     flex: 1,
@@ -74,5 +89,19 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
+  },
+  tab: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginHorizontal: 5,
+    borderRadius: 10,
+  },
+  activeTab: {
+    backgroundColor: colors.PrimaryGreenBackground,
+  },
+  tabText: {
+    fontSize: 12,
+    color: colors.PrimaryWhite,
+    fontWeight: "bold",
   },
 });

@@ -5,6 +5,8 @@ import {
   Animated,
   Button,
   Modal,
+  ScrollView,
+  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -47,6 +49,21 @@ export default function CreateGoalScreen() {
     useState<boolean>(false);
   const [selectedEmoji, setSelectedEmoji] = useState<string>("");
   const [userGoal, setUserGoal] = useState<string>("");
+  const [activeSuggestionTab, setActiveSuggestionTab] = useState<number>(0);
+
+  const suggestionTabs: string[] = [
+    "Scripture",
+    "Workplace",
+    "Classroom",
+    "Kindness",
+    "Community",
+    "Lifestyle",
+    "Learn",
+  ];
+
+  const handleTabPress = (index: number): void => {
+    setActiveSuggestionTab(index);
+  };
 
   const onEmojiSelect = (emoji: string): void => {
     setSelectedEmoji(emoji);
@@ -98,21 +115,23 @@ export default function CreateGoalScreen() {
         >
           Suggestions
         </Paragraph>
-        <SuggestionItem
-          title="Read a Verse"
-          onPress={() => console.log("Read a Verse")}
-          emoji="📖"
-        />
-        <SuggestionItem
-          title="Read a Verse"
-          onPress={() => console.log("Read a Verse")}
-          emoji="📖"
-        />
-        <SuggestionItem
-          title="Read a Verse"
-          onPress={() => console.log("Read a Verse")}
-          emoji="📖"
-        />
+        <View style={styles.suggestionsContainer}>
+          <SuggestionItem
+            title="Read a Verse"
+            onPress={() => console.log("Read a Verse")}
+            emoji="📖"
+          />
+          <SuggestionItem
+            title="Read a Verse"
+            onPress={() => console.log("Read a Verse")}
+            emoji="📖"
+          />
+          <SuggestionItem
+            title="Read a Verse"
+            onPress={() => console.log("Read a Verse")}
+            emoji="📖"
+          />
+        </View>
       </View>
       <Modal
         visible={isEmojiPickerVisible}
@@ -130,6 +149,26 @@ export default function CreateGoalScreen() {
           </View>
         </View>
       </Modal>
+      <View style={styles.suggestionsNavigator}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.tabContainer}
+        >
+          {suggestionTabs.map((tab, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.tab,
+                activeSuggestionTab === index && styles.activeTab,
+              ]}
+              onPress={() => setActiveSuggestionTab(index)}
+            >
+              <Text style={[styles.tabText]}>{tab}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
     </>
   );
 }
