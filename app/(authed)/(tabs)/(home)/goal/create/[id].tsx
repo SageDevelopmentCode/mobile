@@ -17,17 +17,16 @@ import { styles } from "./goal_create.styles";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { Paragraph, Title } from "@/components/Text/TextComponents";
 import EmojiSelector from "react-native-emoji-selector";
-import { GoalItem } from "@/components/Goal/GoalItem";
-import { SuggestionItem } from "@/components/Suggestion/SuggestionItem";
 import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
-import { ScriptureSuggestions } from "@/components/Suggestion/Scripture/ScriptureSuggestion";
-import { WorkplaceSuggestions } from "@/components/Suggestion/Workplace/WorkplaceSuggestions";
-import { LifestyleSuggestions } from "@/components/Suggestion/Lifestyle/LifestyleSuggestion";
-import { LearnSuggestions } from "@/components/Suggestion/Learn/LearnSuggestion";
-import { KindnessSuggestions } from "@/components/Suggestion/Kindness/KindnessSuggestion";
-import { CommunitySuggestions } from "@/components/Suggestion/Community/CommunitySuggestion";
-import { ClassroomSuggestions } from "@/components/Suggestion/Classroom/ClassroomSuggestion";
-import { FontAwesome } from "@expo/vector-icons";
+import {
+  ClassroomSuggestions,
+  CommunitySuggestions,
+  KindnessSuggestions,
+  LearnSuggestions,
+  LifestyleSuggestions,
+  ScriptureSuggestions,
+  WorkplaceSuggestions,
+} from "@/components/Suggestion";
 
 export default function CreateGoalScreen() {
   const navigation = useNavigation();
@@ -142,6 +141,12 @@ export default function CreateGoalScreen() {
           type="PrimaryGray"
           title="Create Goal"
           onPress={() => console.log("Hello")}
+          // onPress={() => router.push({ pathname: "/details", params: data })}
+          // const data = {
+          //   id: 1,
+          //   name: "Example Item",
+          //   description: "This is an example item description.",
+          // };
           disabled={userGoal.length === 0}
           icon={
             <FontAwesome6
