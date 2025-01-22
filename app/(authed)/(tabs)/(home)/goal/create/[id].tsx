@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useNavigation, useRouter } from "expo-router"; //
 import {
   Animated,
@@ -140,13 +140,16 @@ export default function CreateGoalScreen() {
         <ActionButton
           type="PrimaryGray"
           title="Create Goal"
-          onPress={() => console.log("Hello")}
-          // onPress={() => router.push({ pathname: "/details", params: data })}
-          // const data = {
-          //   id: 1,
-          //   name: "Example Item",
-          //   description: "This is an example item description.",
-          // };
+          onPress={() =>
+            router.push({
+              pathname:
+                "/(authed)/(tabs)/(home)/goal/create/create_success/create_success",
+              params: {
+                goal: userGoal,
+                emoji: selectedEmoji,
+              },
+            })
+          }
           disabled={userGoal.length === 0}
           icon={
             <FontAwesome6
