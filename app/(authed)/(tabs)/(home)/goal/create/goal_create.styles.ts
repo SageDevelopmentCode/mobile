@@ -45,6 +45,7 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
     paddingHorizontal: 20,
     fontWeight: "600",
+    color: colors.PrimaryWhite,
   },
   modalContainer: {
     flex: 1,

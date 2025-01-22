@@ -59,7 +59,7 @@ export default function CreateGoalScreen() {
   const { id } = useLocalSearchParams();
   const [isEmojiPickerVisible, setEmojiPickerVisible] =
     useState<boolean>(false);
-  const [selectedEmoji, setSelectedEmoji] = useState<string>("");
+  const [selectedEmoji, setSelectedEmoji] = useState<string>("🎯");
   const [userGoal, setUserGoal] = useState<string>("");
   const [activeSuggestionTab, setActiveSuggestionTab] = useState<string>(
     suggestionTabs[0]
