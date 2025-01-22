@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 import colors from "@/constants/colors";
-import { MaterialIcons } from "@/utils/icons";
+import { FontAwesome6, MaterialIcons } from "@/utils/icons";
 import { styles } from "./goal_create.styles";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { Paragraph, Title } from "@/components/Text/TextComponents";
@@ -27,6 +27,7 @@ import { LearnSuggestions } from "@/components/Suggestion/Learn/LearnSuggestion"
 import { KindnessSuggestions } from "@/components/Suggestion/Kindness/KindnessSuggestion";
 import { CommunitySuggestions } from "@/components/Suggestion/Community/CommunitySuggestion";
 import { ClassroomSuggestions } from "@/components/Suggestion/Classroom/ClassroomSuggestion";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function CreateGoalScreen() {
   const navigation = useNavigation();
@@ -139,9 +140,20 @@ export default function CreateGoalScreen() {
         </View>
         <ActionButton
           type="PrimaryGray"
-          title="Save"
+          title="Create Goal"
           onPress={() => console.log("Hello")}
           disabled={userGoal.length === 0}
+          icon={
+            <FontAwesome6
+              name="plus"
+              size={20}
+              color={
+                userGoal.length === 0
+                  ? colors.DisabledText
+                  : colors.DarkPrimaryText
+              }
+            />
+          }
         />
         <Paragraph
           style={{ marginTop: 10 }}

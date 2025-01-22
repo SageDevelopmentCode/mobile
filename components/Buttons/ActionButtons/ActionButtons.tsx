@@ -10,9 +10,11 @@ interface ActionButtonProps {
   style?: ViewStyle; // Additional container styles
   textStyle?: TextStyle; // Additional text styles
   disabled?: boolean; // Disable the button
+  icon?: any;
 }
 
 function ActionButton({
+  icon,
   title,
   onPress,
   type = "PrimaryBrown",
@@ -65,12 +67,13 @@ function ActionButton({
       style={[styles.button, getButtonStyle(), style]}
       disabled={disabled}
     >
+      {icon && icon}
       <Text
         style={[
           styles.text,
           getTextStyle(),
           textStyle,
-          { fontFamily: "Nunito_800ExtraBold" },
+          { fontFamily: "Nunito_800ExtraBold", marginLeft: icon ? 8 : 0 },
         ]}
       >
         {title}

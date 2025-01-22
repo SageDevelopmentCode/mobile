@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
+    flexDirection: "row",
   },
   DarkBrownButton: {
     backgroundColor: colors.DarkBrownBackground,
@@ -73,7 +74,7 @@ export const styles = StyleSheet.create({
     color: "#9E6329",
   },
   DarkNavyText: {
-    color: "#4B5563",
+    color: colors.DarkPrimaryText,
   },
   secondaryText: {
     color: "#FFFFFF",
