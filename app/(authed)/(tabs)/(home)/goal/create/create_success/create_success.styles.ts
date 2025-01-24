@@ -5,13 +5,13 @@ export const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.GoalCreatedBackground,
     flex: 1,
-    paddingTop: "20%",
+    paddingTop: "30%",
   },
   topContainer: {
     flex: 0.65,
     paddingHorizontal: "5%",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
   contentContainer: {
     width: "100%",

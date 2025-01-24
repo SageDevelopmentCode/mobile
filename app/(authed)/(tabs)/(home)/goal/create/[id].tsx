@@ -76,11 +76,22 @@ export default function CreateGoalScreen() {
     setEmojiPickerVisible(false); // Close picker after selection
   };
 
+  const handleSuggestionSelect = (item: {
+    title: string;
+    emoji: string;
+  }): void => {
+    console.log("Selected Suggestion:", item);
+    setUserGoal(item.title); // Example: Update the goal input
+    setSelectedEmoji(item.emoji); // Example: Update the emoji
+  };
+
   let SuggestionsComponent: JSX.Element | null;
 
   switch (activeSuggestionTab) {
     case "Scripture":
-      SuggestionsComponent = <ScriptureSuggestions />;
+      SuggestionsComponent = (
+        <ScriptureSuggestions onSelect={handleSuggestionSelect} />
+      );
       break;
     case "Workplace":
       SuggestionsComponent = <WorkplaceSuggestions />;

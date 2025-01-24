@@ -1,12 +1,18 @@
 import { View } from "react-native";
 import { SuggestionItem } from "../SuggestionItem";
 
-export const ScriptureSuggestions = () => {
+interface ScriptureSuggestionsProps {
+  onSelect: (item: { title: string; emoji: string }) => void;
+}
+
+export const ScriptureSuggestions = ({
+  onSelect,
+}: ScriptureSuggestionsProps) => {
   return (
     <View>
       <SuggestionItem
         title="Scripture Suggestion"
-        onPress={() => console.log("Read a Verse")}
+        onPress={() => onSelect({ title: "Scripture Suggestion", emoji: "📖" })}
         emoji="📖"
       />
     </View>

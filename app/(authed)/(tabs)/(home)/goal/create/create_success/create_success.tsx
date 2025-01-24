@@ -85,7 +85,7 @@ export default function CreateGoalSuccessScreen() {
             </View>
           </TouchableOpacity>
         </View>
-        <View style={styles.contentContainer}>
+        <View style={[styles.contentContainer, { marginTop: 30 }]}>
           <TouchableOpacity
             style={{ marginVertical: 10 }}
             onPress={() => console.log("Share")}

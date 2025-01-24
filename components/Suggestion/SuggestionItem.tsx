@@ -13,7 +13,7 @@ interface SuggestionItemProps {
   emoji?: string;
   title?: string;
   style?: any;
-  onPress: () => void;
+  onPress: any;
 }
 
 export const SuggestionItem = ({
