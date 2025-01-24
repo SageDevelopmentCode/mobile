@@ -94,22 +94,34 @@ export default function CreateGoalScreen() {
       );
       break;
     case "Workplace":
-      SuggestionsComponent = <WorkplaceSuggestions />;
+      SuggestionsComponent = (
+        <WorkplaceSuggestions onSelect={handleSuggestionSelect} />
+      );
       break;
     case "Lifestyle":
-      SuggestionsComponent = <LifestyleSuggestions />;
+      SuggestionsComponent = (
+        <LifestyleSuggestions onSelect={handleSuggestionSelect} />
+      );
       break;
     case "Learn":
-      SuggestionsComponent = <LearnSuggestions />;
+      SuggestionsComponent = (
+        <LearnSuggestions onSelect={handleSuggestionSelect} />
+      );
       break;
     case "Kindness":
-      SuggestionsComponent = <KindnessSuggestions />;
+      SuggestionsComponent = (
+        <KindnessSuggestions onSelect={handleSuggestionSelect} />
+      );
       break;
     case "Community":
-      SuggestionsComponent = <CommunitySuggestions />;
+      SuggestionsComponent = (
+        <CommunitySuggestions onSelect={handleSuggestionSelect} />
+      );
       break;
     case "Classroom":
-      SuggestionsComponent = <ClassroomSuggestions />;
+      SuggestionsComponent = (
+        <ClassroomSuggestions onSelect={handleSuggestionSelect} />
+      );
       break;
     default:
       SuggestionsComponent = null;

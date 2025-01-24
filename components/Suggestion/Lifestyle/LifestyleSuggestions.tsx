@@ -1,12 +1,18 @@
 import { View } from "react-native";
 import { SuggestionItem } from "../SuggestionItem";
 
-export const LifestyleSuggestions = () => {
+interface LifestyleSuggestionsProps {
+  onSelect: (item: { title: string; emoji: string }) => void;
+}
+
+export const LifestyleSuggestions = ({
+  onSelect,
+}: LifestyleSuggestionsProps) => {
   return (
     <View>
       <SuggestionItem
         title="Lifestyle Suggestion"
-        onPress={() => console.log("Read a Verse")}
+        onPress={() => onSelect({ title: "Lifestyle Suggestion", emoji: "📖" })}
         emoji="📖"
       />
     </View>

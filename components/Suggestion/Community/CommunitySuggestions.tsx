@@ -1,12 +1,18 @@
 import { View } from "react-native";
 import { SuggestionItem } from "../SuggestionItem";
 
-export const CommunitySuggestions = () => {
+interface CommunitySuggestionsProps {
+  onSelect: (item: { title: string; emoji: string }) => void;
+}
+
+export const CommunitySuggestions = ({
+  onSelect,
+}: CommunitySuggestionsProps) => {
   return (
     <View>
       <SuggestionItem
         title="Community Suggestion"
-        onPress={() => console.log("Read a Verse")}
+        onPress={() => onSelect({ title: "Community Suggestion", emoji: "📖" })}
         emoji="📖"
       />
     </View>
