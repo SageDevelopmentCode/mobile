@@ -12,6 +12,7 @@ import colors from "@/constants/colors";
 interface SuggestionItemProps {
   emoji?: string;
   title?: string;
+  style?: any;
   onPress: () => void;
 }
 
@@ -19,9 +20,10 @@ export const SuggestionItem = ({
   onPress,
   emoji,
   title,
+  style,
 }: SuggestionItemProps) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.goalContainer}>
+    <TouchableOpacity onPress={onPress} style={[styles.goalContainer, style]}>
       <View style={styles.goalLeftContainer}>
         <View style={styles.goalEmoji}>
           <Heading>{emoji}</Heading>
