@@ -18,7 +18,9 @@ export const IdeaButton = ({ emoji, title, onPress }: IdeaButtonProps) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.ideaContainer}>
       <Heading color={colors.IdeasPrimaryColor}>{emoji}</Heading>
-      <Heading color={colors.IdeasPrimaryColor}>{title}</Heading>
+      <Heading style={{ marginLeft: 15 }} color={colors.IdeasPrimaryColor}>
+        {title}
+      </Heading>
     </TouchableOpacity>
   );
 };

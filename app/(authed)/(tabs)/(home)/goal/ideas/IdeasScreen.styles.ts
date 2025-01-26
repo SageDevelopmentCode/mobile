@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
   },
   contentContainer: {
     width: "100%",
+    marginTop: "30%",
   },
   imageBackground: {
     flex: 0.35,

@@ -4,7 +4,7 @@ import colors from "@/constants/colors";
 export const styles = StyleSheet.create({
   ideaContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
     paddingVertical: 10,

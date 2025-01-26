@@ -53,32 +53,32 @@ export default function CreateGoalSuccessScreen() {
                 onPress={() => console.log("idea")}
               />
               <IdeaButton
-                emoji="📖"
-                title="Scripture"
+                emoji="🔨"
+                title="Work"
                 onPress={() => console.log("idea")}
               />
             </View>
             <View style={styles.buttonRow}>
               <IdeaButton
-                emoji="📖"
-                title="Scripture"
+                emoji="🌸"
+                title="Kindness"
                 onPress={() => console.log("idea")}
               />
               <IdeaButton
-                emoji="📖"
-                title="Scripture"
+                emoji="️️🏘️"
+                title="Community"
                 onPress={() => console.log("idea")}
               />
             </View>
             <View style={styles.buttonRow}>
               <IdeaButton
-                emoji="📖"
-                title="Scripture"
+                emoji="☀️"
+                title="Lifestyle"
                 onPress={() => console.log("idea")}
               />
               <IdeaButton
-                emoji="📖"
-                title="Scripture"
+                emoji="📚"
+                title="Learn"
                 onPress={() => console.log("idea")}
               />
             </View>
