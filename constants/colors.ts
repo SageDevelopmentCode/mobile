@@ -24,6 +24,8 @@ const colors = {
   DarkSecondaryText: "#282828",
   GoalCreatedBackground: "#9CC1F5",
   PrimarySecondaryPurpleDropShadow: "#8187F5",
+  IdeasPrimaryColor: "#0B466E",
+  IdeasPrimaryBackground: "#EEF5FB",
 } as const;
 
 export type Colors = typeof colors; // Extract the type for the colors object

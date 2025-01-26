@@ -14,7 +14,7 @@ import { FontAwesome6 } from "@/utils/icons";
 import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
 import colors from "@/constants/colors";
 import { styles } from "./create_success.styles";
-import Background from "../../assets/Background.jpg";
+import Background from "../../assets/GoalSuccessBackground.jpg";
 import Deborah from "../../../assets/Deborah.png";
 import {
   ButtonText,

@@ -47,7 +47,6 @@ export default function HomeScreen() {
       description: "Read today's devotional",
     },
     { emoji: "🏋️", title: "Workout", description: "Complete today's session" },
-    // Add more goals here
   ];
 
   const router = useRouter();
@@ -87,7 +86,11 @@ export default function HomeScreen() {
             <StatText>1.3k</StatText>
           </View>
         </View>
-        <TouchableOpacity onPress={() => console.log("Goal icon pressed")}>
+        <TouchableOpacity
+          onPress={() =>
+            router.push("/(authed)/(tabs)/(home)/goal/ideas/IdeasScreen")
+          }
+        >
           <Image source={Goal} style={styles.goalImage} resizeMode="contain" />
         </TouchableOpacity>
       </View>
@@ -140,10 +143,7 @@ export default function HomeScreen() {
         </ImageBackground>
         {/* </View> */}
 
-        <View
-          style={styles.contentContainer}
-          // contentContainerStyle={styles.contentContainer}
-        >
+        <View style={styles.contentContainer}>
           <View style={styles.chestRow}>
             {/* Daily Chest */}
             <TouchableOpacity
