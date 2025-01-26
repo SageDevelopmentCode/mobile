@@ -8,6 +8,7 @@ import { MaterialIcons } from "@/utils/icons";
 import colors from "@/constants/colors";
 import Background from "../assets/IdeasBackground.jpg";
 import { Title } from "@/components/Text/TextComponents";
+import { IdeaButton } from "@/components/Buttons/Idea/IdeaButton";
 
 export default function CreateGoalSuccessScreen() {
   const navigation = useNavigation();
@@ -44,7 +45,44 @@ export default function CreateGoalSuccessScreen() {
         </View>
         <View style={styles.contentContainer}>
           <Title color={colors.IdeasPrimaryColor}>Goal Ideas</Title>
-          <View style={styles.buttonContainer}></View>
+          <View style={styles.buttonContainer}>
+            <View style={styles.buttonRow}>
+              <IdeaButton
+                emoji="📖"
+                title="Scripture"
+                onPress={() => console.log("idea")}
+              />
+              <IdeaButton
+                emoji="📖"
+                title="Scripture"
+                onPress={() => console.log("idea")}
+              />
+            </View>
+            <View style={styles.buttonRow}>
+              <IdeaButton
+                emoji="📖"
+                title="Scripture"
+                onPress={() => console.log("idea")}
+              />
+              <IdeaButton
+                emoji="📖"
+                title="Scripture"
+                onPress={() => console.log("idea")}
+              />
+            </View>
+            <View style={styles.buttonRow}>
+              <IdeaButton
+                emoji="📖"
+                title="Scripture"
+                onPress={() => console.log("idea")}
+              />
+              <IdeaButton
+                emoji="📖"
+                title="Scripture"
+                onPress={() => console.log("idea")}
+              />
+            </View>
+          </View>
         </View>
       </View>
       <ImageBackground
