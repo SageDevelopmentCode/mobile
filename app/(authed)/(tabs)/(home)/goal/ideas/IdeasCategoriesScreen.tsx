@@ -3,7 +3,7 @@ import { useNavigation } from "expo-router";
 import { ImageBackground, Text, TouchableOpacity, View } from "react-native";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { useSearchParams } from "expo-router/build/hooks";
-import { styles } from "./IdeasScreen.styles";
+import { styles } from "./IdeasCategoriesScreen.styles";
 import { MaterialIcons } from "@/utils/icons";
 import colors from "@/constants/colors";
 import Background from "../assets/IdeasBackground.jpg";

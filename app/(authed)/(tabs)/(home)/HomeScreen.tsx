@@ -88,7 +88,9 @@ export default function HomeScreen() {
         </View>
         <TouchableOpacity
           onPress={() =>
-            router.push("/(authed)/(tabs)/(home)/goal/ideas/IdeasScreen")
+            router.push(
+              "/(authed)/(tabs)/(home)/goal/ideas/IdeasCategoriesScreen"
+            )
           }
         >
           <Image source={Goal} style={styles.goalImage} resizeMode="contain" />
