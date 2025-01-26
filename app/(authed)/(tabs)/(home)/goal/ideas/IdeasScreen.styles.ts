@@ -11,10 +11,14 @@ export const styles = StyleSheet.create({
     paddingHorizontal: "5%",
     flex: 0.65,
   },
+  contentContainer: {
+    width: "100%",
+  },
   imageBackground: {
     flex: 0.35,
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
   },
+  buttonContainer: {},
 });

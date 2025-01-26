@@ -7,6 +7,7 @@ import { styles } from "./IdeasScreen.styles";
 import { MaterialIcons } from "@/utils/icons";
 import colors from "@/constants/colors";
 import Background from "../assets/IdeasBackground.jpg";
+import { Title } from "@/components/Text/TextComponents";
 
 export default function CreateGoalSuccessScreen() {
   const navigation = useNavigation();
@@ -41,7 +42,10 @@ export default function CreateGoalSuccessScreen() {
             />
           </TouchableOpacity>
         </View>
-        <Text>Hello Ideas Screen</Text>
+        <View style={styles.contentContainer}>
+          <Title color={colors.IdeasPrimaryColor}>Goal Ideas</Title>
+          <View style={styles.buttonContainer}></View>
+        </View>
       </View>
       <ImageBackground
         resizeMode="cover"
