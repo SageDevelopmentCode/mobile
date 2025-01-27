@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import { useNavigation, useRouter } from "expo-router"; //
+import { useNavigation } from "expo-router";
 import {
-  Animated,
   Button,
   Modal,
   ScrollView,

@@ -23,6 +23,7 @@ import XPGem from "./assets/XPGem.png";
 import CommonChest from "../../../../assets/images/chests/CommonChest.png";
 import RareChest from "../../../../assets/images/chests/RareChest.png";
 import UncommonChest from "../../../../assets/images/chests/UncommonChest.png";
+
 import {
   Heading,
   Paragraph,
