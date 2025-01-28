@@ -30,7 +30,8 @@ export default function CreateGoalSuccessScreen() {
   const goal: any = searchParams.get("goal");
   const emoji: any = searchParams.get("emoji");
 
-  const [dateMenuVisible, setdateMenuVisible] = useState(false); // State for submenu visibility
+  const [dateMenuVisible, setDateMenuVisible] = useState(false); // State for submenu visibility
+  const [repeatMenuVisible, setRepeatMenuVisible] = useState(false); // State for submenu visibility
   const slideAnim = useRef(new Animated.Value(800)).current;
 
   const toggleDateMenu = () => {
@@ -40,9 +41,27 @@ export default function CreateGoalSuccessScreen() {
         toValue: 800, // Move off-screen
         duration: 300,
         useNativeDriver: true,
-      }).start(() => setdateMenuVisible(false)); // Set visibility to false after animation
+      }).start(() => setDateMenuVisible(false)); // Set visibility to false after animation
     } else {
-      setdateMenuVisible(true); // Set visibility to true before animation
+      setDateMenuVisible(true); // Set visibility to true before animation
+      Animated.timing(slideAnim, {
+        toValue: 0, // Bring into view
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
+  const toggleRepeatMenu = () => {
+    if (repeatMenuVisible) {
+      // Close menu
+      Animated.timing(slideAnim, {
+        toValue: 800, // Move off-screen
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => setRepeatMenuVisible(false)); // Set visibility to false after animation
+    } else {
+      setRepeatMenuVisible(true); // Set visibility to true before animation
       Animated.timing(slideAnim, {
         toValue: 0, // Bring into view
         duration: 300,
@@ -89,7 +108,7 @@ export default function CreateGoalSuccessScreen() {
               />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={toggleRepeatMenu}>
             <View style={styles.actionContainer}>
               <SubHeading color={colors.PrimaryWhite}>
                 Does not repeat
@@ -146,6 +165,10 @@ export default function CreateGoalSuccessScreen() {
         <TouchableOpacity style={styles.overlay} onPress={toggleDateMenu} />
       )}
 
+      {repeatMenuVisible && (
+        <TouchableOpacity style={styles.overlay} onPress={toggleRepeatMenu} />
+      )}
+
       {/* Submenu */}
       {dateMenuVisible && (
         <Animated.View
@@ -156,7 +179,21 @@ export default function CreateGoalSuccessScreen() {
             },
           ]}
         >
-          <Heading>Hallo World</Heading>
+          <Heading>Date Menu</Heading>
+        </Animated.View>
+      )}
+
+      {repeatMenuVisible && (
+        <Animated.View
+          style={[
+            styles.menu,
+            {
+              transform: [{ translateY: slideAnim }],
+              height: "40%",
+            },
+          ]}
+        >
+          <Heading>Repeat Menu</Heading>
         </Animated.View>
       )}
     </View>
