@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { useSearchParams } from "expo-router/build/hooks";
-import { FontAwesome6 } from "@/utils/icons";
+import { FontAwesome5, FontAwesome6 } from "@/utils/icons";
 import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
 import colors from "@/constants/colors";
 import { styles } from "./create_success.styles";
@@ -30,19 +30,19 @@ export default function CreateGoalSuccessScreen() {
   const goal: any = searchParams.get("goal");
   const emoji: any = searchParams.get("emoji");
 
-  const [menuVisible, setMenuVisible] = useState(false); // State for submenu visibility
+  const [dateMenuVisible, setdateMenuVisible] = useState(false); // State for submenu visibility
   const slideAnim = useRef(new Animated.Value(800)).current;
 
-  const toggleMenu = () => {
-    if (menuVisible) {
+  const toggleDateMenu = () => {
+    if (dateMenuVisible) {
       // Close menu
       Animated.timing(slideAnim, {
         toValue: 800, // Move off-screen
         duration: 300,
         useNativeDriver: true,
-      }).start(() => setMenuVisible(false)); // Set visibility to false after animation
+      }).start(() => setdateMenuVisible(false)); // Set visibility to false after animation
     } else {
-      setMenuVisible(true); // Set visibility to true before animation
+      setdateMenuVisible(true); // Set visibility to true before animation
       Animated.timing(slideAnim, {
         toValue: 0, // Bring into view
         duration: 300,
@@ -79,7 +79,7 @@ export default function CreateGoalSuccessScreen() {
             emoji={emoji}
             style={{ shadowColor: colors.PrimarySecondaryPurpleDropShadow }}
           />
-          <TouchableOpacity>
+          <TouchableOpacity onPress={toggleDateMenu}>
             <View style={[styles.actionContainer, { marginTop: 10 }]}>
               <SubHeading color={colors.PrimaryWhite}>Today</SubHeading>
               <FontAwesome6
@@ -141,20 +141,24 @@ export default function CreateGoalSuccessScreen() {
       >
         <Image source={Deborah} style={styles.character} resizeMode="contain" />
       </ImageBackground>
-      {/* Close Button for Submenu */}
-      {menuVisible && (
-        <TouchableOpacity
-          style={styles.outsideCloseButton}
-          onPress={toggleMenu}
-        >
-          <Entypo name="chevron-down" size={45} color="#ffffff" />
-        </TouchableOpacity>
-      )}
       {/* Background Tint when Menu is Open */}
-      {menuVisible && <View style={styles.overlay} />}
+      {dateMenuVisible && (
+        <TouchableOpacity style={styles.overlay} onPress={toggleDateMenu} />
+      )}
 
       {/* Submenu */}
-      {menuVisible && <Submenu progress={progress} slideAnim={slideAnim} />}
+      {dateMenuVisible && (
+        <Animated.View
+          style={[
+            styles.menu,
+            {
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
+          <Heading>Hallo World</Heading>
+        </Animated.View>
+      )}
     </View>
   );
 }
