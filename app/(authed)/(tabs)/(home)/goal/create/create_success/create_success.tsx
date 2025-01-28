@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { useNavigation, useRouter } from "expo-router";
 import {
+  Animated,
   Image,
   ImageBackground,
   Text,
@@ -17,11 +18,9 @@ import { styles } from "./create_success.styles";
 import Background from "../../assets/GoalSuccessBackground.jpg";
 import Deborah from "../../../assets/Deborah.png";
 import {
-  ButtonText,
   Heading,
   Paragraph,
   SubHeading,
-  Title,
 } from "@/components/Text/TextComponents";
 import { SuggestionItem } from "@/components/Suggestion";
 
@@ -31,8 +30,26 @@ export default function CreateGoalSuccessScreen() {
   const goal: any = searchParams.get("goal");
   const emoji: any = searchParams.get("emoji");
 
-  console.log("goal", goal);
-  console.log("emoji", emoji);
+  const [menuVisible, setMenuVisible] = useState(false); // State for submenu visibility
+  const slideAnim = useRef(new Animated.Value(800)).current;
+
+  const toggleMenu = () => {
+    if (menuVisible) {
+      // Close menu
+      Animated.timing(slideAnim, {
+        toValue: 800, // Move off-screen
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => setMenuVisible(false)); // Set visibility to false after animation
+    } else {
+      setMenuVisible(true); // Set visibility to true before animation
+      Animated.timing(slideAnim, {
+        toValue: 0, // Bring into view
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -124,6 +141,20 @@ export default function CreateGoalSuccessScreen() {
       >
         <Image source={Deborah} style={styles.character} resizeMode="contain" />
       </ImageBackground>
+      {/* Close Button for Submenu */}
+      {menuVisible && (
+        <TouchableOpacity
+          style={styles.outsideCloseButton}
+          onPress={toggleMenu}
+        >
+          <Entypo name="chevron-down" size={45} color="#ffffff" />
+        </TouchableOpacity>
+      )}
+      {/* Background Tint when Menu is Open */}
+      {menuVisible && <View style={styles.overlay} />}
+
+      {/* Submenu */}
+      {menuVisible && <Submenu progress={progress} slideAnim={slideAnim} />}
     </View>
   );
 }
