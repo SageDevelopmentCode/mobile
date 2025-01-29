@@ -65,6 +65,18 @@ export const styles = StyleSheet.create({
     borderColor: colors.PrimaryWhite,
     borderWidth: 2,
   },
+  actionRowContainer: {
+    width: "100%",
+    paddingHorizontal: 23,
+    paddingVertical: 14,
+    backgroundColor: colors.PrimarySecondaryPurpleDropShadow,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 6,
+    borderColor: colors.PrimaryWhite,
+    borderBottomWidth: 2,
+  },
   multipleActionContainer: {
     width: "100%",
     borderRadius: 10,
@@ -72,5 +84,6 @@ export const styles = StyleSheet.create({
     marginVertical: 6,
     borderColor: colors.PrimaryWhite,
     borderWidth: 2,
+    padding: 0,
   },
 });

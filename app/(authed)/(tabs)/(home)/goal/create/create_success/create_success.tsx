@@ -190,7 +190,7 @@ export default function CreateGoalSuccessScreen() {
             styles.menu,
             {
               transform: [{ translateY: slideAnim }],
-              height: "60%",
+              height: "70%",
             },
           ]}
         >
@@ -227,14 +227,9 @@ export default function CreateGoalSuccessScreen() {
               </View>
             </View>
           </TouchableOpacity>
-          <View style={[styles.multipleActionContainer, { marginTop: 10 }]}>
+          <View style={[styles.multipleActionContainer]}>
             <TouchableOpacity>
-              <View
-                style={[
-                  styles.actionContainer,
-                  { marginTop: 10, borderWidth: 0, borderBottomWidth: 2 },
-                ]}
-              >
+              <View style={[styles.actionRowContainer]}>
                 <SubHeading color={colors.PrimaryWhite}>
                   Does not repeat
                 </SubHeading>
@@ -246,12 +241,7 @@ export default function CreateGoalSuccessScreen() {
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
-              <View
-                style={[
-                  styles.actionContainer,
-                  { marginTop: 10, borderWidth: 0, borderBottomWidth: 2 },
-                ]}
-              >
+              <View style={[styles.actionRowContainer]}>
                 <SubHeading color={colors.PrimaryWhite}>
                   Does not repeat
                 </SubHeading>
@@ -263,12 +253,7 @@ export default function CreateGoalSuccessScreen() {
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
-              <View
-                style={[
-                  styles.actionContainer,
-                  { marginTop: 10, borderWidth: 0, borderBottomWidth: 2 },
-                ]}
-              >
+              <View style={[styles.actionRowContainer]}>
                 <SubHeading color={colors.PrimaryWhite}>
                   Does not repeat
                 </SubHeading>
