@@ -73,7 +73,6 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: 6,
     borderColor: colors.PrimaryWhite,
     borderBottomWidth: 2,
   },
@@ -85,5 +84,6 @@ export const styles = StyleSheet.create({
     borderColor: colors.PrimaryWhite,
     borderWidth: 2,
     padding: 0,
+    overflow: "hidden",
   },
 });

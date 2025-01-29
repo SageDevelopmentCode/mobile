@@ -190,7 +190,7 @@ export default function CreateGoalSuccessScreen() {
             styles.menu,
             {
               transform: [{ translateY: slideAnim }],
-              height: "70%",
+              height: "60%",
             },
           ]}
         >
@@ -227,7 +227,7 @@ export default function CreateGoalSuccessScreen() {
               </View>
             </View>
           </TouchableOpacity>
-          <View style={[styles.multipleActionContainer]}>
+          <View style={[styles.multipleActionContainer, { marginTop: 10 }]}>
             <TouchableOpacity>
               <View style={[styles.actionRowContainer]}>
                 <SubHeading color={colors.PrimaryWhite}>
@@ -253,7 +253,9 @@ export default function CreateGoalSuccessScreen() {
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
-              <View style={[styles.actionRowContainer]}>
+              <View
+                style={[styles.actionRowContainer, { borderBottomWidth: 0 }]}
+              >
                 <SubHeading color={colors.PrimaryWhite}>
                   Does not repeat
                 </SubHeading>
