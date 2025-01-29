@@ -21,6 +21,7 @@ import {
   Heading,
   Paragraph,
   SubHeading,
+  Title,
 } from "@/components/Text/TextComponents";
 import { SuggestionItem } from "@/components/Suggestion";
 
@@ -179,7 +180,7 @@ export default function CreateGoalSuccessScreen() {
             },
           ]}
         >
-          <Heading>Date Menu</Heading>
+          <Title color={colors.PrimaryWhite}>Date Menu</Title>
         </Animated.View>
       )}
 
@@ -189,11 +190,96 @@ export default function CreateGoalSuccessScreen() {
             styles.menu,
             {
               transform: [{ translateY: slideAnim }],
-              height: "40%",
+              height: "60%",
             },
           ]}
         >
-          <Heading>Repeat Menu</Heading>
+          <Title color={colors.PrimaryWhite} style={{ marginBottom: 10 }}>
+            Repeat Menu
+          </Title>
+          <TouchableOpacity>
+            <View style={[styles.actionContainer, { marginTop: 10 }]}>
+              <SubHeading color={colors.PrimaryWhite}>
+                Does not repeat
+              </SubHeading>
+              <FontAwesome6
+                name="circle-check"
+                size={20}
+                color={colors.PrimaryWhite}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <View style={[styles.actionContainer, { marginTop: 10 }]}>
+              <SubHeading color={colors.PrimaryWhite}>Ends</SubHeading>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <SubHeading
+                  style={{ marginRight: 10 }}
+                  color={colors.PrimaryWhite}
+                >
+                  Never
+                </SubHeading>
+                <FontAwesome6
+                  name="chevron-right"
+                  size={20}
+                  color={colors.PrimaryWhite}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
+          <View style={[styles.multipleActionContainer, { marginTop: 10 }]}>
+            <TouchableOpacity>
+              <View
+                style={[
+                  styles.actionContainer,
+                  { marginTop: 10, borderWidth: 0, borderBottomWidth: 2 },
+                ]}
+              >
+                <SubHeading color={colors.PrimaryWhite}>
+                  Does not repeat
+                </SubHeading>
+                <FontAwesome6
+                  name="circle-check"
+                  size={20}
+                  color={colors.PrimaryWhite}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <View
+                style={[
+                  styles.actionContainer,
+                  { marginTop: 10, borderWidth: 0, borderBottomWidth: 2 },
+                ]}
+              >
+                <SubHeading color={colors.PrimaryWhite}>
+                  Does not repeat
+                </SubHeading>
+                <FontAwesome6
+                  name="circle-check"
+                  size={20}
+                  color={colors.PrimaryWhite}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <View
+                style={[
+                  styles.actionContainer,
+                  { marginTop: 10, borderWidth: 0, borderBottomWidth: 2 },
+                ]}
+              >
+                <SubHeading color={colors.PrimaryWhite}>
+                  Does not repeat
+                </SubHeading>
+                <FontAwesome6
+                  name="circle-check"
+                  size={20}
+                  color={colors.PrimaryWhite}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
         </Animated.View>
       )}
     </View>

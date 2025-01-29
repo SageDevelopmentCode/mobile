@@ -1,13 +1,10 @@
 import React, { useEffect } from "react";
 import {
   View,
-  Text,
   ImageBackground,
   Image,
   TouchableOpacity,
-  Touchable,
   ScrollView,
-  Dimensions,
 } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 
