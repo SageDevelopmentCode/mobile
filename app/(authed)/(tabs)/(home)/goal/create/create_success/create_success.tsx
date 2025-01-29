@@ -31,8 +31,13 @@ export default function CreateGoalSuccessScreen() {
   const goal: any = searchParams.get("goal");
   const emoji: any = searchParams.get("emoji");
 
+  const repeatOptions = ["Every day", "Every weekday", "Custom"];
+  const dateAndTimeOptions = ["Every day", "Today", "Tomorrow", "On a date..."];
+
   const [dateMenuVisible, setDateMenuVisible] = useState(false); // State for submenu visibility
   const [repeatMenuVisible, setRepeatMenuVisible] = useState(false); // State for submenu visibility
+  const [repeatSelection, setRepeatSelection] = useState("Does not repeat");
+  const [dateAndTimeSelection, setDateAndTimeSelection] = useState("Every day");
   const slideAnim = useRef(new Animated.Value(800)).current;
 
   const toggleDateMenu = () => {
@@ -180,7 +185,53 @@ export default function CreateGoalSuccessScreen() {
             },
           ]}
         >
-          <Title color={colors.PrimaryWhite}>Date Menu</Title>
+          <Title style={{ marginBottom: 10 }} color={colors.PrimaryWhite}>
+            Date and Time
+          </Title>
+          <View style={[styles.multipleActionContainer, { marginTop: 10 }]}>
+            {dateAndTimeOptions.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => setDateAndTimeSelection(option)}
+              >
+                <View
+                  style={[
+                    styles.actionRowContainer,
+                    index === dateAndTimeOptions.length - 1
+                      ? { borderBottomWidth: 0 }
+                      : {},
+                  ]}
+                >
+                  <SubHeading color={colors.PrimaryWhite}>{option}</SubHeading>
+                  {dateAndTimeSelection === option && (
+                    <FontAwesome6
+                      name="circle-check"
+                      size={20}
+                      color={colors.PrimaryWhite}
+                    />
+                  )}
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <TouchableOpacity>
+            <View style={[styles.actionContainer, { marginTop: 10 }]}>
+              <SubHeading color={colors.PrimaryWhite}>Ends</SubHeading>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <SubHeading
+                  style={{ marginRight: 10 }}
+                  color={colors.PrimaryWhite}
+                >
+                  Any time
+                </SubHeading>
+                <FontAwesome6
+                  name="chevron-right"
+                  size={20}
+                  color={colors.PrimaryWhite}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
         </Animated.View>
       )}
 
@@ -195,9 +246,11 @@ export default function CreateGoalSuccessScreen() {
           ]}
         >
           <Title color={colors.PrimaryWhite} style={{ marginBottom: 10 }}>
-            Repeat Menu
+            Repeat
           </Title>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setRepeatSelection("Does not repeat")}
+          >
             <View style={[styles.actionContainer, { marginTop: 10 }]}>
               <SubHeading color={colors.PrimaryWhite}>
                 Does not repeat
@@ -206,6 +259,11 @@ export default function CreateGoalSuccessScreen() {
                 name="circle-check"
                 size={20}
                 color={colors.PrimaryWhite}
+                style={
+                  repeatSelection === "Does not repeat"
+                    ? {}
+                    : { color: colors.PrimarySecondaryPurpleDropShadow }
+                }
               />
             </View>
           </TouchableOpacity>
@@ -228,44 +286,30 @@ export default function CreateGoalSuccessScreen() {
             </View>
           </TouchableOpacity>
           <View style={[styles.multipleActionContainer, { marginTop: 10 }]}>
-            <TouchableOpacity>
-              <View style={[styles.actionRowContainer]}>
-                <SubHeading color={colors.PrimaryWhite}>
-                  Does not repeat
-                </SubHeading>
-                <FontAwesome6
-                  name="circle-check"
-                  size={20}
-                  color={colors.PrimaryWhite}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <View style={[styles.actionRowContainer]}>
-                <SubHeading color={colors.PrimaryWhite}>
-                  Does not repeat
-                </SubHeading>
-                <FontAwesome6
-                  name="circle-check"
-                  size={20}
-                  color={colors.PrimaryWhite}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <View
-                style={[styles.actionRowContainer, { borderBottomWidth: 0 }]}
+            {repeatOptions.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => setRepeatSelection(option)}
               >
-                <SubHeading color={colors.PrimaryWhite}>
-                  Does not repeat
-                </SubHeading>
-                <FontAwesome6
-                  name="circle-check"
-                  size={20}
-                  color={colors.PrimaryWhite}
-                />
-              </View>
-            </TouchableOpacity>
+                <View
+                  style={[
+                    styles.actionRowContainer,
+                    index === repeatOptions.length - 1
+                      ? { borderBottomWidth: 0 }
+                      : {},
+                  ]}
+                >
+                  <SubHeading color={colors.PrimaryWhite}>{option}</SubHeading>
+                  {repeatSelection === option && (
+                    <FontAwesome6
+                      name="circle-check"
+                      size={20}
+                      color={colors.PrimaryWhite}
+                    />
+                  )}
+                </View>
+              </TouchableOpacity>
+            ))}
           </View>
         </Animated.View>
       )}

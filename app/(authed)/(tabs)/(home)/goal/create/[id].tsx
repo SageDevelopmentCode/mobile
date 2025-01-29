@@ -80,8 +80,8 @@ export default function CreateGoalScreen() {
     emoji: string;
   }): void => {
     console.log("Selected Suggestion:", item);
-    setUserGoal(item.title); // Example: Update the goal input
-    setSelectedEmoji(item.emoji); // Example: Update the emoji
+    setUserGoal(item.title);
+    setSelectedEmoji(item.emoji);
   };
 
   let SuggestionsComponent: JSX.Element | null;

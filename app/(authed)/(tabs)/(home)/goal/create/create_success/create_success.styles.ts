@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    height: "60%",
+    height: "55%",
     backgroundColor: colors.GoalCreatedBackground,
     paddingHorizontal: 20,
     paddingVertical: 30,
