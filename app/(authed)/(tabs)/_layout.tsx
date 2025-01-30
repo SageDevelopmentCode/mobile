@@ -1,7 +1,7 @@
 import colors from "@/constants/colors";
 import { Tabs } from "expo-router";
 import { FontAwesome5, Ionicons } from "@/utils/icons";
-import CreateGoalScreen from "./(home)/goal/create/[id]";
+import CreateGoalScreen from "./(home)/goal/create/goal_create";
 
 export default function TabLayout() {
   return (

@@ -165,7 +165,7 @@ export default function CreateGoalScreen() {
           onPress={() =>
             router.push({
               pathname:
-                "/(authed)/(tabs)/(home)/goal/create/create_success/create_success",
+                "/(authed)/(tabs)/(home)/goal/create/goal_create_success/goal_create_success",
               params: {
                 goal: userGoal,
                 emoji: selectedEmoji,
