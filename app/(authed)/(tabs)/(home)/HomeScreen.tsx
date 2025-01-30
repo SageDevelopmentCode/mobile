@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 
-import { FontAwesome5, FontAwesome6, Ionicons, Octicons } from "@/utils/icons";
+import { Ionicons, Octicons } from "@/utils/icons";
 import colors from "@/constants/colors";
 
 import Background from "./assets/BackgroundOne.jpg"; // Updated import path
@@ -21,13 +21,7 @@ import CommonChest from "../../../../assets/images/chests/CommonChest.png";
 import RareChest from "../../../../assets/images/chests/RareChest.png";
 import UncommonChest from "../../../../assets/images/chests/UncommonChest.png";
 
-import {
-  Heading,
-  Paragraph,
-  StatText,
-  SubHeading,
-  Title,
-} from "@/components/Text/TextComponents";
+import { StatText, SubHeading, Title } from "@/components/Text/TextComponents";
 import SquareActionButton from "@/components/Buttons/SquareActionButtons/SquareActionButtons";
 import ProgressBar from "@/components/ProgressBar/ProgressBar";
 
@@ -37,7 +31,7 @@ import { GoalItem } from "@/components/Goal/GoalItem";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-
+  const router = useRouter();
   const goals = [
     {
       emoji: "📖",
@@ -47,7 +41,6 @@ export default function HomeScreen() {
     { emoji: "🏋️", title: "Workout", description: "Complete today's session" },
   ];
 
-  const router = useRouter();
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);

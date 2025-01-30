@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, View, StyleProp, ViewStyle } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons"; // Ensure you have this library installed
 import { styles } from "./GoalItem.styles";
 import { Heading, StatText } from "../Text/TextComponents";

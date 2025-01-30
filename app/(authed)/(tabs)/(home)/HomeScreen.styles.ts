@@ -19,15 +19,11 @@ export const styles = StyleSheet.create({
     position: "relative",
   },
   imageBackground: {
-    // flex: 0.57,
     height: height * 0.57, // Convert flex ratio to fixed height
     width: "100%",
-    // height: "100%",
     paddingTop: 50,
     alignItems: "center",
     position: "relative",
-    // borderColor: "green",
-    // borderWidth: 2,
   },
   heroContent: {
     flex: 1,
@@ -61,7 +57,7 @@ export const styles = StyleSheet.create({
     alignItems: "center", // Align items vertically in the center
     marginBottom: 5,
     position: "absolute",
-    top: 45,
+    top: 50,
     paddingHorizontal: "4%",
     zIndex: 10,
   },
