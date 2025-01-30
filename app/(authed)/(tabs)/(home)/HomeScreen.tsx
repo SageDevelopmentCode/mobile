@@ -8,15 +8,11 @@ import {
 } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 
-import { Ionicons, Octicons } from "@/utils/icons";
+import { Octicons } from "@/utils/icons";
 import colors from "@/constants/colors";
 
 import Background from "./assets/BackgroundOne.jpg"; // Updated import path
 import Deborah from "./assets/Deborah.png";
-import Goal from "./assets/Goal.png";
-import ShardGem from "./assets/ShardGem.png";
-import Star from "./assets/Star.png";
-import XPGem from "./assets/XPGem.png";
 import CommonChest from "../../../../assets/images/chests/CommonChest.png";
 import RareChest from "../../../../assets/images/chests/RareChest.png";
 import UncommonChest from "../../../../assets/images/chests/UncommonChest.png";
@@ -28,10 +24,11 @@ import ProgressBar from "@/components/ProgressBar/ProgressBar";
 import { styles } from "./HomeScreen.styles";
 import HeadingBar from "@/components/Heading/HeadingBar";
 import { GoalItem } from "@/components/Goal/GoalItem";
+import { StatsHeader } from "@/components/Home/StatsHeader/StatsHeader";
+import { formatNumber } from "@/utils/formatNumber";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-  const router = useRouter();
   const goals = [
     {
       emoji: "📖",
@@ -47,61 +44,22 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.statsHeader}>
-        <TouchableOpacity onPress={() => console.log("Menu icon pressed")}>
-          <Ionicons name="menu" size={30} color={colors.PrimaryWhite} />
-        </TouchableOpacity>
-        <View style={styles.statsContainer}>
-          <View style={styles.statBox}>
-            <Image
-              source={XPGem}
-              style={styles.statImage}
-              resizeMode="contain"
-            />
-            <StatText>1.3k</StatText>
-          </View>
-          <View style={styles.statBox}>
-            <Image
-              source={ShardGem}
-              style={styles.statImage}
-              resizeMode="contain"
-            />
-            <StatText>1.3k</StatText>
-          </View>
-          <View style={styles.statBox}>
-            <Image
-              source={Star}
-              style={styles.statImage}
-              resizeMode="contain"
-            />
-            <StatText>1.3k</StatText>
-          </View>
-        </View>
-        <TouchableOpacity
-          onPress={() =>
-            router.push(
-              "/(authed)/(tabs)/(home)/goal/ideas/IdeasCategoriesScreen"
-            )
-          }
-        >
-          <Image source={Goal} style={styles.goalImage} resizeMode="contain" />
-        </TouchableOpacity>
-      </View>
+      <StatsHeader
+        userGems={formatNumber(1300)}
+        userShards={formatNumber(1240)}
+        userStars={formatNumber(1400)}
+      />
       {/* Image Container with Background Image */}
       <ScrollView
         scrollEnabled={true}
         contentContainerStyle={styles.scrollViewContainer}
-        // showsVerticalScrollIndicator={true} // Add this to make scrollbar visible
       >
-        {/* <View style={styles.imageContainer}> */}
         <ImageBackground
           source={Background}
           style={styles.imageBackground}
           resizeMode="cover"
         >
           <View style={styles.heroContent}>
-            {/* Stats Bar */}
-
             {/* Hero Bar with Title and Action Buttons */}
             <View style={styles.heroBar}>
               <Title color={colors.PrimaryWhite}>Deborah</Title>

@@ -46,7 +46,7 @@ export default function TabLayout() {
         name="(play)"
         options={{
           headerShown: false,
-          title: "Fight",
+          title: "Battle",
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="play" size={size} color={color} />
           ),

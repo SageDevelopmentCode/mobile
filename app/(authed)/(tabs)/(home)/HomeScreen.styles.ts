@@ -32,52 +32,13 @@ export const styles = StyleSheet.create({
     paddingTop: "12%",
     paddingHorizontal: "4%",
   },
-  statImage: {
-    height: 25,
-    width: 25,
-    marginRight: 5,
-  },
-  goalImage: {
-    height: 40,
-    width: 40,
-  },
-
   contentContainer: {
     flex: 0.43,
-    alignItems: "center", // Layout-related styles moved here
+    alignItems: "center",
     paddingHorizontal: "4%",
-    // borderColor: "purple",
-    // borderWidth: 2,
-  },
-  statsHeader: {
-    width: "100%",
-    paddingVertical: 5,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center", // Align items vertically in the center
-    marginBottom: 5,
-    position: "absolute",
-    top: 50,
-    paddingHorizontal: "4%",
-    zIndex: 10,
   },
   scrollableContainer: {
-    marginTop: 60, // Adjust for statsBar height
-  },
-  statsContainer: {
-    width: "63%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center", // Align items vertically in the center
-  },
-  statBox: {
-    backgroundColor: "rgba(255, 255, 255, 0.25)",
-    borderRadius: 10,
-    paddingHorizontal: 7,
-    paddingVertical: 5,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    marginTop: 60,
   },
   heroBar: {
     backgroundColor: "rgba(255, 255, 255, 0.25)",
