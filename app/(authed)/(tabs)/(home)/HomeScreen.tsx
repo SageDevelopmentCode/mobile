@@ -26,6 +26,7 @@ import HeadingBar from "@/components/Heading/HeadingBar";
 import { GoalItem } from "@/components/Goal/GoalItem";
 import { StatsHeader } from "@/components/Home/StatsHeader/StatsHeader";
 import { formatNumber } from "@/utils/formatNumber";
+import { HeroBar } from "@/components/Home/Hero/HeroBar/HeroBar";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -49,7 +50,6 @@ export default function HomeScreen() {
         userShards={formatNumber(1240)}
         userStars={formatNumber(1400)}
       />
-      {/* Image Container with Background Image */}
       <ScrollView
         scrollEnabled={true}
         contentContainerStyle={styles.scrollViewContainer}
@@ -60,24 +60,7 @@ export default function HomeScreen() {
           resizeMode="cover"
         >
           <View style={styles.heroContent}>
-            {/* Hero Bar with Title and Action Buttons */}
-            <View style={styles.heroBar}>
-              <Title color={colors.PrimaryWhite}>Deborah</Title>
-              <View style={styles.actions}>
-                <SquareActionButton
-                  onPress={() => console.log("Icon Button Pressed")}
-                  title="✅"
-                />
-                <SquareActionButton
-                  onPress={() => console.log("Icon Button Pressed")}
-                  title="🌱"
-                />
-                <SquareActionButton
-                  onPress={() => console.log("Icon Button Pressed")}
-                  icon={<Octicons name="arrow-switch" size={20} />}
-                />
-              </View>
-            </View>
+            <HeroBar />
 
             {/* Character Image */}
             <TouchableOpacity
@@ -92,7 +75,6 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
         </ImageBackground>
-        {/* </View> */}
 
         <View style={styles.contentContainer}>
           <View style={styles.chestRow}>
