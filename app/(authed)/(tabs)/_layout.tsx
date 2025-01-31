@@ -63,6 +63,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="(friends)"
+        options={{
+          headerShown: false,
+          title: "Friends",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="user-friends" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="(read)"
         options={{
           headerShown: false,
