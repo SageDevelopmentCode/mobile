@@ -8,25 +8,20 @@ import {
 } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 
-import { Octicons } from "@/utils/icons";
 import colors from "@/constants/colors";
 
 import Background from "./assets/BackgroundOne.jpg"; // Updated import path
 import Deborah from "./assets/Deborah.png";
-import CommonChest from "../../../../assets/images/chests/CommonChest.png";
-import RareChest from "../../../../assets/images/chests/RareChest.png";
 import UncommonChest from "../../../../assets/images/chests/UncommonChest.png";
-
-import { StatText, SubHeading, Title } from "@/components/Text/TextComponents";
-import SquareActionButton from "@/components/Buttons/SquareActionButtons/SquareActionButtons";
 import ProgressBar from "@/components/ProgressBar/ProgressBar";
 
 import { styles } from "./HomeScreen.styles";
 import HeadingBar from "@/components/Heading/HeadingBar";
 import { GoalItem } from "@/components/Goal/GoalItem";
 import { StatsHeader } from "@/components/Home/StatsHeader/StatsHeader";
-import { formatNumber } from "@/utils/formatNumber";
+import { formatNumber } from "@/utils/format/formatNumber";
 import { HeroBar } from "@/components/Home/Hero/HeroBar/HeroBar";
+import { Chest } from "@/components/Home/Content/Chest/Chest";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -79,48 +74,22 @@ export default function HomeScreen() {
         <View style={styles.contentContainer}>
           <View style={styles.chestRow}>
             {/* Daily Chest */}
-            <TouchableOpacity
+            <Chest
               onPress={() => {
-                console.log("Daily Chest Opened");
+                console.log("Daily");
               }}
-              style={styles.chestContainer}
-            >
-              <View style={styles.chest}>
-                <Image
-                  source={CommonChest}
-                  style={styles.chestImage}
-                  resizeMode="contain"
-                />
-              </View>
-              <View>
-                <SubHeading color={colors.PrimaryWhite}>Daily Chest</SubHeading>
-                <StatText color={colors.GrayText}>04:06</StatText>
-              </View>
-            </TouchableOpacity>
-
-            {/* Weekly Chest */}
-            <TouchableOpacity
-              accessible
-              accessibilityLabel="Weekly Chest"
+              type="Daily"
+              timeRemaining="04:06"
+              key="Daily"
+            />
+            <Chest
               onPress={() => {
-                console.log("Weekly Chest opened");
+                console.log("Weekly");
               }}
-              style={styles.chestContainer}
-            >
-              <View style={styles.weeklyChest}>
-                <Image
-                  source={RareChest}
-                  style={styles.chestImage}
-                  resizeMode="contain"
-                />
-              </View>
-              <View>
-                <SubHeading color={colors.PrimaryWhite}>
-                  Weekly Chest
-                </SubHeading>
-                <StatText color={colors.GrayText}>05:10:04</StatText>
-              </View>
-            </TouchableOpacity>
+              type="Weekly"
+              timeRemaining="05:06"
+              key="Weekly"
+            />
           </View>
 
           {/* Progress Bar */}
