@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { useNavigation, useRouter } from "expo-router";
+import { useNavigation } from "expo-router";
 
 import colors from "@/constants/colors";
 

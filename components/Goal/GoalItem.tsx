@@ -54,7 +54,7 @@ export const GoalItem = ({
         <TouchableOpacity
           onPress={() =>
             router.push({
-              pathname: "/(authed)/(tabs)/(home)/goal/create/goal_create",
+              pathname: "/(authed)/(tabs)/(home)/goal/create/GoalCreate",
             })
           }
           style={[
@@ -86,7 +86,7 @@ export const GoalItem = ({
             <TouchableOpacity
               onPress={() =>
                 router.push({
-                  pathname: "/(authed)/(tabs)/(home)/goal/create/goal_create",
+                  pathname: "/(authed)/(tabs)/(home)/goal/create/GoalCreate",
                 })
               }
             >

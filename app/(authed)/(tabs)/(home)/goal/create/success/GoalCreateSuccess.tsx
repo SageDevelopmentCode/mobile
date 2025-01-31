@@ -14,7 +14,7 @@ import { useSearchParams } from "expo-router/build/hooks";
 import { FontAwesome5, FontAwesome6 } from "@/utils/icons";
 import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
 import colors from "@/constants/colors";
-import { styles } from "./goal_create_success.styles";
+import { styles } from "./GoalCreateSuccess.styles";
 import Background from "../../assets/GoalSuccessBackground.jpg";
 import Deborah from "../../../assets/Deborah.png";
 import {

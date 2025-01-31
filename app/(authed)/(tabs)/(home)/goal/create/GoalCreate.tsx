@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import colors from "@/constants/colors";
 import { FontAwesome6, MaterialIcons } from "@/utils/icons";
-import { styles } from "./goal_create.styles";
+import { styles } from "./GoalCreate.styles";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { Paragraph, Title } from "@/components/Text/TextComponents";
 import EmojiSelector from "react-native-emoji-selector";
@@ -165,7 +165,7 @@ export default function CreateGoalScreen() {
           onPress={() =>
             router.push({
               pathname:
-                "/(authed)/(tabs)/(home)/goal/create/goal_create_success/goal_create_success",
+                "/(authed)/(tabs)/(home)/goal/create/success/GoalCreateSuccess",
               params: {
                 goal: userGoal,
                 emoji: selectedEmoji,
