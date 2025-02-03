@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import { useNavigation } from "expo-router";
 import {
   Button,
@@ -55,7 +55,6 @@ export default function CreateGoalScreen() {
     "Learn",
   ];
 
-  const { id } = useLocalSearchParams();
   const [isEmojiPickerVisible, setEmojiPickerVisible] =
     useState<boolean>(false);
   const [selectedEmoji, setSelectedEmoji] = useState<string>("🎯");
@@ -126,7 +125,6 @@ export default function CreateGoalScreen() {
       SuggestionsComponent = null;
   }
 
-  console.log("id: ", id);
   return (
     <>
       <View style={styles.container}>
