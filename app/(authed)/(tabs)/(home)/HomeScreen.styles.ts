@@ -12,6 +12,11 @@ export const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 100,
   },
+  menuScrollViewContainer: {
+    flexGrow: 1,
+    paddingBottom: 100,
+    width: "100%",
+  },
   imageContainer: {
     flex: 0.57,
     alignItems: "center",
@@ -25,20 +30,17 @@ export const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: "rgba(0, 0, 0, 0.5)", // Black tint with some transparency
-    zIndex: 1,
+    zIndex: 11,
   },
   menu: {
     position: "absolute",
     bottom: 0,
     width: "100%",
-    height: "55%",
+    height: "85%",
     backgroundColor: colors.DarkPurpleBackground,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
-    zIndex: 2,
-    alignItems: "center",
+    zIndex: 25,
   },
   imageBackground: {
     height: height * 0.57, // Convert flex ratio to fixed height
@@ -46,6 +48,18 @@ export const styles = StyleSheet.create({
     paddingTop: 50,
     alignItems: "center",
     position: "relative",
+  },
+  menuImageContainer: {
+    width: "100%",
+    height: "70%", // Adjust as needed
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    overflow: "hidden", // Ensures the image follows border radius
+  },
+  menuImageBackground: {
+    flex: 1, // Fill the parent container
+    justifyContent: "center",
+    alignItems: "center",
   },
   heroContent: {
     flex: 1,
@@ -68,6 +82,11 @@ export const styles = StyleSheet.create({
   },
   character: {
     height: "100%",
+  },
+  menuCharacter: {
+    width: "60%", // Adjust size as needed
+    height: "60%", // Adjust size as needed
+    resizeMode: "contain",
   },
   chestRow: {
     width: "100%",

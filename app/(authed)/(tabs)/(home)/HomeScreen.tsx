@@ -25,6 +25,7 @@ import { HeroBar } from "@/components/Home/Hero/HeroBar/HeroBar";
 import { Chest } from "@/components/Home/Content/Chest/Chest";
 import toggleMenu from "@/utils/animations/toggleMenu";
 import { Title } from "@/components/Text/TextComponents";
+import { tabBarOptions } from "@/constants/tabBarOptions";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -45,7 +46,28 @@ export default function HomeScreen() {
 
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
-  }, [navigation]);
+
+    const parentNavigation = navigation.getParent();
+
+    if (characterMenuVisible) {
+      // Hide the tab bar when the character menu is open
+      parentNavigation?.setOptions({
+        tabBarStyle: { display: "none" },
+      });
+    } else {
+      // Show the tab bar when the character menu is closed
+      parentNavigation?.setOptions({
+        ...tabBarOptions, // Restore default tabBarOptions
+      });
+    }
+
+    return () => {
+      // Ensure the tab bar reappears when component unmounts
+      parentNavigation?.setOptions({
+        ...tabBarOptions,
+      });
+    };
+  }, [navigation, characterMenuVisible]);
 
   return (
     <View style={styles.container}>
@@ -143,13 +165,30 @@ export default function HomeScreen() {
             styles.menu,
             {
               transform: [{ translateY: slideAnim }],
-              height: "60%",
             },
           ]}
         >
-          <Title color={colors.PrimaryWhite} style={{ marginBottom: 10 }}>
-            Character
-          </Title>
+          <ScrollView
+            scrollEnabled={true}
+            horizontal={false} // Prevent horizontal scrolling
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              flexGrow: 1,
+              borderTopLeftRadius: 40,
+              borderTopRightRadius: 40,
+            }}
+            style={{ width: "100%" }}
+          >
+            <View style={styles.menuImageContainer}>
+              <ImageBackground
+                source={Background}
+                style={styles.menuImageBackground}
+                resizeMode="cover"
+              >
+                <Image source={Deborah} style={styles.menuCharacter} />
+              </ImageBackground>
+            </View>
+          </ScrollView>
         </Animated.View>
       )}
     </View>
