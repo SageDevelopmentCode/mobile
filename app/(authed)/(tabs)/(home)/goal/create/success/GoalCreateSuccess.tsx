@@ -1,22 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
-import { router, useLocalSearchParams } from "expo-router";
-import { useNavigation, useRouter } from "expo-router";
+import { router, useNavigation } from "expo-router";
+import { useSearchParams } from "expo-router/build/hooks";
 import {
   Animated,
   Image,
   ImageBackground,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { FontAwesome6 } from "@/utils/icons";
 import { tabBarOptions } from "@/constants/tabBarOptions";
-import { useSearchParams } from "expo-router/build/hooks";
-import { FontAwesome5, FontAwesome6 } from "@/utils/icons";
-import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
 import colors from "@/constants/colors";
 import { styles } from "./GoalCreateSuccess.styles";
-import Background from "../../assets/GoalSuccessBackground.jpg";
-import Deborah from "../../../assets/Deborah.png";
+
+// Components
+import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
 import {
   Heading,
   Paragraph,
@@ -24,6 +22,12 @@ import {
   Title,
 } from "@/components/Text/TextComponents";
 import { SuggestionItem } from "@/components/Suggestion";
+
+// Assets
+import Background from "../../assets/GoalSuccessBackground.jpg";
+import Deborah from "../../../assets/Deborah.png";
+import toggleMenu from "@/utils/animations/toggleMenu";
+import ToggleMenuButton from "@/components/Goal/Create/Success/ToggleMenuButton/ToggleMenuButton";
 
 export default function CreateGoalSuccessScreen() {
   const navigation = useNavigation();
@@ -40,41 +44,10 @@ export default function CreateGoalSuccessScreen() {
   const [dateAndTimeSelection, setDateAndTimeSelection] = useState("Every day");
   const slideAnim = useRef(new Animated.Value(800)).current;
 
-  const toggleDateMenu = () => {
-    if (dateMenuVisible) {
-      // Close menu
-      Animated.timing(slideAnim, {
-        toValue: 800, // Move off-screen
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => setDateMenuVisible(false)); // Set visibility to false after animation
-    } else {
-      setDateMenuVisible(true); // Set visibility to true before animation
-      Animated.timing(slideAnim, {
-        toValue: 0, // Bring into view
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }
-  };
-
-  const toggleRepeatMenu = () => {
-    if (repeatMenuVisible) {
-      // Close menu
-      Animated.timing(slideAnim, {
-        toValue: 800, // Move off-screen
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => setRepeatMenuVisible(false)); // Set visibility to false after animation
-    } else {
-      setRepeatMenuVisible(true); // Set visibility to true before animation
-      Animated.timing(slideAnim, {
-        toValue: 0, // Bring into view
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }
-  };
+  const toggleDateMenu = () =>
+    toggleMenu(dateMenuVisible, setDateMenuVisible, slideAnim);
+  const toggleRepeatMenu = () =>
+    toggleMenu(repeatMenuVisible, setRepeatMenuVisible, slideAnim);
 
   useEffect(() => {
     navigation.setOptions({
@@ -102,30 +75,16 @@ export default function CreateGoalSuccessScreen() {
             title={goal}
             onPress={() => console.log("Verse you created")}
             emoji={emoji}
-            style={{ shadowColor: colors.PrimarySecondaryPurpleDropShadow }}
+            style={{
+              shadowColor: colors.PrimarySecondaryPurpleDropShadow,
+              marginBottom: 10,
+            }}
           />
-          <TouchableOpacity onPress={toggleDateMenu}>
-            <View style={[styles.actionContainer, { marginTop: 10 }]}>
-              <SubHeading color={colors.PrimaryWhite}>Today</SubHeading>
-              <FontAwesome6
-                name="pencil"
-                size={20}
-                color={colors.PrimaryWhite}
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={toggleRepeatMenu}>
-            <View style={styles.actionContainer}>
-              <SubHeading color={colors.PrimaryWhite}>
-                Does not repeat
-              </SubHeading>
-              <FontAwesome6
-                name="pencil"
-                size={20}
-                color={colors.PrimaryWhite}
-              />
-            </View>
-          </TouchableOpacity>
+          <ToggleMenuButton label="Today" onPress={toggleDateMenu} />
+          <ToggleMenuButton
+            label="Does not repeat"
+            onPress={toggleRepeatMenu}
+          />
         </View>
         <View style={[styles.contentContainer, { marginTop: 30 }]}>
           <TouchableOpacity
@@ -166,6 +125,7 @@ export default function CreateGoalSuccessScreen() {
       >
         <Image source={Deborah} style={styles.character} resizeMode="contain" />
       </ImageBackground>
+
       {/* Background Tint when Menu is Open */}
       {dateMenuVisible && (
         <TouchableOpacity style={styles.overlay} onPress={toggleDateMenu} />
