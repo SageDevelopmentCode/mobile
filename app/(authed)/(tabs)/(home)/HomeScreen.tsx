@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   ImageBackground,
   Image,
   TouchableOpacity,
   ScrollView,
+  Animated,
 } from "react-native";
 import { useNavigation } from "expo-router";
 
@@ -22,9 +23,17 @@ import { StatsHeader } from "@/components/Home/StatsHeader/StatsHeader";
 import { formatNumber } from "@/utils/format/formatNumber";
 import { HeroBar } from "@/components/Home/Hero/HeroBar/HeroBar";
 import { Chest } from "@/components/Home/Content/Chest/Chest";
+import toggleMenu from "@/utils/animations/toggleMenu";
+import { Title } from "@/components/Text/TextComponents";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+  const [characterMenuVisible, setCharacterMenuVisible] = useState(false);
+  const slideAnim = useRef(new Animated.Value(800)).current;
+
+  const toggleCharacterMenu = () =>
+    toggleMenu(characterMenuVisible, setCharacterMenuVisible, slideAnim);
+
   const goals = [
     {
       emoji: "📖",
@@ -59,7 +68,7 @@ export default function HomeScreen() {
 
             {/* Character Image */}
             <TouchableOpacity
-              onPress={() => console.log("Character Image Pressed")}
+              onPress={toggleCharacterMenu}
               style={styles.characterImage}
             >
               <Image
@@ -121,6 +130,28 @@ export default function HomeScreen() {
           />
         </View>
       </ScrollView>
+      {characterMenuVisible && (
+        <TouchableOpacity
+          style={styles.overlay}
+          onPress={toggleCharacterMenu}
+        />
+      )}
+
+      {characterMenuVisible && (
+        <Animated.View
+          style={[
+            styles.menu,
+            {
+              transform: [{ translateY: slideAnim }],
+              height: "60%",
+            },
+          ]}
+        >
+          <Title color={colors.PrimaryWhite} style={{ marginBottom: 10 }}>
+            Character
+          </Title>
+        </Animated.View>
+      )}
     </View>
   );
 }

@@ -18,6 +18,28 @@ export const styles = StyleSheet.create({
     width: "100%",
     position: "relative",
   },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Black tint with some transparency
+    zIndex: 1,
+  },
+  menu: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: "55%",
+    backgroundColor: colors.DarkPurpleBackground,
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    zIndex: 2,
+    alignItems: "center",
+  },
   imageBackground: {
     height: height * 0.57, // Convert flex ratio to fixed height
     width: "100%",
