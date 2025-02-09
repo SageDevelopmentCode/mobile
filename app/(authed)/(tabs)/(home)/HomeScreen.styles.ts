@@ -51,15 +51,14 @@ export const styles = StyleSheet.create({
   },
   menuImageContainer: {
     width: "100%",
-    height: "70%", // Adjust as needed
+    height: "50%", // Adjust as needed
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     overflow: "hidden", // Ensures the image follows border radius
   },
   menuImageBackground: {
     flex: 1, // Fill the parent container
-    justifyContent: "center",
-    alignItems: "center",
+    position: "relative",
   },
   heroContent: {
     flex: 1,
@@ -78,15 +77,32 @@ export const styles = StyleSheet.create({
   },
   characterImage: {
     height: "75%",
-    alignSelf: "center",
   },
   character: {
     height: "100%",
   },
   menuCharacter: {
-    width: "60%", // Adjust size as needed
-    height: "60%", // Adjust size as needed
+    height: "85%", // Adjust size as needed
     resizeMode: "contain",
+    position: "absolute",
+    bottom: 20,
+    alignSelf: "center",
+  },
+  characterTypeContainer: {
+    marginVertical: 10,
+    padding: 10,
+    borderRadius: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  typeImage: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.DarkPurpleButtonDropShadow,
+  },
+  menuContentContainer: {
+    alignItems: "center",
   },
   chestRow: {
     width: "100%",

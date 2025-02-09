@@ -24,7 +24,7 @@ import { formatNumber } from "@/utils/format/formatNumber";
 import { HeroBar } from "@/components/Home/Hero/HeroBar/HeroBar";
 import { Chest } from "@/components/Home/Content/Chest/Chest";
 import toggleMenu from "@/utils/animations/toggleMenu";
-import { Title } from "@/components/Text/TextComponents";
+import { Heading, Paragraph, Title } from "@/components/Text/TextComponents";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 
 export default function HomeScreen() {
@@ -187,6 +187,13 @@ export default function HomeScreen() {
               >
                 <Image source={Deborah} style={styles.menuCharacter} />
               </ImageBackground>
+              <View style={styles.menuContentContainer}>
+                <Title color={colors.PrimaryWhite}>Nickname</Title>
+                <Paragraph color={colors.GrayText}>Deborah</Paragraph>
+                <View style={styles.characterTypeContainer}>
+                  <View style={styles.typeImage}></View>
+                </View>
+              </View>
             </View>
           </ScrollView>
         </Animated.View>
