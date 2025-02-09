@@ -13,6 +13,7 @@ import colors from "@/constants/colors";
 
 import Background from "./assets/BackgroundOne.jpg"; // Updated import path
 import Deborah from "./assets/Deborah.png";
+import SolaraType from "../../../../assets/images/character_types/SolaraType.png";
 import UncommonChest from "../../../../assets/images/chests/UncommonChest.png";
 import ProgressBar from "@/components/ProgressBar/ProgressBar";
 
@@ -24,16 +25,28 @@ import { formatNumber } from "@/utils/format/formatNumber";
 import { HeroBar } from "@/components/Home/Hero/HeroBar/HeroBar";
 import { Chest } from "@/components/Home/Content/Chest/Chest";
 import toggleMenu from "@/utils/animations/toggleMenu";
-import { Heading, Paragraph, Title } from "@/components/Text/TextComponents";
+import {
+  Heading,
+  Paragraph,
+  StatText,
+  SubHeading,
+  Title,
+} from "@/components/Text/TextComponents";
 import { tabBarOptions } from "@/constants/tabBarOptions";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
   const [characterMenuVisible, setCharacterMenuVisible] = useState(false);
+  const [typeDialogVisible, setTypeDialogVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(800)).current;
 
   const toggleCharacterMenu = () =>
     toggleMenu(characterMenuVisible, setCharacterMenuVisible, slideAnim);
+
+  const toggleDialog = () => {
+    setTypeDialogVisible(!typeDialogVisible);
+  };
 
   const goals = [
     {
@@ -190,11 +203,49 @@ export default function HomeScreen() {
               <View style={styles.menuContentContainer}>
                 <Title color={colors.PrimaryWhite}>Nickname</Title>
                 <Paragraph color={colors.GrayText}>Deborah</Paragraph>
-                <View style={styles.characterTypeContainer}>
-                  <View style={styles.typeImage}></View>
-                </View>
+                <TouchableOpacity onPress={toggleDialog}>
+                  <View style={styles.characterTypeContainer}>
+                    <View style={styles.typeImageContainer}>
+                      <Image source={SolaraType} style={styles.typeImage} />
+                    </View>
+                    <View style={styles.typeTextContainer}>
+                      <Paragraph color={colors.PrimaryWhite}>Solara</Paragraph>
+                    </View>
+                  </View>
+                </TouchableOpacity>
               </View>
             </View>
+            {typeDialogVisible && (
+              <View style={styles.dialogOverlay}>
+                <View style={styles.dialogBox}>
+                  <Heading
+                    style={{ marginBottom: 5 }}
+                    color={colors.SolaraGreen}
+                  >
+                    Solara
+                  </Heading>
+                  <StatText color={colors.PrimaryWhite}>
+                    Solara represents the essence of kindness, one of the
+                    powerful fruits of the Spirit. Characters of this type are
+                    natural peacemakers, capable of calming tensions and
+                    inspiring cooperation among allies.
+                  </StatText>
+                </View>
+                <View style={styles.dialogImageContainer}>
+                  <TouchableOpacity
+                    style={styles.dialogClose}
+                    onPress={toggleDialog}
+                  >
+                    <Ionicons
+                      name="close"
+                      size={25}
+                      color={colors.PrimaryWhite}
+                    />
+                  </TouchableOpacity>
+                  <Image source={SolaraType} style={styles.dialogImage} />
+                </View>
+              </View>
+            )}
           </ScrollView>
         </Animated.View>
       )}

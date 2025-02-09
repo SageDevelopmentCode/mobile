@@ -60,6 +60,37 @@ export const styles = StyleSheet.create({
     flex: 1, // Fill the parent container
     position: "relative",
   },
+  dialogOverlay: {
+    position: "absolute",
+    top: "19%", // Adjust as needed
+    left: "50%",
+    transform: [{ translateX: -155 }, { translateY: -50 }],
+    backgroundColor: colors.DarkPurpleButton,
+    borderRadius: 10,
+    width: 310,
+    zIndex: 26,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    overflow: "hidden",
+  },
+  dialogImageContainer: {
+    padding: 15,
+    width: "40%",
+    backgroundColor: colors.DarkPurpleButtonDropShadow,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+  },
+  dialogBox: {
+    padding: 15,
+    borderRadius: 10,
+    width: "60%",
+  },
+  dialogClose: {
+    position: "absolute",
+    top: 15,
+    right: 15,
+  },
   heroContent: {
     flex: 1,
     alignItems: "center",
@@ -90,16 +121,49 @@ export const styles = StyleSheet.create({
   },
   characterTypeContainer: {
     marginVertical: 10,
-    padding: 10,
     borderRadius: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    backgroundColor: colors.DarkPurpleButtonDropShadow,
+    shadowColor: colors.DarkPurpleButtonDropShadow,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 4,
+    width: 140,
+    padding: 0,
+    height: 40,
+    overflow: "hidden",
   },
-  typeImage: {
+  typeImageContainer: {
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.DarkPurpleButtonDropShadow,
+    paddingHorizontal: 5,
+    width: "35%",
+  },
+  typeTextContainer: {
+    backgroundColor: colors.DarkPurpleButton,
+    width: "65%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  typeImageWrapper: {
+    shadowColor: "rgba(0, 186, 205, 0.25)", // Matches the drop-shadow color
+    shadowOffset: { width: 0, height: 4 }, // Mimics (0px, 4px)
+    shadowOpacity: 0.25, // Matches the opacity
+    shadowRadius: 20, // Matches the 20px blur
+    elevation: 5, // Required for Android shadow
+  },
+  typeImage: {
+    width: 37,
+    height: 32,
+  },
+  dialogImage: {
+    width: 107,
+    height: 102,
   },
   menuContentContainer: {
     alignItems: "center",
