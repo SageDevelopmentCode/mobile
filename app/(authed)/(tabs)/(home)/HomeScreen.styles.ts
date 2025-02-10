@@ -14,8 +14,8 @@ export const styles = StyleSheet.create({
   },
   menuScrollViewContainer: {
     flexGrow: 1,
-    paddingBottom: 100,
-    width: "100%",
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
   },
   imageContainer: {
     flex: 0.57,
@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
   },
   menuImageContainer: {
     width: "100%",
-    height: "50%", // Adjust as needed
+    height: height * 0.57, // Adjust as needed
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     overflow: "hidden", // Ensures the image follows border radius
@@ -62,7 +62,7 @@ export const styles = StyleSheet.create({
   },
   dialogOverlay: {
     position: "absolute",
-    top: "19%", // Adjust as needed
+    top: "25%", // Adjust as needed
     left: "50%",
     transform: [{ translateX: -155 }, { translateY: -50 }],
     backgroundColor: colors.DarkPurpleButton,
@@ -167,6 +167,7 @@ export const styles = StyleSheet.create({
   },
   menuContentContainer: {
     alignItems: "center",
+    paddingHorizontal: "4%",
   },
   chestRow: {
     width: "100%",

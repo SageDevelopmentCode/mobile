@@ -143,10 +143,36 @@ export default function HomeScreen() {
             backgroundColor={colors.PrimaryWhite}
             progressColor={colors.PrimaryPurpleBackground}
             imageSrc={UncommonChest}
+            leftText="0 energy today"
+            rightText="Goal: 20"
           />
 
           {/* Heading for Goals */}
           <HeadingBar headingText="Goals for today" />
+          <GoalItem
+            title="Test Test"
+            emoji="📖"
+            description="Read today's devotional"
+            onPress={() => console.log("Icon Button Pressed")}
+            onIconPress={() => console.log("Icon Button Pressed")}
+            newGoal={false}
+          />
+          <GoalItem
+            title="Test Test"
+            emoji="📖"
+            description="Read today's devotional"
+            onPress={() => console.log("Icon Button Pressed")}
+            onIconPress={() => console.log("Icon Button Pressed")}
+            newGoal={false}
+          />
+          <GoalItem
+            title="Test Test"
+            emoji="📖"
+            description="Read today's devotional"
+            onPress={() => console.log("Icon Button Pressed")}
+            onIconPress={() => console.log("Icon Button Pressed")}
+            newGoal={false}
+          />
           <GoalItem
             title="Test Test"
             emoji="📖"
@@ -185,11 +211,7 @@ export default function HomeScreen() {
             scrollEnabled={true}
             horizontal={false} // Prevent horizontal scrolling
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              flexGrow: 1,
-              borderTopLeftRadius: 40,
-              borderTopRightRadius: 40,
-            }}
+            contentContainerStyle={styles.menuScrollViewContainer}
             style={{ width: "100%" }}
           >
             <View style={styles.menuImageContainer}>
@@ -213,6 +235,15 @@ export default function HomeScreen() {
                     </View>
                   </View>
                 </TouchableOpacity>
+                <ProgressBar
+                  height={15}
+                  progress={40}
+                  backgroundColor={colors.PrimaryWhite}
+                  progressColor={colors.PrimaryPurpleBackground}
+                  imageSrc={UncommonChest}
+                  leftText="Level 19"
+                  rightText="Level 20"
+                />
               </View>
             </View>
             {typeDialogVisible && (

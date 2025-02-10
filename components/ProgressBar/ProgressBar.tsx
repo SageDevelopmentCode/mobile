@@ -10,6 +10,8 @@ interface ProgressBarProps {
   backgroundColor?: string; // Optional background color
   progressColor?: string; // Optional progress color
   imageSrc?: any;
+  leftText?: string;
+  rightText?: string;
 }
 
 function ProgressBar(props: ProgressBarProps) {
@@ -19,6 +21,8 @@ function ProgressBar(props: ProgressBarProps) {
     backgroundColor = "#38B38E",
     progressColor = "#AFE3EF",
     imageSrc,
+    leftText,
+    rightText,
   } = props;
 
   return (
@@ -35,10 +39,10 @@ function ProgressBar(props: ProgressBarProps) {
         />
       </View>
       <View style={styles.textContainer}>
+        <SubHeading color={colors.PrimaryGrayDropShadow}>{leftText}</SubHeading>
         <SubHeading color={colors.PrimaryGrayDropShadow}>
-          0 energy today
+          {rightText}
         </SubHeading>
-        <SubHeading color={colors.PrimaryGrayDropShadow}>Goal: 20</SubHeading>
       </View>
       <View style={styles.circleResult}>
         <Image
