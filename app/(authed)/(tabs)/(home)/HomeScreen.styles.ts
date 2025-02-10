@@ -175,6 +175,24 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  tabContainer: {
+    paddingVertical: 10,
+    alignItems: "center",
+  },
+  tab: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginHorizontal: 5,
+    borderRadius: 10,
+  },
+  activeTab: {
+    backgroundColor: colors.PrimaryGreenBackground,
+  },
+  tabText: {
+    fontSize: 14,
+    color: colors.PrimaryWhite,
+    fontWeight: "bold",
+  },
   goalContainer: {
     width: "100%",
     paddingHorizontal: 20,

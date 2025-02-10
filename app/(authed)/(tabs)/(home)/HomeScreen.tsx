@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Animated,
+  Text,
 } from "react-native";
 import { useNavigation } from "expo-router";
 
@@ -36,16 +37,32 @@ import { tabBarOptions } from "@/constants/tabBarOptions";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
+  const menuCharacterTabs: string[] = [
+    "Stats",
+    "Abilities",
+    "Rarities",
+    "Cards",
+  ];
+
   const navigation = useNavigation();
   const [characterMenuVisible, setCharacterMenuVisible] = useState(false);
   const [typeDialogVisible, setTypeDialogVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(800)).current;
+  const [activeMenuCharacterTab, setActiveMenuCharacterTab] = useState<string>(
+    menuCharacterTabs[0]
+  );
 
   const toggleCharacterMenu = () =>
     toggleMenu(characterMenuVisible, setCharacterMenuVisible, slideAnim);
 
   const toggleDialog = () => {
     setTypeDialogVisible(!typeDialogVisible);
+  };
+
+  let CharacterMenuComponent: JSX.Element | null;
+
+  const handleTabPress = (tab: string): void => {
+    setActiveMenuCharacterTab(tab);
   };
 
   const goals = [
@@ -244,6 +261,24 @@ export default function HomeScreen() {
                   leftText="Level 19"
                   rightText="Level 20"
                 />
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.tabContainer}
+                >
+                  {menuCharacterTabs.map((tab, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={[
+                        styles.tab,
+                        activeMenuCharacterTab === tab && styles.activeTab,
+                      ]}
+                      onPress={() => handleTabPress(tab)}
+                    >
+                      <Text style={[styles.tabText]}>{tab}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
               </View>
             </View>
             {typeDialogVisible && (

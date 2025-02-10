@@ -67,8 +67,6 @@ export default function CreateGoalScreen() {
     setActiveSuggestionTab(tab);
   };
 
-  console.log("activeSuggestionTab: ", activeSuggestionTab);
-
   const onEmojiSelect = (emoji: string): void => {
     setSelectedEmoji(emoji);
     setEmojiPickerVisible(false); // Close picker after selection
