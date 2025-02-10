@@ -85,7 +85,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <StatsHeader
-        userGems={formatNumber(1300)}
+        userGems={formatNumber(1000)}
         userShards={formatNumber(1240)}
         userStars={formatNumber(1400)}
       />
