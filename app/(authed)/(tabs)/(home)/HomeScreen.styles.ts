@@ -186,11 +186,11 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
   },
   activeTab: {
-    backgroundColor: colors.PrimaryGreenBackground,
+    backgroundColor: colors.PrimaryWhite,
   },
   tabText: {
     fontSize: 14,
-    color: colors.PrimaryWhite,
+
     fontWeight: "bold",
   },
   goalContainer: {
