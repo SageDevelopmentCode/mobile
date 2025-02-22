@@ -35,8 +35,10 @@ import {
 } from "@/components/Text/TextComponents";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { Ionicons } from "@expo/vector-icons";
-import { VictoryChart, VictoryPolarAxis, VictoryArea } from "victory-native";
-import Svg from "react-native-svg";
+import { CharacterStats } from "@/components/Home/Character/Details/CharacterStats/CharacterStats";
+import { CharacterAbilities } from "@/components/Home/Character/Details/CharacterAbilities/CharacterAbilities";
+import { CharacterRarities } from "@/components/Home/Character/Details/CharacterRarities/CharacterRarities";
+import { CharacterCards } from "@/components/Home/Character/Details/CharacterCards/CharacterCards";
 
 export default function HomeScreen() {
   const menuCharacterTabs: string[] = [
@@ -46,6 +48,8 @@ export default function HomeScreen() {
     "Cards",
   ];
 
+  let CharacterDetailsComponent: JSX.Element | null;
+
   const navigation = useNavigation();
   const [characterMenuVisible, setCharacterMenuVisible] = useState(false);
   const [typeDialogVisible, setTypeDialogVisible] = useState(false);
@@ -54,22 +58,29 @@ export default function HomeScreen() {
     menuCharacterTabs[0]
   );
 
+  switch (activeMenuCharacterTab) {
+    case "Stats":
+      CharacterDetailsComponent = <CharacterStats />;
+      break;
+    case "Abilities":
+      CharacterDetailsComponent = <CharacterAbilities />;
+      break;
+    case "Rarities":
+      CharacterDetailsComponent = <CharacterRarities />;
+      break;
+    case "Cards":
+      CharacterDetailsComponent = <CharacterCards />;
+      break;
+    default:
+      CharacterDetailsComponent = null;
+  }
+
   const toggleCharacterMenu = () =>
     toggleMenu(characterMenuVisible, setCharacterMenuVisible, slideAnim);
 
   const toggleDialog = () => {
     setTypeDialogVisible(!typeDialogVisible);
   };
-
-  const chartData = [
-    { subject: "Attack", value: 20 },
-    { subject: "Special Attack", value: 25 },
-    { subject: "Defense", value: 18 },
-    { subject: "Speed", value: 22 },
-    { subject: "Hit Points", value: 25 },
-  ];
-
-  const maxStat = 150; // Maximum stat value for scaling
 
   let CharacterMenuComponent: JSX.Element | null;
 
@@ -303,49 +314,9 @@ export default function HomeScreen() {
                     </TouchableOpacity>
                   ))}
                 </ScrollView>
-                {/* Here */}
-                <View
-                  style={{
-                    alignItems: "center",
-                    backgroundColor: "#111",
-                    padding: 20,
-                  }}
-                >
-                  <Svg width={300} height={300}>
-                    <VictoryChart
-                      polar
-                      width={300}
-                      height={300}
-                      domain={{ y: [0, maxStat] }}
-                    >
-                      {chartData.map((item, i) => (
-                        <VictoryPolarAxis
-                          key={i}
-                          dependentAxis
-                          label={item.subject}
-                          tickValues={[0, maxStat]}
-                          style={{
-                            axisLabel: { fill: "#fff", fontSize: 10 },
-                            tickLabels: { fill: "transparent" },
-                            axis: { stroke: "#444" },
-                          }}
-                        />
-                      ))}
-                      <VictoryArea
-                        data={chartData}
-                        x="subject"
-                        y="value"
-                        style={{
-                          data: {
-                            fill: "#8884d8",
-                            fillOpacity: 0.6,
-                            stroke: "#8884d8",
-                          },
-                        }}
-                      />
-                    </VictoryChart>
-                  </Svg>
-                </View>
+                {CharacterDetailsComponent}
+                <HeadingBar headingText="Appears in" />
+                <HeadingBar headingText="Description" />
               </View>
             </View>
             {typeDialogVisible && (

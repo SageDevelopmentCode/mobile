@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
   },
   menuImageContainer: {
     width: "100%",
-    height: height * 0.57, // Adjust as needed
+    height: 700, // Adjust as needed
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     overflow: "hidden", // Ensures the image follows border radius
