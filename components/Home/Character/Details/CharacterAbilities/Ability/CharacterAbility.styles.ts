@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   card: {
     width: 150,
     height: 190,
-    borderRadius: 20,
+    borderRadius: 10,
     borderWidth: 3,
     borderColor: "#597C9F",
     overflow: "hidden",

@@ -42,7 +42,7 @@ export const GoalItem = ({
               onPress={onIconPress}
               icon={
                 <FontAwesome6
-                  color={colors.PrimaryBlue}
+                  color={colors.SolaraGreen}
                   name="play"
                   size={23}
                 />

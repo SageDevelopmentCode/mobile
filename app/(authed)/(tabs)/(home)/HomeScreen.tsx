@@ -45,7 +45,7 @@ export default function HomeScreen() {
     "Stats",
     "Abilities",
     "Rarities",
-    "Cards",
+    "Your Cards",
   ];
 
   let CharacterDetailsComponent: JSX.Element | null;
@@ -181,7 +181,7 @@ export default function HomeScreen() {
             height={15}
             progress={40}
             backgroundColor={colors.PrimaryWhite}
-            progressColor={colors.PrimaryPurpleBackground}
+            progressColor={colors.SolaraGreen}
             imageSrc={UncommonChest}
             leftText="0 energy today"
             rightText="Goal: 20"

@@ -149,13 +149,6 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  typeImageWrapper: {
-    shadowColor: "rgba(0, 186, 205, 0.25)", // Matches the drop-shadow color
-    shadowOffset: { width: 0, height: 4 }, // Mimics (0px, 4px)
-    shadowOpacity: 0.25, // Matches the opacity
-    shadowRadius: 20, // Matches the 20px blur
-    elevation: 5, // Required for Android shadow
-  },
   typeImage: {
     width: 37,
     height: 32,
@@ -189,41 +182,6 @@ export const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: 14,
-
     fontWeight: "bold",
-  },
-  goalContainer: {
-    width: "100%",
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    borderRadius: 10,
-    backgroundColor: colors.DarkPurpleButton,
-    shadowColor: colors.DarkPurpleButtonDropShadow,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 4,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginVertical: 6,
-  },
-  goalEmoji: {
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    borderRadius: 5,
-    alignItems: "center",
-    backgroundColor: colors.EmojiGrayBackground,
-  },
-  goalLeftContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  goalRightContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
   },
 });
