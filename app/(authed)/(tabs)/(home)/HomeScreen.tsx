@@ -389,10 +389,18 @@ export default function HomeScreen() {
             contentContainerStyle={styles.menuScrollViewContainer}
             style={{ width: "100%" }}
           >
-            <View style={styles.menuContentContainer}>
-              <Heading style={{ marginBottom: 5 }} color={colors.SolaraGreen}>
-                Switch Character here
-              </Heading>
+            <View style={styles.characterSwitchMenuContentContainer}>
+              <HeadingBar headingText="Your Characters" />
+              <ImageBackground
+                source={Background}
+                style={styles.characterSwitchCard}
+                resizeMode="cover"
+              >
+                <Image
+                  source={Deborah}
+                  style={styles.characterSwitchCardImage}
+                />
+              </ImageBackground>
             </View>
           </ScrollView>
         </Animated.View>

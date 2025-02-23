@@ -161,6 +161,10 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: "4%",
   },
+  characterSwitchMenuContentContainer: {
+    alignItems: "center",
+    paddingVertical: "8%",
+  },
   chestRow: {
     width: "100%",
     flexDirection: "row",
@@ -183,5 +187,19 @@ export const styles = StyleSheet.create({
   tabText: {
     fontSize: 14,
     fontWeight: "bold",
+  },
+  characterSwitchCard: {
+    width: "96%",
+    height: 200,
+    borderRadius: 30,
+    position: "relative",
+    marginBottom: 20,
+  },
+  characterSwitchCardImage: {
+    height: "85%", // Adjust size as needed
+    resizeMode: "contain",
+    position: "absolute",
+    bottom: 20,
+    alignSelf: "center",
   },
 });
