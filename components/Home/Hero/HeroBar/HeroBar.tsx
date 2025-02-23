@@ -6,9 +6,11 @@ import React from "react";
 import { View } from "react-native";
 import { styles } from "./HeroBar.styles";
 
-type HeroBarProps = {};
+type HeroBarProps = {
+  onSwitchPress: () => void;
+};
 
-export const HeroBar = ({}: HeroBarProps) => {
+export const HeroBar = ({ onSwitchPress }: HeroBarProps) => {
   return (
     <View style={styles.heroBar}>
       <Title color={colors.PrimaryWhite}>Deborah</Title>
@@ -22,7 +24,7 @@ export const HeroBar = ({}: HeroBarProps) => {
           title="🌱"
         />
         <SquareActionButton
-          onPress={() => console.log("Icon Button Pressed")}
+          onPress={onSwitchPress}
           icon={<Octicons name="arrow-switch" size={20} />}
         />
       </View>

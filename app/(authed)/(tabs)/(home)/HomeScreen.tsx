@@ -51,7 +51,10 @@ export default function HomeScreen() {
   let CharacterDetailsComponent: JSX.Element | null;
 
   const navigation = useNavigation();
-  const [characterMenuVisible, setCharacterMenuVisible] = useState(false);
+  const [characterMenuVisible, setCharacterMenuVisible] =
+    useState<boolean>(false);
+  const [characterSwitchMenuVisible, setCharacterSwitchMenuVisible] =
+    useState<boolean>(false);
   const [typeDialogVisible, setTypeDialogVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(800)).current;
   const [activeMenuCharacterTab, setActiveMenuCharacterTab] = useState<string>(
@@ -74,6 +77,13 @@ export default function HomeScreen() {
     default:
       CharacterDetailsComponent = null;
   }
+
+  const toggleCharacterSwitchMenu = () =>
+    toggleMenu(
+      characterSwitchMenuVisible,
+      setCharacterSwitchMenuVisible,
+      slideAnim
+    );
 
   const toggleCharacterMenu = () =>
     toggleMenu(characterMenuVisible, setCharacterMenuVisible, slideAnim);
@@ -102,7 +112,7 @@ export default function HomeScreen() {
 
     const parentNavigation = navigation.getParent();
 
-    if (characterMenuVisible) {
+    if (characterMenuVisible || characterSwitchMenuVisible) {
       // Hide the tab bar when the character menu is open
       parentNavigation?.setOptions({
         tabBarStyle: { display: "none" },
@@ -120,10 +130,15 @@ export default function HomeScreen() {
         ...tabBarOptions,
       });
     };
-  }, [navigation, characterMenuVisible]);
+  }, [navigation, characterMenuVisible, characterSwitchMenuVisible]);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: colors.DarkPurpleBackground },
+      ]}
+    >
       <StatsHeader
         userGems={formatNumber(1000)}
         userShards={formatNumber(1240)}
@@ -134,20 +149,20 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollViewContainer}
       >
         <ImageBackground
-          source={Background}
+          source={Background} // TODO: Dynamic
           style={styles.imageBackground}
           resizeMode="cover"
         >
           <View style={styles.heroContent}>
-            <HeroBar />
+            <HeroBar onSwitchPress={toggleCharacterSwitchMenu} />
 
             {/* Character Image */}
             <TouchableOpacity
-              onPress={toggleCharacterMenu}
+              onPress={toggleCharacterMenu} // TODO: Menu is dynamic
               style={styles.characterImage}
             >
               <Image
-                source={Deborah}
+                source={Deborah} // TODO: Dynamic
                 style={styles.character}
                 resizeMode="contain"
               />
@@ -180,8 +195,8 @@ export default function HomeScreen() {
           <ProgressBar
             height={15}
             progress={40}
-            backgroundColor={colors.PrimaryWhite}
-            progressColor={colors.SolaraGreen}
+            backgroundColor={colors.PrimaryWhite} // TODO: Dynamic
+            progressColor={colors.SolaraGreen} // TODO: Dynamic
             imageSrc={UncommonChest}
             leftText="0 energy today"
             rightText="Goal: 20"
@@ -189,31 +204,7 @@ export default function HomeScreen() {
 
           {/* Heading for Goals */}
           <HeadingBar headingText="Goals for today" />
-          <GoalItem
-            title="Test Test"
-            emoji="📖"
-            description="Read today's devotional"
-            onPress={() => console.log("Icon Button Pressed")}
-            onIconPress={() => console.log("Icon Button Pressed")}
-            newGoal={false}
-          />
-          <GoalItem
-            title="Test Test"
-            emoji="📖"
-            description="Read today's devotional"
-            onPress={() => console.log("Icon Button Pressed")}
-            onIconPress={() => console.log("Icon Button Pressed")}
-            newGoal={false}
-          />
-          <GoalItem
-            title="Test Test"
-            emoji="📖"
-            description="Read today's devotional"
-            onPress={() => console.log("Icon Button Pressed")}
-            onIconPress={() => console.log("Icon Button Pressed")}
-            newGoal={false}
-          />
-          <GoalItem
+          <GoalItem // TODO: This component has to be dynamic
             title="Test Test"
             emoji="📖"
             description="Read today's devotional"
@@ -231,10 +222,18 @@ export default function HomeScreen() {
           />
         </View>
       </ScrollView>
+
       {characterMenuVisible && (
         <TouchableOpacity
           style={styles.overlay}
           onPress={toggleCharacterMenu}
+        />
+      )}
+
+      {characterSwitchMenuVisible && (
+        <TouchableOpacity
+          style={styles.overlay}
+          onPress={toggleCharacterSwitchMenu}
         />
       )}
 
@@ -243,6 +242,7 @@ export default function HomeScreen() {
           style={[
             styles.menu,
             {
+              backgroundColor: colors.DarkPurpleBackground, // TODO: Dynamic
               transform: [{ translateY: slideAnim }],
             },
           ]}
@@ -256,7 +256,7 @@ export default function HomeScreen() {
           >
             <View style={styles.menuImageContainer}>
               <ImageBackground
-                source={Background}
+                source={Background} // TODO: Dynamic and the Image Source
                 style={styles.menuImageBackground}
                 resizeMode="cover"
               >
@@ -266,8 +266,21 @@ export default function HomeScreen() {
                 <Title color={colors.PrimaryWhite}>Nickname</Title>
                 <Paragraph color={colors.GrayText}>Deborah</Paragraph>
                 <TouchableOpacity onPress={toggleDialog}>
-                  <View style={styles.characterTypeContainer}>
-                    <View style={styles.typeImageContainer}>
+                  <View
+                    style={[
+                      styles.characterTypeContainer,
+                      {
+                        backgroundColor: colors.DarkPurpleButtonDropShadow,
+                        shadowColor: colors.DarkPurpleButtonDropShadow,
+                      },
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.typeImageContainer,
+                        { backgroundColor: colors.DarkPurpleButtonDropShadow },
+                      ]} // TODO: Image source is dynamic
+                    >
                       <Image source={SolaraType} style={styles.typeImage} />
                     </View>
                     <View style={styles.typeTextContainer}>
@@ -320,7 +333,12 @@ export default function HomeScreen() {
               </View>
             </View>
             {typeDialogVisible && (
-              <View style={styles.dialogOverlay}>
+              <View
+                style={[
+                  styles.dialogOverlay,
+                  { backgroundColor: colors.DarkPurpleButton },
+                ]}
+              >
                 <View style={styles.dialogBox}>
                   <Heading
                     style={{ marginBottom: 5 }}
@@ -350,6 +368,32 @@ export default function HomeScreen() {
                 </View>
               </View>
             )}
+          </ScrollView>
+        </Animated.View>
+      )}
+
+      {characterSwitchMenuVisible && (
+        <Animated.View
+          style={[
+            styles.menu,
+            {
+              backgroundColor: colors.DarkPurpleBackground, // TODO: Dynamic
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
+          <ScrollView
+            scrollEnabled={true}
+            horizontal={false} // Prevent horizontal scrolling
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.menuScrollViewContainer}
+            style={{ width: "100%" }}
+          >
+            <View style={styles.menuContentContainer}>
+              <Heading style={{ marginBottom: 5 }} color={colors.SolaraGreen}>
+                Switch Character here
+              </Heading>
+            </View>
           </ScrollView>
         </Animated.View>
       )}
