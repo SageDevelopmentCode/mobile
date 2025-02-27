@@ -27,6 +27,7 @@ const colors = {
   IdeasPrimaryColor: "#0B466E",
   IdeasPrimaryBackground: "#EEF5FB",
   SolaraGreen: "#40CAA0",
+  SolaraGreenDropShadow: "#4AA78B",
 } as const;
 
 export type Colors = typeof colors; // Extract the type for the colors object

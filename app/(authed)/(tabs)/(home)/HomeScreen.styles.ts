@@ -162,6 +162,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: "4%",
   },
   characterSwitchMenuContentContainer: {
+    display: "flex",
+    justifyContent: "center",
     alignItems: "center",
     paddingVertical: "8%",
   },
@@ -189,17 +191,18 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   characterSwitchCard: {
-    width: "96%",
-    height: 200,
-    borderRadius: 30,
+    width: "100%",
+    height: 180,
+    borderRadius: 20,
     position: "relative",
-    marginBottom: 20,
+    marginBottom: 5,
+    overflow: "hidden",
   },
   characterSwitchCardImage: {
-    height: "85%", // Adjust size as needed
+    height: "80%", // Adjust size as needed
     resizeMode: "contain",
     position: "absolute",
-    bottom: 20,
+    bottom: 15,
     alignSelf: "center",
   },
 });

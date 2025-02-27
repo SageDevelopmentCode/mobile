@@ -13,6 +13,8 @@ import { useNavigation } from "expo-router";
 import colors from "@/constants/colors";
 
 import Background from "./assets/BackgroundOne.jpg"; // Updated import path
+import GabrielBackground from "./assets/GabrielBackground.jpg";
+import Gabriel from "./assets/Gabriel.png";
 import Deborah from "./assets/Deborah.png";
 import SolaraType from "../../../../assets/images/character_types/SolaraType.png";
 import UncommonChest from "../../../../assets/images/chests/UncommonChest.png";
@@ -27,6 +29,7 @@ import { HeroBar } from "@/components/Home/Hero/HeroBar/HeroBar";
 import { Chest } from "@/components/Home/Content/Chest/Chest";
 import toggleMenu from "@/utils/animations/toggleMenu";
 import {
+  ButtonText,
   Heading,
   Paragraph,
   StatText,
@@ -39,6 +42,7 @@ import { CharacterStats } from "@/components/Home/Character/Details/CharacterSta
 import { CharacterAbilities } from "@/components/Home/Character/Details/CharacterAbilities/CharacterAbilities";
 import { CharacterRarities } from "@/components/Home/Character/Details/CharacterRarities/CharacterRarities";
 import { CharacterCards } from "@/components/Home/Character/Details/CharacterCards/CharacterCards";
+import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
 
 export default function HomeScreen() {
   const menuCharacterTabs: string[] = [
@@ -391,16 +395,106 @@ export default function HomeScreen() {
           >
             <View style={styles.characterSwitchMenuContentContainer}>
               <HeadingBar headingText="Your Characters" />
-              <ImageBackground
-                source={Background}
-                style={styles.characterSwitchCard}
-                resizeMode="cover"
+              <View
+                style={[
+                  {
+                    width: "100%",
+                    paddingHorizontal: "5%",
+                    marginVertical: 20,
+                  },
+                ]}
               >
-                <Image
-                  source={Deborah}
-                  style={styles.characterSwitchCardImage}
-                />
-              </ImageBackground>
+                <ImageBackground
+                  source={Background}
+                  style={[styles.characterSwitchCard, { alignSelf: "center" }]}
+                  resizeMode="cover"
+                >
+                  <Image
+                    source={Deborah}
+                    style={styles.characterSwitchCardImage}
+                  />
+                </ImageBackground>
+                <View
+                  style={[
+                    {
+                      flexDirection: "row",
+                      alignItems: "center",
+                      width: "100%",
+                      justifyContent: "space-between",
+                      marginTop: 5,
+                    },
+                  ]}
+                >
+                  <Heading color={colors.PrimaryWhite}>Deborah</Heading>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: colors.SolaraGreen,
+                      paddingHorizontal: 15,
+                      paddingVertical: 6,
+                      borderRadius: 10,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      shadowColor: colors.SolaraGreenDropShadow,
+                      shadowOffset: { width: 0, height: 3 },
+                      shadowOpacity: 1,
+                      shadowRadius: 0,
+                      elevation: 3,
+                    }}
+                  >
+                    <ButtonText color={colors.PrimaryWhite}>Switch</ButtonText>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View
+                style={[
+                  {
+                    width: "100%",
+                    paddingHorizontal: "5%",
+                    marginVertical: 20,
+                  },
+                ]}
+              >
+                <ImageBackground
+                  source={GabrielBackground}
+                  style={[styles.characterSwitchCard, { alignSelf: "center" }]}
+                  resizeMode="cover"
+                >
+                  <Image
+                    source={Gabriel}
+                    style={styles.characterSwitchCardImage}
+                  />
+                </ImageBackground>
+                <View
+                  style={[
+                    {
+                      flexDirection: "row",
+                      alignItems: "center",
+                      width: "100%",
+                      justifyContent: "space-between",
+                      marginTop: 5,
+                    },
+                  ]}
+                >
+                  <Heading color={colors.PrimaryWhite}>Gabriel</Heading>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: colors.SolaraGreen,
+                      paddingHorizontal: 15,
+                      paddingVertical: 6,
+                      borderRadius: 10,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      shadowColor: colors.SolaraGreenDropShadow,
+                      shadowOffset: { width: 0, height: 3 },
+                      shadowOpacity: 1,
+                      shadowRadius: 0,
+                      elevation: 3,
+                    }}
+                  >
+                    <ButtonText color={colors.PrimaryWhite}>Switch</ButtonText>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
           </ScrollView>
         </Animated.View>
