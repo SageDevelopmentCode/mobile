@@ -20,7 +20,7 @@ import SolaraType from "../../../../assets/images/character_types/SolaraType.png
 import UncommonChest from "../../../../assets/images/chests/UncommonChest.png";
 import ProgressBar from "@/components/ProgressBar/ProgressBar";
 
-import { styles } from "./HomeScreen.styles";
+// import { styles } from "./HomeScreen.styles";
 import HeadingBar from "@/components/Heading/HeadingBar";
 import { GoalItem } from "@/components/Goal/GoalItem";
 import { StatsHeader } from "@/components/Home/StatsHeader/StatsHeader";
@@ -43,6 +43,7 @@ import { CharacterAbilities } from "@/components/Home/Character/Details/Characte
 import { CharacterRarities } from "@/components/Home/Character/Details/CharacterRarities/CharacterRarities";
 import { CharacterCards } from "@/components/Home/Character/Details/CharacterCards/CharacterCards";
 import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
+import { getStyles } from "./HomeScreen.styles";
 
 export default function HomeScreen() {
   const menuCharacterTabs: string[] = [
@@ -64,6 +65,9 @@ export default function HomeScreen() {
   const [activeMenuCharacterTab, setActiveMenuCharacterTab] = useState<string>(
     menuCharacterTabs[0]
   );
+  const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
+
+  const styles = getStyles(activeCharacter);
 
   switch (activeMenuCharacterTab) {
     case "Stats":
