@@ -157,7 +157,9 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollViewContainer}
       >
         <ImageBackground
-          source={Background} // TODO: Dynamic
+          source={
+            activeCharacter === "Deborah" ? Background : GabrielBackground
+          } // TODO: Dynamic
           style={styles.imageBackground}
           resizeMode="cover"
         >
@@ -170,7 +172,7 @@ export default function HomeScreen() {
               style={styles.characterImage}
             >
               <Image
-                source={Deborah} // TODO: Dynamic
+                source={activeCharacter === "Deborah" ? Deborah : Gabriel} // TODO: Dynamic
                 style={styles.character}
                 resizeMode="contain"
               />
@@ -250,7 +252,6 @@ export default function HomeScreen() {
           style={[
             styles.menu,
             {
-              backgroundColor: colors.DarkPurpleBackground, // TODO: Dynamic
               transform: [{ translateY: slideAnim }],
             },
           ]}
@@ -264,11 +265,16 @@ export default function HomeScreen() {
           >
             <View style={styles.menuImageContainer}>
               <ImageBackground
-                source={Background} // TODO: Dynamic and the Image Source
+                source={
+                  activeCharacter === "Deborah" ? Background : GabrielBackground
+                }
                 style={styles.menuImageBackground}
                 resizeMode="cover"
               >
-                <Image source={Deborah} style={styles.menuCharacter} />
+                <Image
+                  source={activeCharacter === "Deborah" ? Deborah : Gabriel}
+                  style={styles.menuCharacter}
+                />
               </ImageBackground>
               <View style={styles.menuContentContainer}>
                 <Title color={colors.PrimaryWhite}>Nickname</Title>
@@ -493,6 +499,10 @@ export default function HomeScreen() {
                       shadowOpacity: 1,
                       shadowRadius: 0,
                       elevation: 3,
+                    }}
+                    onPress={() => {
+                      setActiveCharacter("Gabriel");
+                      setCharacterSwitchMenuVisible(false);
                     }}
                   >
                     <ButtonText color={colors.PrimaryWhite}>Switch</ButtonText>

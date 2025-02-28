@@ -8,7 +8,9 @@ export const getStyles = (activeCharacter: string) => {
 
   return StyleSheet.create({
     container: {
-      backgroundColor: colors.DarkPurpleBackground,
+      backgroundColor: isDeborah
+        ? colors.DarkPurpleBackground
+        : colors.GabrielBackground,
       flex: 1,
     },
     scrollViewContainer: {
@@ -40,7 +42,9 @@ export const getStyles = (activeCharacter: string) => {
       bottom: 0,
       width: "100%",
       height: "85%",
-      backgroundColor: colors.DarkPurpleBackground,
+      backgroundColor: isDeborah
+        ? colors.DarkPurpleBackground
+        : colors.GabrielBackground,
       borderTopLeftRadius: 40,
       borderTopRightRadius: 40,
       zIndex: 25,
