@@ -8,12 +8,13 @@ import { styles } from "./HeroBar.styles";
 
 type HeroBarProps = {
   onSwitchPress: () => void;
+  characterName: string;
 };
 
-export const HeroBar = ({ onSwitchPress }: HeroBarProps) => {
+export const HeroBar = ({ onSwitchPress, characterName }: HeroBarProps) => {
   return (
     <View style={styles.heroBar}>
-      <Title color={colors.PrimaryWhite}>Deborah</Title>
+      <Title color={colors.PrimaryWhite}>{characterName}</Title>
       <View style={styles.actions}>
         <SquareActionButton
           onPress={() => console.log("Icon Button Pressed")}

@@ -141,12 +141,7 @@ export default function HomeScreen() {
   }, [navigation, characterMenuVisible, characterSwitchMenuVisible]);
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: colors.DarkPurpleBackground },
-      ]}
-    >
+    <View style={[styles.container]}>
       <StatsHeader
         userGems={formatNumber(1000)}
         userShards={formatNumber(1240)}
@@ -159,12 +154,17 @@ export default function HomeScreen() {
         <ImageBackground
           source={
             activeCharacter === "Deborah" ? Background : GabrielBackground
-          } // TODO: Dynamic
+          }
           style={styles.imageBackground}
           resizeMode="cover"
         >
           <View style={styles.heroContent}>
-            <HeroBar onSwitchPress={toggleCharacterSwitchMenu} />
+            <HeroBar
+              characterName={
+                activeCharacter === "Deborah" ? "Deborah" : "Gabriel"
+              }
+              onSwitchPress={toggleCharacterSwitchMenu}
+            />
 
             {/* Character Image */}
             <TouchableOpacity

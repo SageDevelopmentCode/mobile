@@ -33,7 +33,9 @@ export const Chest = ({ onPress, type, timeRemaining }: ChestProps) => {
         <SubHeading color={colors.PrimaryWhite}>
           {capitalizeFirstLetter(type)} Chest
         </SubHeading>
-        <StatText color={colors.GrayText}>{timeRemaining}</StatText>
+        <StatText color={colors.PrimaryGrayDropShadow}>
+          {timeRemaining}
+        </StatText>
       </View>
     </TouchableOpacity>
   );

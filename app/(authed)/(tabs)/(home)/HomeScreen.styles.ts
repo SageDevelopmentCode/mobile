@@ -6,6 +6,8 @@ const { height } = Dimensions.get("window");
 export const getStyles = (activeCharacter: string) => {
   const isDeborah = activeCharacter === "Deborah";
 
+  console.log("isDeborah", isDeborah);
+
   return StyleSheet.create({
     container: {
       backgroundColor: isDeborah
