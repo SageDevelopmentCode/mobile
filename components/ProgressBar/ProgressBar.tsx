@@ -1,8 +1,8 @@
 import React from "react";
 import { Image, View } from "react-native";
-import { styles } from "./ProgressBar.styles";
 import { SubHeading } from "../Text/TextComponents";
 import colors from "@/constants/colors";
+import { getStyles } from "./ProgressBar.styles";
 
 interface ProgressBarProps {
   progress: number; // Progress as a percentage (0-100)
@@ -12,18 +12,22 @@ interface ProgressBarProps {
   imageSrc?: any;
   leftText?: string;
   rightText?: string;
+  activeCharacter: string;
 }
 
 function ProgressBar(props: ProgressBarProps) {
   const {
     progress,
     height = 30,
-    backgroundColor = "#38B38E",
-    progressColor = "#AFE3EF",
+    backgroundColor,
+    progressColor,
     imageSrc,
     leftText,
     rightText,
+    activeCharacter,
   } = props;
+
+  const styles = getStyles(activeCharacter);
 
   return (
     <View style={styles.outerContainer}>

@@ -42,7 +42,6 @@ import { CharacterStats } from "@/components/Home/Character/Details/CharacterSta
 import { CharacterAbilities } from "@/components/Home/Character/Details/CharacterAbilities/CharacterAbilities";
 import { CharacterRarities } from "@/components/Home/Character/Details/CharacterRarities/CharacterRarities";
 import { CharacterCards } from "@/components/Home/Character/Details/CharacterCards/CharacterCards";
-import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
 import { getStyles } from "./HomeScreen.styles";
 
 export default function HomeScreen() {
@@ -190,6 +189,7 @@ export default function HomeScreen() {
               type="Daily"
               timeRemaining="04:06"
               key="Daily"
+              activeCharacter={activeCharacter}
             />
             <Chest
               onPress={() => {
@@ -198,6 +198,7 @@ export default function HomeScreen() {
               type="Weekly"
               timeRemaining="05:06"
               key="Weekly"
+              activeCharacter={activeCharacter}
             />
           </View>
 
@@ -210,6 +211,7 @@ export default function HomeScreen() {
             imageSrc={UncommonChest}
             leftText="0 energy today"
             rightText="Goal: 20"
+            activeCharacter={activeCharacter}
           />
 
           {/* Heading for Goals */}
@@ -221,6 +223,7 @@ export default function HomeScreen() {
             onPress={() => console.log("Icon Button Pressed")}
             onIconPress={() => console.log("Icon Button Pressed")}
             newGoal={false}
+            activeCharacter={activeCharacter}
           />
           <GoalItem
             title="Test Test"
@@ -229,6 +232,7 @@ export default function HomeScreen() {
             onPress={() => console.log("Icon Button Pressed")}
             onIconPress={() => console.log("Icon Button Pressed")}
             newGoal={true}
+            activeCharacter={activeCharacter}
           />
         </View>
       </ScrollView>
@@ -310,6 +314,7 @@ export default function HomeScreen() {
                   imageSrc={UncommonChest}
                   leftText="Level 19"
                   rightText="Level 20"
+                  activeCharacter={activeCharacter}
                 />
                 <ScrollView
                   horizontal

@@ -1,13 +1,14 @@
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons"; // Ensure you have this library installed
-import { styles } from "./GoalItem.styles";
 import { Heading, StatText } from "../Text/TextComponents";
 import colors from "@/constants/colors";
 import SquareActionButton from "../Buttons/SquareActionButtons/SquareActionButtons";
 import { router } from "expo-router";
+import { getStyles } from "./GoalItem.styles";
 
 type GoalItemProps = {
+  activeCharacter: string;
   newGoal: boolean;
   emoji?: string;
   title?: string;
@@ -17,6 +18,7 @@ type GoalItemProps = {
 };
 
 export const GoalItem = ({
+  activeCharacter,
   emoji,
   title,
   description,
@@ -24,6 +26,8 @@ export const GoalItem = ({
   onIconPress,
   newGoal,
 }: GoalItemProps) => {
+  const styles = getStyles(activeCharacter);
+
   return (
     <View>
       {!newGoal ? (

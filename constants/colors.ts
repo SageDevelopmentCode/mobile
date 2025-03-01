@@ -29,6 +29,8 @@ const colors = {
   SolaraGreen: "#40CAA0",
   SolaraGreenDropShadow: "#4AA78B",
   GabrielBackground: "#A0B57A",
+  GabrielGoalBackground: "#7EA159",
+  GabrielGoalDropShadow: "#517D5A",
 } as const;
 
 export type Colors = typeof colors; // Extract the type for the colors object
