@@ -64,7 +64,7 @@ export const GoalItem = ({
           style={[
             styles.goalContainer,
             {
-              backgroundColor: "rgba(240, 240, 240, 0.05)",
+              backgroundColor: "rgba(240, 240, 240, 0.15)",
               shadowColor: "none",
               shadowOffset: { width: 0, height: 0 },
               shadowOpacity: 0,

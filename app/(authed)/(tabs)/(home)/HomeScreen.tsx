@@ -128,6 +128,21 @@ export default function HomeScreen() {
       // Show the tab bar when the character menu is closed
       parentNavigation?.setOptions({
         ...tabBarOptions, // Restore default tabBarOptions
+        tabBarStyle: {
+          ...tabBarOptions.tabBarStyle,
+          backgroundColor:
+            activeCharacter === "Deborah"
+              ? "rgba(30, 31, 51, 0.98)"
+              : "#A0B57A",
+        },
+        tabBarActiveTintColor:
+          activeCharacter === "Deborah"
+            ? colors.PrimaryPurpleBackground
+            : colors.PrimaryWhite,
+        tabBarInactiveTintColor:
+          activeCharacter === "Deborah"
+            ? "#6c757d"
+            : colors.GabrielGoalBackground,
       });
     }
 
@@ -454,6 +469,10 @@ export default function HomeScreen() {
                       shadowOpacity: 1,
                       shadowRadius: 0,
                       elevation: 3,
+                    }}
+                    onPress={() => {
+                      setActiveCharacter("Deborah");
+                      setCharacterSwitchMenuVisible(false);
                     }}
                   >
                     <ButtonText color={colors.PrimaryWhite}>Switch</ButtonText>

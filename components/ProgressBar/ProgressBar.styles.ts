@@ -34,8 +34,12 @@ export const getStyles = (activeCharacter: string) => {
       width: 50,
       height: 50,
       borderRadius: 100,
-      backgroundColor: colors.DarkPurpleBackground,
-      borderColor: colors.DarkPrimaryText,
+      backgroundColor: isDeborah
+        ? colors.DarkPurpleBackground
+        : colors.GabrielGoalBackground,
+      borderColor: isDeborah
+        ? colors.DarkPrimaryText
+        : colors.GabrielGoalDropShadow,
       borderWidth: 3,
       justifyContent: "center",
       alignItems: "center",
