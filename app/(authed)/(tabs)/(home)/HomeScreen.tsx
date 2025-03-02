@@ -43,6 +43,7 @@ import { CharacterAbilities } from "@/components/Home/Character/Details/Characte
 import { CharacterRarities } from "@/components/Home/Character/Details/CharacterRarities/CharacterRarities";
 import { CharacterCards } from "@/components/Home/Character/Details/CharacterCards/CharacterCards";
 import { getStyles } from "./HomeScreen.styles";
+import { CharacterCard } from "@/components/Home/Character/Switch/Card/Card";
 
 export default function HomeScreen() {
   const menuCharacterTabs: string[] = [
@@ -409,7 +410,6 @@ export default function HomeScreen() {
           style={[
             styles.menu,
             {
-              backgroundColor: colors.DarkPurpleBackground, // TODO: Dynamic
               transform: [{ translateY: slideAnim }],
             },
           ]}
@@ -423,114 +423,24 @@ export default function HomeScreen() {
           >
             <View style={styles.characterSwitchMenuContentContainer}>
               <HeadingBar headingText="Your Characters" />
-              <View
-                style={[
-                  {
-                    width: "100%",
-                    paddingHorizontal: "5%",
-                    marginVertical: 20,
-                  },
-                ]}
-              >
-                <ImageBackground
-                  source={Background}
-                  style={[styles.characterSwitchCard, { alignSelf: "center" }]}
-                  resizeMode="cover"
-                >
-                  <Image
-                    source={Deborah}
-                    style={styles.characterSwitchCardImage}
-                  />
-                </ImageBackground>
-                <View
-                  style={[
-                    {
-                      flexDirection: "row",
-                      alignItems: "center",
-                      width: "100%",
-                      justifyContent: "space-between",
-                      marginTop: 5,
-                    },
-                  ]}
-                >
-                  <Heading color={colors.PrimaryWhite}>Deborah</Heading>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: colors.SolaraGreen,
-                      paddingHorizontal: 15,
-                      paddingVertical: 6,
-                      borderRadius: 10,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      shadowColor: colors.SolaraGreenDropShadow,
-                      shadowOffset: { width: 0, height: 3 },
-                      shadowOpacity: 1,
-                      shadowRadius: 0,
-                      elevation: 3,
-                    }}
-                    onPress={() => {
-                      setActiveCharacter("Deborah");
-                      setCharacterSwitchMenuVisible(false);
-                    }}
-                  >
-                    <ButtonText color={colors.PrimaryWhite}>Switch</ButtonText>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View
-                style={[
-                  {
-                    width: "100%",
-                    paddingHorizontal: "5%",
-                    marginVertical: 20,
-                  },
-                ]}
-              >
-                <ImageBackground
-                  source={GabrielBackground}
-                  style={[styles.characterSwitchCard, { alignSelf: "center" }]}
-                  resizeMode="cover"
-                >
-                  <Image
-                    source={Gabriel}
-                    style={styles.characterSwitchCardImage}
-                  />
-                </ImageBackground>
-                <View
-                  style={[
-                    {
-                      flexDirection: "row",
-                      alignItems: "center",
-                      width: "100%",
-                      justifyContent: "space-between",
-                      marginTop: 5,
-                    },
-                  ]}
-                >
-                  <Heading color={colors.PrimaryWhite}>Gabriel</Heading>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: colors.SolaraGreen,
-                      paddingHorizontal: 15,
-                      paddingVertical: 6,
-                      borderRadius: 10,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      shadowColor: colors.SolaraGreenDropShadow,
-                      shadowOffset: { width: 0, height: 3 },
-                      shadowOpacity: 1,
-                      shadowRadius: 0,
-                      elevation: 3,
-                    }}
-                    onPress={() => {
-                      setActiveCharacter("Gabriel");
-                      setCharacterSwitchMenuVisible(false);
-                    }}
-                  >
-                    <ButtonText color={colors.PrimaryWhite}>Switch</ButtonText>
-                  </TouchableOpacity>
-                </View>
-              </View>
+              <CharacterCard
+                characterName="Gabriel"
+                characterImage={Gabriel}
+                backgroundImage={GabrielBackground}
+                onSwitch={() => {
+                  setActiveCharacter("Gabriel");
+                  setCharacterSwitchMenuVisible(false);
+                }}
+              />
+              <CharacterCard
+                characterName="Deborah"
+                characterImage={Deborah}
+                backgroundImage={Background}
+                onSwitch={() => {
+                  setActiveCharacter("Deborah");
+                  setCharacterSwitchMenuVisible(false);
+                }}
+              />
             </View>
           </ScrollView>
         </Animated.View>
