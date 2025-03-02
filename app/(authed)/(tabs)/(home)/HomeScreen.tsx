@@ -133,16 +133,14 @@ export default function HomeScreen() {
           backgroundColor:
             activeCharacter === "Deborah"
               ? "rgba(30, 31, 51, 0.98)"
-              : "#A0B57A",
+              : colors.GabrielGoalBackground,
         },
         tabBarActiveTintColor:
           activeCharacter === "Deborah"
             ? colors.PrimaryPurpleBackground
             : colors.PrimaryWhite,
         tabBarInactiveTintColor:
-          activeCharacter === "Deborah"
-            ? "#6c757d"
-            : colors.GabrielGoalBackground,
+          activeCharacter === "Deborah" ? "#6c757d" : "#C1C1C1",
       });
     }
 
