@@ -44,6 +44,7 @@ import { CharacterRarities } from "@/components/Home/Character/Details/Character
 import { CharacterCards } from "@/components/Home/Character/Details/CharacterCards/CharacterCards";
 import { getStyles } from "./HomeScreen.styles";
 import { CharacterCard } from "@/components/Home/Character/Switch/Card/Card";
+import { CharacterTypeDialog } from "@/components/Home/Character/Details/Type/Dialogue/Dialogue";
 
 export default function HomeScreen() {
   const menuCharacterTabs: string[] = [
@@ -366,40 +367,13 @@ export default function HomeScreen() {
               </View>
             </View>
             {typeDialogVisible && (
-              <View
-                style={[
-                  styles.dialogOverlay,
-                  { backgroundColor: colors.DarkPurpleButton },
-                ]}
-              >
-                <View style={styles.dialogBox}>
-                  <Heading
-                    style={{ marginBottom: 5 }}
-                    color={colors.SolaraGreen}
-                  >
-                    Solara
-                  </Heading>
-                  <StatText color={colors.PrimaryWhite}>
-                    Solara represents the essence of kindness, one of the
-                    powerful fruits of the Spirit. Characters of this type are
-                    natural peacemakers, capable of calming tensions and
-                    inspiring cooperation among allies.
-                  </StatText>
-                </View>
-                <View style={styles.dialogImageContainer}>
-                  <TouchableOpacity
-                    style={styles.dialogClose}
-                    onPress={toggleDialog}
-                  >
-                    <Ionicons
-                      name="close"
-                      size={25}
-                      color={colors.PrimaryWhite}
-                    />
-                  </TouchableOpacity>
-                  <Image source={SolaraType} style={styles.dialogImage} />
-                </View>
-              </View>
+              <CharacterTypeDialog
+                title="Solara"
+                description="Solara represents the essence of kindness, one of the powerful fruits of the Spirit. Characters of this type are natural peacemakers, capable of calming tensions and inspiring cooperation among allies."
+                typeImage={SolaraType}
+                onClose={toggleDialog}
+                type="Solara"
+              />
             )}
           </ScrollView>
         </Animated.View>
