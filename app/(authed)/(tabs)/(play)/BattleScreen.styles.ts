@@ -4,9 +4,11 @@ const { height } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: colors.ZoneOneBattleBackground,
     width: "100%",
+    flexGrow: 1,
+    paddingBottom: 100,
   },
   imageBackground: {
     height: height * 0.57, // Convert flex ratio to fixed height
@@ -22,30 +24,16 @@ export const styles = StyleSheet.create({
   character: {
     height: "100%",
   },
-  heroBar: {
-    backgroundColor: "rgba(255, 255, 255, 0.25)",
-    width: "100%",
-    paddingVertical: 10,
-    paddingHorizontal: 20, // Use paddingHorizontal instead of padding to avoid unnecessary vertical padding
-    borderRadius: 10,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center", // Align items vertically in the center
-  },
-  headingContainer: {
-    width: "100%",
-    flexDirection: "row",
+  tabContainer: {
+    paddingHorizontal: 10,
     alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 10,
   },
-  line: {
-    flex: 1,
-    height: 1,
-    backgroundColor: colors.ZoneOneBattleText,
-    borderRadius: 5,
-  },
-  headingText: {
-    marginHorizontal: 10,
+  card: {
+    width: 85,
+    height: 110,
+    borderRadius: 10,
+    backgroundColor: colors.ZoneOneBattleCardBackground,
+    overflow: "hidden",
+    marginRight: 20,
   },
 });

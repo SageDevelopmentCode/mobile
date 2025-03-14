@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, ImageBackground, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  ImageBackground,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 import { styles } from "./BattleScreen.styles";
 import ZoneOneBattleBackground from "./assets/ZoneOneHome.jpg"; // Updated import path
@@ -9,6 +15,7 @@ import { Heading, Title } from "@/components/Text/TextComponents";
 import colors from "@/constants/colors";
 import HeadingBar from "@/components/Heading/HeadingBar";
 import { tabBarOptions } from "@/constants/tabBarOptions";
+import { HeroBar } from "@/components/Battle/Hero/HeroBar/HeroBar";
 
 export default function BattleScreen() {
   const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
@@ -33,28 +40,13 @@ export default function BattleScreen() {
   }, [navigation]);
 
   return (
-    <View style={styles.container}>
+    <ScrollView scrollEnabled={true} contentContainerStyle={styles.container}>
       <ImageBackground
         source={ZoneOneBattleBackground}
         style={styles.imageBackground}
         resizeMode="cover"
       >
-        <View style={[{ width: "100%", paddingHorizontal: 30 }]}>
-          <View style={[styles.headingContainer]}>
-            <View style={styles.line} />
-            <Heading
-              style={styles.headingText}
-              color={colors.ZoneOneBattleText}
-            >
-              Zone 1
-            </Heading>
-            <View style={styles.line} />
-          </View>
-          <View style={styles.heroBar}>
-            <Title color={colors.PrimaryWhite}>Garden of Eden</Title>
-          </View>
-        </View>
-
+        <HeroBar />
         <TouchableOpacity style={styles.characterImage}>
           <Image
             source={activeCharacter === "Deborah" ? Deborah : Gabriel} // TODO: Dynamic
@@ -64,6 +56,13 @@ export default function BattleScreen() {
         </TouchableOpacity>
       </ImageBackground>
       <HeadingBar headingText="Rewards" />
-    </View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.tabContainer}
+      >
+        <View style={styles.card}></View>
+      </ScrollView>
+    </ScrollView>
   );
 }
