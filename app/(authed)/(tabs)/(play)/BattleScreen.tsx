@@ -8,6 +8,7 @@ import Gabriel from "../../../../assets/images/characters/Gabriel.png";
 import { Heading, Title } from "@/components/Text/TextComponents";
 import colors from "@/constants/colors";
 import HeadingBar from "@/components/Heading/HeadingBar";
+import { tabBarOptions } from "@/constants/tabBarOptions";
 
 export default function BattleScreen() {
   const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
@@ -17,6 +18,18 @@ export default function BattleScreen() {
   const router = useRouter();
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
+
+    const parentNavigation = navigation.getParent();
+
+    parentNavigation?.setOptions({
+      ...tabBarOptions, // Restore default tabBarOptions
+      tabBarStyle: {
+        ...tabBarOptions.tabBarStyle,
+        backgroundColor: colors.GabrielGoalBackground,
+      },
+      tabBarActiveTintColor: colors.PrimaryWhite,
+      tabBarInactiveTintColor: "#C1C1C1",
+    });
   }, [navigation]);
 
   return (
@@ -50,6 +63,7 @@ export default function BattleScreen() {
           />
         </TouchableOpacity>
       </ImageBackground>
+      <HeadingBar headingText="Rewards" />
     </View>
   );
 }
