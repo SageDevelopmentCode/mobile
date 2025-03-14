@@ -31,6 +31,8 @@ const colors = {
   GabrielBackground: "#A0B57A",
   GabrielGoalBackground: "#7EA159",
   GabrielGoalDropShadow: "#517D5A",
+  ZoneOneBattleBackground: "#505900",
+  ZoneOneBattleText: "#D4D20E",
 } as const;
 
 export type Colors = typeof colors; // Extract the type for the colors object
