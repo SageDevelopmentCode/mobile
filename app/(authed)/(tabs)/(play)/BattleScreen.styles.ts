@@ -4,7 +4,6 @@ const { height } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     backgroundColor: colors.ZoneOneBattleBackground,
     width: "100%",
     flexGrow: 1,
@@ -19,21 +18,38 @@ export const styles = StyleSheet.create({
     position: "relative",
   },
   characterImage: {
-    height: "75%",
+    height: "65%",
   },
   character: {
     height: "100%",
   },
   tabContainer: {
-    paddingHorizontal: 10,
+    padding: 0,
+    paddingHorizontal: "5%",
+    paddingVertical: 0,
+    height: 140,
     alignItems: "center",
   },
   card: {
-    width: 85,
-    height: 110,
+    width: 100,
     borderRadius: 10,
     backgroundColor: colors.ZoneOneBattleCardBackground,
     overflow: "hidden",
     marginRight: 20,
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingVertical: 15,
+  },
+  chestImage: {
+    height: "45%",
+    marginBottom: 15,
+  },
+  textContainer: {
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    backgroundColor: colors.PrimaryWhite,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
   },
 });

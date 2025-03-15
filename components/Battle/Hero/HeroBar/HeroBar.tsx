@@ -8,7 +8,7 @@ type HeroBarProps = {};
 
 export const HeroBar = ({}: HeroBarProps) => {
   return (
-    <View style={[{ width: "100%", paddingHorizontal: 30 }]}>
+    <View style={[{ width: "100%", paddingHorizontal: "5%" }]}>
       <View style={[styles.headingContainer]}>
         <View style={styles.line} />
         <Heading style={styles.headingText} color={colors.ZoneOneBattleText}>

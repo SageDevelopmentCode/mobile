@@ -11,11 +11,13 @@ import { styles } from "./BattleScreen.styles";
 import ZoneOneBattleBackground from "./assets/ZoneOneHome.jpg"; // Updated import path
 import Deborah from "../../../../assets/images/characters/Deborah.png";
 import Gabriel from "../../../../assets/images/characters/Gabriel.png";
-import { Heading, Title } from "@/components/Text/TextComponents";
+import RareChest from "../../../../assets/images/chests/RareChest.png";
 import colors from "@/constants/colors";
 import HeadingBar from "@/components/Heading/HeadingBar";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { HeroBar } from "@/components/Battle/Hero/HeroBar/HeroBar";
+import { ButtonText, SubHeading } from "@/components/Text/TextComponents";
+import { RewardCard } from "@/components/Battle/RewardCard/RewardCard";
 
 export default function BattleScreen() {
   const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
@@ -61,7 +63,9 @@ export default function BattleScreen() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.tabContainer}
       >
-        <View style={styles.card}></View>
+        <RewardCard rewardSrc={RareChest} quantity={1} />
+        <RewardCard rewardSrc={RareChest} quantity={1} />
+        <RewardCard rewardSrc={RareChest} quantity={1} />
       </ScrollView>
     </ScrollView>
   );
