@@ -16,8 +16,14 @@ import colors from "@/constants/colors";
 import HeadingBar from "@/components/Heading/HeadingBar";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { HeroBar } from "@/components/Battle/Hero/HeroBar/HeroBar";
-import { ButtonText, SubHeading } from "@/components/Text/TextComponents";
+import {
+  ButtonText,
+  Heading,
+  SubHeading,
+} from "@/components/Text/TextComponents";
 import { RewardCard } from "@/components/Battle/RewardCard/RewardCard";
+import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
+import { FontAwesome6 } from "@/utils/icons";
 
 export default function BattleScreen() {
   const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
@@ -67,6 +73,23 @@ export default function BattleScreen() {
         <RewardCard rewardSrc={RareChest} quantity={1} />
         <RewardCard rewardSrc={RareChest} quantity={1} />
       </ScrollView>
+      <View
+        style={[
+          {
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            borderWidth: 2,
+            borderColor: "red",
+          },
+        ]}
+      >
+        <Heading color={colors.PrimaryWhite}>Trial 1 of 5</Heading>
+        <TouchableOpacity style={styles.startBattleButton}>
+          <ButtonText color={colors.PrimaryWhite}>Start Battle</ButtonText>
+          <FontAwesome6 name="check" size={20} color={colors.PrimaryWhite} />
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
