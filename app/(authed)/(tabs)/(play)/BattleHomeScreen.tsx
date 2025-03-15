@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
-import { styles } from "./BattleScreen.styles";
+import { styles } from "./BattleHomeScreen.styles";
 import ZoneOneBattleBackground from "./assets/ZoneOneHome.jpg"; // Updated import path
 import Deborah from "../../../../assets/images/characters/Deborah.png";
 import Gabriel from "../../../../assets/images/characters/Gabriel.png";
@@ -25,7 +25,7 @@ import { RewardCard } from "@/components/Battle/RewardCard/RewardCard";
 import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
 import { FontAwesome6 } from "@/utils/icons";
 
-export default function BattleScreen() {
+export default function BattleHomeScreen() {
   const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
 
   const navigation = useNavigation();
@@ -86,9 +86,22 @@ export default function BattleScreen() {
           ]}
         >
           <Heading color={colors.PrimaryWhite}>Trial 1 of 5</Heading>
-          <TouchableOpacity style={styles.startBattleButton}>
+          <TouchableOpacity
+            style={styles.startBattleButton}
+            onPress={() =>
+              router.push("/(authed)/(tabs)/(play)/battle/BattleScreen")
+            }
+          >
             <Heading color={colors.PrimaryWhite}>Start Battle</Heading>
-            <FontAwesome6 name="check" size={20} color={colors.PrimaryWhite} />
+            <View style={[{ flexDirection: "row" }]}>
+              <Heading color={colors.PrimaryWhite}>2</Heading>
+              <FontAwesome6
+                style={[{ marginLeft: 10 }]}
+                name="bolt"
+                size={20}
+                color={colors.EnergyColor}
+              />
+            </View>
           </TouchableOpacity>
         </View>
       </View>

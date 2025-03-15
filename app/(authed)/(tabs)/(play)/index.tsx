@@ -1,1 +1,1 @@
-export { default } from "./BattleScreen";
+export { default } from "./BattleHomeScreen";
