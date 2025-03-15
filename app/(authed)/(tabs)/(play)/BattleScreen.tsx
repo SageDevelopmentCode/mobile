@@ -63,32 +63,34 @@ export default function BattleScreen() {
           />
         </TouchableOpacity>
       </ImageBackground>
-      <HeadingBar headingText="Rewards" />
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.tabContainer}
-      >
-        <RewardCard rewardSrc={RareChest} quantity={1} />
-        <RewardCard rewardSrc={RareChest} quantity={1} />
-        <RewardCard rewardSrc={RareChest} quantity={1} />
-      </ScrollView>
-      <View
-        style={[
-          {
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-            borderWidth: 2,
-            borderColor: "red",
-          },
-        ]}
-      >
-        <Heading color={colors.PrimaryWhite}>Trial 1 of 5</Heading>
-        <TouchableOpacity style={styles.startBattleButton}>
-          <ButtonText color={colors.PrimaryWhite}>Start Battle</ButtonText>
-          <FontAwesome6 name="check" size={20} color={colors.PrimaryWhite} />
-        </TouchableOpacity>
+      <View>
+        <HeadingBar headingText="Rewards" />
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.tabContainer}
+        >
+          <RewardCard rewardSrc={RareChest} quantity={1} />
+          <RewardCard rewardSrc={RareChest} quantity={1} />
+          <RewardCard rewardSrc={RareChest} quantity={1} />
+        </ScrollView>
+        <View
+          style={[
+            {
+              width: "100%",
+              paddingHorizontal: "5%",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 20,
+            },
+          ]}
+        >
+          <Heading color={colors.PrimaryWhite}>Trial 1 of 5</Heading>
+          <TouchableOpacity style={styles.startBattleButton}>
+            <Heading color={colors.PrimaryWhite}>Start Battle</Heading>
+            <FontAwesome6 name="check" size={20} color={colors.PrimaryWhite} />
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );

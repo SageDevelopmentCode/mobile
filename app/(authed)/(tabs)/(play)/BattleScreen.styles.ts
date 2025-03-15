@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   imageBackground: {
-    height: height * 0.57, // Convert flex ratio to fixed height
+    height: height * 0.52, // Convert flex ratio to fixed height
     width: "100%",
     paddingTop: 50,
     alignItems: "center",
@@ -29,8 +29,22 @@ export const styles = StyleSheet.create({
     paddingVertical: 0,
     height: 140,
     alignItems: "center",
-    borderWidth: 2,
-    borderColor: "red",
     margin: 0,
+  },
+  startBattleButton: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 25,
+    paddingVertical: 15,
+    backgroundColor: colors.ZoneOneBattleButtonBackground,
+    shadowColor: colors.ZoneOneBattleButtonDropShadow,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 4,
+    borderRadius: 10,
+    marginTop: 10,
   },
 });
