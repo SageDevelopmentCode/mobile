@@ -1,11 +1,22 @@
-import React, { useEffect } from "react";
-import { View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  Image,
+  ImageBackground,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 import colors from "@/constants/colors";
 import { tabBarOptions } from "@/constants/tabBarOptions";
-import { Heading } from "@/components/Text/TextComponents";
+import { styles } from "./BattleScreen.styles";
+import ZoneOneBattleBackground from "../assets/ZoneOneBattle.jpg";
+import Deborah from "../../../../../assets/images/characters/Deborah.png";
+import Gabriel from "../../../../../assets/images/characters/Gabriel.png";
 
 export default function BattleScreen() {
+  const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
+
   const navigation = useNavigation();
 
   const router = useRouter();
@@ -26,8 +37,29 @@ export default function BattleScreen() {
   }, [navigation]);
 
   return (
-    <View>
-      <Heading>Battle Screen</Heading>
-    </View>
+    <ScrollView scrollEnabled={true} contentContainerStyle={styles.container}>
+      <ImageBackground
+        source={ZoneOneBattleBackground}
+        style={styles.imageBackground}
+        resizeMode="cover"
+      >
+        <View style={styles.charactersContainer}>
+          <TouchableOpacity style={styles.characterImage}>
+            <Image
+              source={activeCharacter === "Deborah" ? Deborah : Gabriel} // TODO: Dynamic
+              style={styles.character}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.characterImage}>
+            <Image
+              source={Gabriel} // TODO: Dynamic
+              style={styles.character}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
+    </ScrollView>
   );
 }

@@ -31,11 +31,12 @@ const colors = {
   GabrielBackground: "#A0B57A",
   GabrielGoalBackground: "#7EA159",
   GabrielGoalDropShadow: "#517D5A",
-  ZoneOneBattleBackground: "#505900",
+  ZoneOneBattleHomeBackground: "#505900",
   ZoneOneBattleText: "#D4D20E",
   ZoneOneBattleCardBackground: "#3A3F05",
   ZoneOneBattleButtonBackground: "#EE3E7E",
   ZoneOneBattleButtonDropShadow: "#BC3A66",
+  ZoneOneBattleBackground: "#3D4806",
   EnergyColor: "#FFBC42",
 } as const;
 

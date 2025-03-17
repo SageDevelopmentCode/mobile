@@ -4,7 +4,7 @@ const { height } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.ZoneOneBattleBackground,
+    backgroundColor: colors.ZoneOneBattleHomeBackground,
     width: "100%",
     flexGrow: 1,
     paddingBottom: 100,
