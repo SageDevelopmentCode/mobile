@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Image,
   ImageBackground,
   ScrollView,
@@ -13,6 +14,7 @@ import { styles } from "./BattleScreen.styles";
 import ZoneOneBattleBackground from "../assets/ZoneOneBattle.jpg";
 import Deborah from "../../../../../assets/images/characters/Deborah.png";
 import Gabriel from "../../../../../assets/images/characters/Gabriel.png";
+import { ButtonText } from "@/components/Text/TextComponents";
 
 export default function BattleScreen() {
   const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
@@ -44,20 +46,53 @@ export default function BattleScreen() {
         resizeMode="cover"
       >
         <View style={styles.charactersContainer}>
-          <TouchableOpacity style={styles.characterImage}>
-            <Image
-              source={activeCharacter === "Deborah" ? Deborah : Gabriel} // TODO: Dynamic
-              style={styles.character}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.characterImage}>
-            <Image
-              source={Gabriel} // TODO: Dynamic
-              style={styles.character}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
+          <View>
+            <TouchableOpacity style={styles.characterImage}>
+              <Image
+                source={activeCharacter === "Deborah" ? Deborah : Gabriel} // TODO: Dynamic
+                style={styles.character}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+            <View style={styles.characterName}>
+              <ButtonText color={colors.PrimaryWhite}>Deborah</ButtonText>
+            </View>
+          </View>
+
+          <View>
+            <View style={styles.healthBarContainer}>
+              <View style={[{ flexDirection: "row", alignItems: "center" }]}>
+                <Image
+                  source={Solana} // TODO: Dynamic
+                  style={styles.type}
+                  resizeMode="contain"
+                />
+                <ButtonText color={colors.PrimaryWhite}>Lv 12</ButtonText>
+                <ButtonText color={colors.PrimaryWhite}>400/400</ButtonText>
+              </View>
+              <View style={[styles.container, { height, backgroundColor }]}>
+                <View
+                  style={[
+                    styles.progress,
+                    {
+                      width: `${99}%`,
+                      backgroundColor: colors.HealthBarGreen,
+                    },
+                  ]}
+                />
+              </View>
+            </View>
+            <TouchableOpacity style={styles.characterImage}>
+              <Image
+                source={Gabriel} // TODO: Dynamic
+                style={styles.character}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+            <View style={styles.characterName}>
+              <ButtonText color={colors.PrimaryWhite}>Gabriel</ButtonText>
+            </View>
+          </View>
         </View>
       </ImageBackground>
     </ScrollView>

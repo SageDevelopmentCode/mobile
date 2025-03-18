@@ -32,4 +32,14 @@ export const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
   },
+  characterName: {
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
+    paddingVertical: 5,
+    paddingHorizontal: 10, // Use paddingHorizontal instead of padding to avoid unnecessary vertical padding
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center", // Align items vertically in the center
+    marginTop: 10,
+    alignSelf: "center", // This will make the View only as wide as its content
+  },
 });
