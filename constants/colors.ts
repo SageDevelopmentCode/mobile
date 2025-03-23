@@ -39,6 +39,7 @@ const colors = {
   ZoneOneBattleBackground: "#3D4806",
   EnergyColor: "#FFBC42",
   HealthBarGreen: "#48E1B2",
+  BattleTimer: "#F86F5A",
 } as const;
 
 export type Colors = typeof colors; // Extract the type for the colors object

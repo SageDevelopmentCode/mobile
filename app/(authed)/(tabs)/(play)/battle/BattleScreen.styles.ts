@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     position: "absolute",
     bottom: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   characterImage: {
     height: height * 0.2,
@@ -60,5 +60,19 @@ export const styles = StyleSheet.create({
   typeImage: {
     width: 37,
     height: 32,
+  },
+  textRow: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  timerBox: {
+    backgroundColor: colors.PrimaryWhite,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: colors.BattleTimer,
   },
 });

@@ -15,7 +15,13 @@ import ZoneOneBattleBackground from "../assets/ZoneOneBattle.jpg";
 import Deborah from "../../../../../assets/images/characters/Deborah.png";
 import Gabriel from "../../../../../assets/images/characters/Gabriel.png";
 import SolaraType from "../../../../../assets/images/character_types/SolaraType.png";
-import { ButtonText } from "@/components/Text/TextComponents";
+import {
+  ButtonText,
+  Heading,
+  SubHeading,
+  Title,
+} from "@/components/Text/TextComponents";
+import { CharacterAbilities } from "@/components/Home/Character/Details/CharacterAbilities/CharacterAbilities";
 
 export default function BattleScreen() {
   const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
@@ -48,6 +54,44 @@ export default function BattleScreen() {
       >
         <View style={styles.charactersContainer}>
           <View>
+            <View style={styles.healthBarContainer}>
+              <View
+                style={[
+                  {
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  },
+                ]}
+              >
+                <View style={[{ flexDirection: "row", alignItems: "center" }]}>
+                  <Image
+                    source={SolaraType} // TODO: Dynamic
+                    style={styles.typeImage}
+                    resizeMode="contain"
+                  />
+                  <ButtonText color={colors.PrimaryWhite}>Lv 12</ButtonText>
+                </View>
+
+                <ButtonText color={colors.PrimaryWhite}>400/400</ButtonText>
+              </View>
+              <View
+                style={[
+                  styles.progressContainer,
+                  { height: 11, backgroundColor: colors.PrimaryWhite },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.progress,
+                    {
+                      width: `${99}%`,
+                      backgroundColor: colors.HealthBarGreen,
+                    },
+                  ]}
+                />
+              </View>
+            </View>
             <TouchableOpacity style={styles.characterImage}>
               <Image
                 source={activeCharacter === "Deborah" ? Deborah : Gabriel} // TODO: Dynamic
@@ -112,6 +156,22 @@ export default function BattleScreen() {
           </View>
         </View>
       </ImageBackground>
+      <View style={[{ paddingHorizontal: "5%", paddingTop: 10 }]}>
+        <View style={styles.textRow}>
+          <Heading color={colors.PrimaryWhite}>
+            What will{" "}
+            <Heading color={colors.PrimaryPurpleBackground}>Deborah</Heading>{" "}
+            do?
+          </Heading>
+          <View style={styles.timerBox}>
+            <ButtonText color={colors.BattleTimer}>2:24</ButtonText>
+          </View>
+        </View>
+        <CharacterAbilities />
+        <View style={styles.textRow}>
+          <Heading color={colors.PrimaryWhite}>Switch</Heading>
+        </View>
+      </View>
     </ScrollView>
   );
 }
