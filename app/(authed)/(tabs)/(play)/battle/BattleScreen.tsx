@@ -171,6 +171,41 @@ export default function BattleScreen() {
         <View style={styles.textRow}>
           <Heading color={colors.PrimaryWhite}>Switch</Heading>
         </View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingVertical: 20,
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity style={styles.characterSwitch}>
+            <Image
+              source={Gabriel} // TODO: Dynamic
+              style={styles.switchCharacter}
+              resizeMode="contain"
+            />
+            <View>
+              <ButtonText color={colors.PrimaryWhite}>Deborah</ButtonText>
+              <View
+                style={[
+                  styles.progressContainer,
+                  { height: 11, backgroundColor: colors.PrimaryWhite },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.progress,
+                    {
+                      width: `${99}%`,
+                      backgroundColor: colors.HealthBarGreen,
+                    },
+                  ]}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
     </ScrollView>
   );

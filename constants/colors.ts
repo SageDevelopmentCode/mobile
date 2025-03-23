@@ -40,6 +40,8 @@ const colors = {
   EnergyColor: "#FFBC42",
   HealthBarGreen: "#48E1B2",
   BattleTimer: "#F86F5A",
+  BattleCharacterSwitch: "#656565",
+  BattleCharacterSwitchDropShadow: "#404040",
 } as const;
 
 export type Colors = typeof colors; // Extract the type for the colors object
