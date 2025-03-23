@@ -9,6 +9,13 @@ export const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 100,
   },
+  progressContainer: {
+    width: "100%",
+    borderRadius: 20,
+    overflow: "hidden",
+    height: 10,
+    padding: 2,
+  },
   imageBackground: {
     height: height * 0.52, // Convert flex ratio to fixed height
     width: "100%",
@@ -23,6 +30,7 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     position: "absolute",
     bottom: 20,
+    paddingHorizontal: 20,
   },
   characterImage: {
     height: height * 0.2,
@@ -41,5 +49,16 @@ export const styles = StyleSheet.create({
     alignItems: "center", // Align items vertically in the center
     marginTop: 10,
     alignSelf: "center", // This will make the View only as wide as its content
+  },
+  healthBarContainer: {
+    paddingHorizontal: 10,
+  },
+  progress: {
+    height: "100%",
+    borderRadius: 20,
+  },
+  typeImage: {
+    width: 37,
+    height: 32,
   },
 });
