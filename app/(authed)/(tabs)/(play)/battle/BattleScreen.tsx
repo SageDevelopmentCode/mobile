@@ -22,13 +22,13 @@ import {
   Title,
 } from "@/components/Text/TextComponents";
 import { CharacterAbilities } from "@/components/Home/Character/Details/CharacterAbilities/CharacterAbilities";
+import { CharacterSwitchCard } from "@/components/Battle/BattleScreen/CharacterSwitchCard/CharacterSwitchCard";
 
 export default function BattleScreen() {
   const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
 
   const navigation = useNavigation();
 
-  const router = useRouter();
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
 
@@ -175,36 +175,25 @@ export default function BattleScreen() {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
-            paddingVertical: 20,
+            paddingVertical: 10,
             alignItems: "center",
           }}
         >
-          <TouchableOpacity style={styles.characterSwitch}>
-            <Image
-              source={Gabriel} // TODO: Dynamic
-              style={styles.switchCharacter}
-              resizeMode="contain"
-            />
-            <View>
-              <ButtonText color={colors.PrimaryWhite}>Deborah</ButtonText>
-              <View
-                style={[
-                  styles.progressContainer,
-                  { height: 11, backgroundColor: colors.PrimaryWhite },
-                ]}
-              >
-                <View
-                  style={[
-                    styles.progress,
-                    {
-                      width: `${99}%`,
-                      backgroundColor: colors.HealthBarGreen,
-                    },
-                  ]}
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
+          <CharacterSwitchCard
+            characterImage={Gabriel}
+            characterName="Gabriel"
+            health={99}
+          />
+          <CharacterSwitchCard
+            characterImage={Gabriel}
+            characterName="Gabriel"
+            health={99}
+          />
+          <CharacterSwitchCard
+            characterImage={Gabriel}
+            characterName="Gabriel"
+            health={99}
+          />
         </ScrollView>
       </View>
     </ScrollView>

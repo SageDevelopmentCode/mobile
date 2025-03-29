@@ -15,15 +15,15 @@ import RareChest from "../../../../assets/images/chests/RareChest.png";
 import colors from "@/constants/colors";
 import HeadingBar from "@/components/Heading/HeadingBar";
 import { tabBarOptions } from "@/constants/tabBarOptions";
-import { HeroBar } from "@/components/Battle/Hero/HeroBar/HeroBar";
 import {
   ButtonText,
   Heading,
   SubHeading,
 } from "@/components/Text/TextComponents";
-import { RewardCard } from "@/components/Battle/RewardCard/RewardCard";
 import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
 import { FontAwesome6 } from "@/utils/icons";
+import { RewardCard } from "@/components/Battle/BattleHome/RewardCard/RewardCard";
+import { HeroBar } from "@/components/Battle/BattleHome/Hero/HeroBar/HeroBar";
 
 export default function BattleHomeScreen() {
   const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
