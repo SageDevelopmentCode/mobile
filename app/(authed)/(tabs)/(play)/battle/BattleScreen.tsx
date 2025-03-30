@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {
-  Button,
-  Image,
   ImageBackground,
-  Modal,
   ScrollView,
   TouchableOpacity,
   View,
 } from "react-native";
-import { router, useNavigation, useRouter } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import colors from "@/constants/colors";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { styles } from "./BattleScreen.styles";
@@ -16,18 +13,14 @@ import ZoneOneBattleBackground from "../assets/ZoneOneBattle.jpg";
 import Deborah from "../../../../../assets/images/characters/Deborah.png";
 import Gabriel from "../../../../../assets/images/characters/Gabriel.png";
 import SolaraType from "../../../../../assets/images/character_types/SolaraType.png";
-import {
-  ButtonText,
-  Heading,
-  SubHeading,
-} from "@/components/Text/TextComponents";
+import { ButtonText, Heading } from "@/components/Text/TextComponents";
 import { CharacterAbilities } from "@/components/Home/Character/Details/CharacterAbilities/CharacterAbilities";
 import { CharacterSwitchCard } from "@/components/Battle/BattleScreen/CharacterSwitchCard/CharacterSwitchCard";
 import { MaterialIcons } from "@/utils/icons";
 import { QuitModal } from "@/components/Battle/BattleScreen/QuitModal/QuitModal";
+import { Character } from "@/components/Battle/BattleScreen/Character/Character";
 
 export default function BattleScreen() {
-  const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
   const [quitModalVisible, setQuitModalVisible] = useState<boolean>(false);
 
   const navigation = useNavigation();
@@ -84,111 +77,25 @@ export default function BattleScreen() {
             <ButtonText color={colors.PrimaryWhite}>Quit</ButtonText>
           </TouchableOpacity>
           <View style={styles.charactersContainer}>
-            <View>
-              <View style={styles.healthBarContainer}>
-                <View
-                  style={[
-                    {
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    },
-                  ]}
-                >
-                  <View
-                    style={[{ flexDirection: "row", alignItems: "center" }]}
-                  >
-                    <Image
-                      source={SolaraType} // TODO: Dynamic
-                      style={styles.typeImage}
-                      resizeMode="contain"
-                    />
-                    <ButtonText color={colors.PrimaryWhite}>Lv 12</ButtonText>
-                  </View>
+            <Character
+              characterName="Deborah"
+              level={12}
+              health={99}
+              typeImage={SolaraType}
+              characterImage={Deborah}
+              onPress={() => {}}
+              maxHealth={100}
+            />
 
-                  <ButtonText color={colors.PrimaryWhite}>400/400</ButtonText>
-                </View>
-                <View
-                  style={[
-                    styles.progressContainer,
-                    { height: 11, backgroundColor: colors.PrimaryWhite },
-                  ]}
-                >
-                  <View
-                    style={[
-                      styles.progress,
-                      {
-                        width: `${99}%`,
-                        backgroundColor: colors.HealthBarGreen,
-                      },
-                    ]}
-                  />
-                </View>
-              </View>
-              <TouchableOpacity style={styles.characterImage}>
-                <Image
-                  source={activeCharacter === "Deborah" ? Deborah : Gabriel} // TODO: Dynamic
-                  style={styles.character}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-              <View style={styles.characterName}>
-                <ButtonText color={colors.PrimaryWhite}>Deborah</ButtonText>
-              </View>
-            </View>
-
-            <View>
-              <View style={styles.healthBarContainer}>
-                <View
-                  style={[
-                    {
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    },
-                  ]}
-                >
-                  <View
-                    style={[{ flexDirection: "row", alignItems: "center" }]}
-                  >
-                    <Image
-                      source={SolaraType} // TODO: Dynamic
-                      style={styles.typeImage}
-                      resizeMode="contain"
-                    />
-                    <ButtonText color={colors.PrimaryWhite}>Lv 12</ButtonText>
-                  </View>
-
-                  <ButtonText color={colors.PrimaryWhite}>400/400</ButtonText>
-                </View>
-                <View
-                  style={[
-                    styles.progressContainer,
-                    { height: 11, backgroundColor: colors.PrimaryWhite },
-                  ]}
-                >
-                  <View
-                    style={[
-                      styles.progress,
-                      {
-                        width: `${99}%`,
-                        backgroundColor: colors.HealthBarGreen,
-                      },
-                    ]}
-                  />
-                </View>
-              </View>
-              <TouchableOpacity style={styles.characterImage}>
-                <Image
-                  source={Gabriel} // TODO: Dynamic
-                  style={styles.character}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-              <View style={styles.characterName}>
-                <ButtonText color={colors.PrimaryWhite}>Gabriel</ButtonText>
-              </View>
-            </View>
+            <Character
+              characterName="Gabriel"
+              level={12}
+              health={105}
+              typeImage={SolaraType}
+              characterImage={Gabriel}
+              onPress={() => {}}
+              maxHealth={400}
+            />
           </View>
         </ImageBackground>
         <View style={[{ paddingHorizontal: "5%", paddingTop: 10 }]}>
