@@ -19,8 +19,6 @@ import Deborah from "./assets/Deborah.png";
 import SolaraType from "../../../../assets/images/character_types/SolaraType.png";
 import UncommonChest from "../../../../assets/images/chests/UncommonChest.png";
 import ProgressBar from "@/components/ProgressBar/ProgressBar";
-
-// import { styles } from "./HomeScreen.styles";
 import HeadingBar from "@/components/Heading/HeadingBar";
 import { GoalItem } from "@/components/Goal/GoalItem";
 import { StatsHeader } from "@/components/Home/StatsHeader/StatsHeader";
@@ -28,16 +26,8 @@ import { formatNumber } from "@/utils/format/formatNumber";
 import { HeroBar } from "@/components/Home/Hero/HeroBar/HeroBar";
 import { Chest } from "@/components/Home/Content/Chest/Chest";
 import toggleMenu from "@/utils/animations/toggleMenu";
-import {
-  ButtonText,
-  Heading,
-  Paragraph,
-  StatText,
-  SubHeading,
-  Title,
-} from "@/components/Text/TextComponents";
+import { Paragraph, Title } from "@/components/Text/TextComponents";
 import { tabBarOptions } from "@/constants/tabBarOptions";
-import { Ionicons } from "@expo/vector-icons";
 import { CharacterStats } from "@/components/Home/Character/Details/CharacterStats/CharacterStats";
 import { CharacterAbilities } from "@/components/Home/Character/Details/CharacterAbilities/CharacterAbilities";
 import { CharacterRarities } from "@/components/Home/Character/Details/CharacterRarities/CharacterRarities";

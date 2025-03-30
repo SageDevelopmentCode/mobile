@@ -37,6 +37,7 @@ const colors = {
   ZoneOneBattleButtonBackground: "#EE3E7E",
   ZoneOneBattleButtonDropShadow: "#BC3A66",
   ZoneOneBattleBackground: "#3D4806",
+  ZoneOneBattleQuestionMenuBackground: "#1E1301",
   EnergyColor: "#FFBC42",
   HealthBarGreen: "#48E1B2",
   BattleTimer: "#F86F5A",

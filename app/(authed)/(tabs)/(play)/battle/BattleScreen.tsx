@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+  Animated,
   ImageBackground,
   ScrollView,
+  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -19,9 +21,17 @@ import { CharacterSwitchCard } from "@/components/Battle/BattleScreen/CharacterS
 import { MaterialIcons } from "@/utils/icons";
 import { QuitModal } from "@/components/Battle/BattleScreen/QuitModal/QuitModal";
 import { Character } from "@/components/Battle/BattleScreen/Character/Character";
+import { CharacterAbility } from "@/components/Home/Character/Details/CharacterAbilities/Ability/CharacterAbility";
+import JudgeWisdom from "../../../../../components/Home/Character/Details/CharacterAbilities/Ability/assets/JudgeWisdom.png";
+import JudgeWisdomBg from "../../../../../components/Home/Character/Details/CharacterAbilities/Ability/assets/JudgeWisdomBg.jpg";
+import toggleMenu from "@/utils/animations/toggleMenu";
+import Overlay from "@/components/Overlay/Overlay";
 
 export default function BattleScreen() {
   const [quitModalVisible, setQuitModalVisible] = useState<boolean>(false);
+  const [questionMenuVisible, setQuestionMenuVisible] =
+    useState<boolean>(false);
+  const slideAnim = useRef(new Animated.Value(800)).current;
 
   const navigation = useNavigation();
 
@@ -53,6 +63,9 @@ export default function BattleScreen() {
   const cancelQuit = () => {
     setQuitModalVisible(false);
   };
+
+  const toggleQuestionMenu = () =>
+    toggleMenu(questionMenuVisible, setQuestionMenuVisible, slideAnim);
 
   return (
     <>
@@ -109,7 +122,45 @@ export default function BattleScreen() {
               <ButtonText color={colors.BattleTimer}>2:24</ButtonText>
             </View>
           </View>
-          <CharacterAbilities />
+          {/* <CharacterAbilities /> */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingVertical: 20,
+              alignItems: "center",
+            }}
+          >
+            <CharacterAbility
+              icon={JudgeWisdom}
+              name="Judge's Wisdom"
+              defense={15}
+              accuracy={15}
+              cardBackground={JudgeWisdomBg}
+              onPress={toggleQuestionMenu}
+            />
+            <CharacterAbility
+              icon={JudgeWisdom}
+              name="Judge's Wisdom"
+              defense={15}
+              accuracy={15}
+              cardBackground={JudgeWisdomBg}
+            />
+            <CharacterAbility
+              icon={JudgeWisdom}
+              name="Judge's Wisdom"
+              defense={15}
+              accuracy={15}
+              cardBackground={JudgeWisdomBg}
+            />
+            <CharacterAbility
+              icon={JudgeWisdom}
+              name="Judge's Wisdom"
+              defense={15}
+              accuracy={15}
+              cardBackground={JudgeWisdomBg}
+            />
+          </ScrollView>
           <View style={styles.textRow}>
             <Heading color={colors.PrimaryWhite}>Switch</Heading>
           </View>
@@ -139,6 +190,27 @@ export default function BattleScreen() {
           </ScrollView>
         </View>
       </ScrollView>
+
+      {questionMenuVisible && (
+        <Animated.View
+          style={[
+            styles.menu,
+            {
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
+          <ScrollView
+            scrollEnabled={true}
+            horizontal={false} // Prevent horizontal scrolling
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.menuScrollViewContainer}
+            style={{ width: "100%" }}
+          ></ScrollView>
+        </Animated.View>
+      )}
+
+      {questionMenuVisible && <Overlay onPress={toggleQuestionMenu} />}
     </>
   );
 }

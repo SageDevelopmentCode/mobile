@@ -58,4 +58,19 @@ export const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  menuScrollViewContainer: {
+    flexGrow: 1,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+  },
+  menu: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: "85%",
+    backgroundColor: colors.ZoneOneBattleQuestionMenuBackground,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    zIndex: 25,
+  },
 });

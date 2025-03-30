@@ -1,4 +1,11 @@
-import { Text, View, StyleSheet, Image, ImageBackground } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  ImageBackground,
+  TouchableOpacity,
+} from "react-native";
 import { styles } from "./CharacterAbility.styles";
 import colors from "@/constants/colors";
 
@@ -8,6 +15,7 @@ interface CharacterAbilityProps {
   defense: number;
   accuracy: number;
   cardBackground: any;
+  onPress?: () => void;
 }
 
 export const CharacterAbility = ({
@@ -16,38 +24,41 @@ export const CharacterAbility = ({
   cardBackground,
   defense = 15,
   accuracy = 15,
+  onPress,
 }: CharacterAbilityProps) => {
   return (
-    <ImageBackground
-      source={cardBackground}
-      style={styles.card}
-      resizeMode="cover"
-    >
-      {/* Black overlay */}
-      <View style={styles.overlay} />
+    <TouchableOpacity onPress={onPress}>
+      <ImageBackground
+        source={cardBackground}
+        style={styles.card}
+        resizeMode="cover"
+      >
+        {/* Black overlay */}
+        <View style={styles.overlay} />
 
-      {/* Content */}
-      <View style={styles.content}>
-        <Image source={icon} style={styles.icon} resizeMode="contain" />
-        <Text style={styles.title}>{name}</Text>
-        <View style={styles.statsContainer}>
-          <View style={styles.statItem}>
-            <Text style={styles.statValue}>+{defense}</Text>
-            <Text style={styles.statLabel}>Def</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text
-              style={[
-                styles.statValue,
-                { color: colors.PrimaryPurpleBackground },
-              ]}
-            >
-              +{accuracy}
-            </Text>
-            <Text style={styles.statLabel}>Acc</Text>
+        {/* Content */}
+        <View style={styles.content}>
+          <Image source={icon} style={styles.icon} resizeMode="contain" />
+          <Text style={styles.title}>{name}</Text>
+          <View style={styles.statsContainer}>
+            <View style={styles.statItem}>
+              <Text style={styles.statValue}>+{defense}</Text>
+              <Text style={styles.statLabel}>Def</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Text
+                style={[
+                  styles.statValue,
+                  { color: colors.PrimaryPurpleBackground },
+                ]}
+              >
+                +{accuracy}
+              </Text>
+              <Text style={styles.statLabel}>Acc</Text>
+            </View>
           </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+    </TouchableOpacity>
   );
 };
