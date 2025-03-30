@@ -19,7 +19,7 @@ export default function FriendsScreen() {
         alignItems: "center",
       }}
     >
-      <Text>Hello Friends</Text>
+      <Text>Coming Soon in Phase 2</Text>
     </View>
   );
 }

@@ -24,6 +24,7 @@ import {
 import { CharacterAbilities } from "@/components/Home/Character/Details/CharacterAbilities/CharacterAbilities";
 import { CharacterSwitchCard } from "@/components/Battle/BattleScreen/CharacterSwitchCard/CharacterSwitchCard";
 import { MaterialIcons } from "@/utils/icons";
+import { QuitModal } from "@/components/Battle/BattleScreen/QuitModal/QuitModal";
 
 export default function BattleScreen() {
   const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
@@ -62,37 +63,11 @@ export default function BattleScreen() {
 
   return (
     <>
-      <Modal
-        transparent={true}
+      <QuitModal
         visible={quitModalVisible}
-        onRequestClose={cancelQuit}
-      >
-        <TouchableOpacity style={styles.modalOverlay} onPress={cancelQuit}>
-          <View style={styles.modalContent}>
-            <Heading color={colors.PrimaryWhite}>Quit Battle?</Heading>
-            <SubHeading
-              color={colors.PrimaryWhite}
-              style={{ marginTop: 10, marginBottom: 20 }}
-            >
-              Are you sure you want to quit? All progress will be lost.
-            </SubHeading>
-            <View style={styles.modalButtonsContainer}>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.cancelButton]}
-                onPress={cancelQuit}
-              >
-                <ButtonText color={colors.PrimaryWhite}>Cancel</ButtonText>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.confirmButton]}
-                onPress={confirmQuit}
-              >
-                <ButtonText color={colors.PrimaryWhite}>Quit</ButtonText>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </Modal>
+        onClose={cancelQuit}
+        onConfirm={confirmQuit}
+      />
       <ScrollView scrollEnabled={true} contentContainerStyle={styles.container}>
         <ImageBackground
           source={ZoneOneBattleBackground}
