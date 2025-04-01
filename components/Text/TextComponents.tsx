@@ -14,7 +14,7 @@ import {
 import { useFonts } from "expo-font";
 
 interface BaseTextProps extends TextProps {
-  style?: TextStyle; // Allow additional styling if needed
+  style?: any;
   children: React.ReactNode;
   color?: string; // New color prop
 }

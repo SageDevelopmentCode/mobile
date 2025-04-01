@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
+  Image,
   ImageBackground,
   ScrollView,
   Text,
@@ -12,6 +13,7 @@ import colors from "@/constants/colors";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { styles } from "./BattleScreen.styles";
 import ZoneOneBattleBackground from "../assets/ZoneOneBattle.jpg";
+import OldTestament from "../assets/OldTestament.jpg";
 import Deborah from "../../../../../assets/images/characters/Deborah.png";
 import Gabriel from "../../../../../assets/images/characters/Gabriel.png";
 import SolaraType from "../../../../../assets/images/character_types/SolaraType.png";
@@ -206,7 +208,42 @@ export default function BattleScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.menuScrollViewContainer}
             style={{ width: "100%" }}
-          ></ScrollView>
+          >
+            <View style={styles.textRow}>
+              <Heading color={colors.PrimaryWhite}>Select a Category</Heading>
+              <View style={styles.timerBox}>
+                <ButtonText color={colors.BattleTimer}>2:24</ButtonText>
+              </View>
+            </View>
+            <View style={[{ marginTop: 20 }]}>
+              <View style={styles.textRow}>
+                <TouchableOpacity>
+                  <View style={[{ alignItems: "center", width: 150 }]}>
+                    <View style={styles.categoryImageContainer}>
+                      <Image source={OldTestament} style={[styles.image]} />
+                    </View>
+                    <ButtonText color={colors.PrimaryWhite}>
+                      Old Testament Stories
+                    </ButtonText>
+                  </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity>
+                  <View style={[{ alignItems: "center", width: 150 }]}>
+                    <View style={styles.categoryImageContainer}>
+                      <Image source={OldTestament} style={[styles.image]} />
+                    </View>
+                    <ButtonText
+                      style={[{ textAlign: "center" }]}
+                      color={colors.PrimaryWhite}
+                    >
+                      Old Testament Stories is the best
+                    </ButtonText>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
         </Animated.View>
       )}
 

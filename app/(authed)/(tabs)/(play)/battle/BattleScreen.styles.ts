@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
   },
   timerBox: {
     backgroundColor: colors.PrimaryWhite,
@@ -62,15 +62,32 @@ export const styles = StyleSheet.create({
     flexGrow: 1,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
+    padding: 25,
   },
   menu: {
     position: "absolute",
     bottom: 0,
     width: "100%",
-    height: "85%",
+    height: "55%",
     backgroundColor: colors.ZoneOneBattleQuestionMenuBackground,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     zIndex: 25,
+  },
+  categoryImageContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    width: 150,
+    height: 150,
+    borderRadius: 20,
+    backgroundColor: colors.PrimaryWhite,
+    marginBottom: 10,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover", // Adjust based on your needs
+    borderRadius: 10, // Optional for rounded corners
   },
 });
