@@ -28,10 +28,11 @@ import JudgeWisdom from "../../../../../components/Home/Character/Details/Charac
 import JudgeWisdomBg from "../../../../../components/Home/Character/Details/CharacterAbilities/Ability/assets/JudgeWisdomBg.jpg";
 import toggleMenu from "@/utils/animations/toggleMenu";
 import Overlay from "@/components/Overlay/Overlay";
-import { CategoryCard } from "@/components/Battle/BattleScreen/Questions/CategoryCard/CategoryCard";
+import { CategoryCard } from "@/components/Battle/BattleScreen/Questions/Categories/CategoryCard/CategoryCard";
 
 export default function BattleScreen() {
   const [quitModalVisible, setQuitModalVisible] = useState<boolean>(false);
+  const [questionStep, setQuestionStep] = useState<number>(1);
   const [questionMenuVisible, setQuestionMenuVisible] =
     useState<boolean>(false);
   const slideAnim = useRef(new Animated.Value(800)).current;
@@ -221,36 +222,48 @@ export default function BattleScreen() {
                 <CategoryCard
                   imageSrc={OldTestament}
                   title="Old Testament Stories"
-                  onPress={() => {}}
+                  onPress={() => {
+                    setQuestionStep(2);
+                  }}
                 />
                 <CategoryCard
                   imageSrc={OldTestament}
                   title="Old Testament Stories"
-                  onPress={() => {}}
-                />
-              </View>
-              <View style={styles.categoryRow}>
-                <CategoryCard
-                  imageSrc={OldTestament}
-                  title="Old Testament Stories"
-                  onPress={() => {}}
-                />
-                <CategoryCard
-                  imageSrc={OldTestament}
-                  title="Old Testament Stories"
-                  onPress={() => {}}
+                  onPress={() => {
+                    setQuestionStep(2);
+                  }}
                 />
               </View>
               <View style={styles.categoryRow}>
                 <CategoryCard
                   imageSrc={OldTestament}
                   title="Old Testament Stories"
-                  onPress={() => {}}
+                  onPress={() => {
+                    setQuestionStep(2);
+                  }}
                 />
                 <CategoryCard
                   imageSrc={OldTestament}
                   title="Old Testament Stories"
-                  onPress={() => {}}
+                  onPress={() => {
+                    setQuestionStep(2);
+                  }}
+                />
+              </View>
+              <View style={styles.categoryRow}>
+                <CategoryCard
+                  imageSrc={OldTestament}
+                  title="Old Testament Stories"
+                  onPress={() => {
+                    setQuestionStep(2);
+                  }}
+                />
+                <CategoryCard
+                  imageSrc={OldTestament}
+                  title="Old Testament Stories"
+                  onPress={() => {
+                    setQuestionStep(2);
+                  }}
                 />
               </View>
             </View>
