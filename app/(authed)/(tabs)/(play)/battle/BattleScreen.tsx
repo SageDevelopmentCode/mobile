@@ -28,6 +28,7 @@ import JudgeWisdom from "../../../../../components/Home/Character/Details/Charac
 import JudgeWisdomBg from "../../../../../components/Home/Character/Details/CharacterAbilities/Ability/assets/JudgeWisdomBg.jpg";
 import toggleMenu from "@/utils/animations/toggleMenu";
 import Overlay from "@/components/Overlay/Overlay";
+import { CategoryCard } from "@/components/Battle/BattleScreen/Questions/CategoryCard/CategoryCard";
 
 export default function BattleScreen() {
   const [quitModalVisible, setQuitModalVisible] = useState<boolean>(false);
@@ -202,6 +203,12 @@ export default function BattleScreen() {
             },
           ]}
         >
+          <View style={styles.textRow}>
+            <Heading color={colors.PrimaryWhite}>Select a Category</Heading>
+            <View style={styles.timerBox}>
+              <ButtonText color={colors.BattleTimer}>2:24</ButtonText>
+            </View>
+          </View>
           <ScrollView
             scrollEnabled={true}
             horizontal={false} // Prevent horizontal scrolling
@@ -209,38 +216,42 @@ export default function BattleScreen() {
             contentContainerStyle={styles.menuScrollViewContainer}
             style={{ width: "100%" }}
           >
-            <View style={styles.textRow}>
-              <Heading color={colors.PrimaryWhite}>Select a Category</Heading>
-              <View style={styles.timerBox}>
-                <ButtonText color={colors.BattleTimer}>2:24</ButtonText>
-              </View>
-            </View>
             <View style={[{ marginTop: 20 }]}>
-              <View style={styles.textRow}>
-                <TouchableOpacity>
-                  <View style={[{ alignItems: "center", width: 150 }]}>
-                    <View style={styles.categoryImageContainer}>
-                      <Image source={OldTestament} style={[styles.image]} />
-                    </View>
-                    <ButtonText color={colors.PrimaryWhite}>
-                      Old Testament Stories
-                    </ButtonText>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity>
-                  <View style={[{ alignItems: "center", width: 150 }]}>
-                    <View style={styles.categoryImageContainer}>
-                      <Image source={OldTestament} style={[styles.image]} />
-                    </View>
-                    <ButtonText
-                      style={[{ textAlign: "center" }]}
-                      color={colors.PrimaryWhite}
-                    >
-                      Old Testament Stories is the best
-                    </ButtonText>
-                  </View>
-                </TouchableOpacity>
+              <View style={styles.categoryRow}>
+                <CategoryCard
+                  imageSrc={OldTestament}
+                  title="Old Testament Stories"
+                  onPress={() => {}}
+                />
+                <CategoryCard
+                  imageSrc={OldTestament}
+                  title="Old Testament Stories"
+                  onPress={() => {}}
+                />
+              </View>
+              <View style={styles.categoryRow}>
+                <CategoryCard
+                  imageSrc={OldTestament}
+                  title="Old Testament Stories"
+                  onPress={() => {}}
+                />
+                <CategoryCard
+                  imageSrc={OldTestament}
+                  title="Old Testament Stories"
+                  onPress={() => {}}
+                />
+              </View>
+              <View style={styles.categoryRow}>
+                <CategoryCard
+                  imageSrc={OldTestament}
+                  title="Old Testament Stories"
+                  onPress={() => {}}
+                />
+                <CategoryCard
+                  imageSrc={OldTestament}
+                  title="Old Testament Stories"
+                  onPress={() => {}}
+                />
               </View>
             </View>
           </ScrollView>

@@ -31,6 +31,13 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
   },
+  categoryRow: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 25,
+  },
   timerBox: {
     backgroundColor: colors.PrimaryWhite,
     paddingVertical: 5,
@@ -62,7 +69,6 @@ export const styles = StyleSheet.create({
     flexGrow: 1,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
-    padding: 25,
   },
   menu: {
     position: "absolute",
@@ -73,6 +79,8 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     zIndex: 25,
+    paddingTop: 25,
+    paddingHorizontal: 25,
   },
   categoryImageContainer: {
     alignItems: "center",
