@@ -1,10 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
-  Image,
   ImageBackground,
   ScrollView,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -18,7 +16,6 @@ import Deborah from "../../../../../assets/images/characters/Deborah.png";
 import Gabriel from "../../../../../assets/images/characters/Gabriel.png";
 import SolaraType from "../../../../../assets/images/character_types/SolaraType.png";
 import { ButtonText, Heading } from "@/components/Text/TextComponents";
-import { CharacterAbilities } from "@/components/Home/Character/Details/CharacterAbilities/CharacterAbilities";
 import { CharacterSwitchCard } from "@/components/Battle/BattleScreen/CharacterSwitchCard/CharacterSwitchCard";
 import { MaterialIcons } from "@/utils/icons";
 import { QuitModal } from "@/components/Battle/BattleScreen/QuitModal/QuitModal";
@@ -29,7 +26,7 @@ import JudgeWisdomBg from "../../../../../components/Home/Character/Details/Char
 import toggleMenu from "@/utils/animations/toggleMenu";
 import Overlay from "@/components/Overlay/Overlay";
 import { CategoryCard } from "@/components/Battle/BattleScreen/Questions/Categories/CategoryCard/CategoryCard";
-import { DifficultyButton } from "@/components/Battle/BattleScreen/Questions/DifficultyButton/DifficultyButton";
+import { ActionButton } from "@/components/Battle/BattleScreen/Questions/ActionButton/ActionButton";
 
 export default function BattleScreen() {
   const [quitModalVisible, setQuitModalVisible] = useState<boolean>(false);
@@ -290,29 +287,37 @@ export default function BattleScreen() {
                 style={{ width: "100%" }}
               >
                 <View style={[{ marginTop: 20 }]}>
-                  <DifficultyButton
+                  <ActionButton
                     backgroundColor="#505207"
                     buttonDropShadow="#424307"
                     title="Easy"
-                    onPress={() => {}}
+                    onPress={() => {
+                      setQuestionStep(3);
+                    }}
                   />
-                  <DifficultyButton
+                  <ActionButton
                     backgroundColor="#FE9B96"
                     buttonDropShadow="#C5736F"
                     title="Medium"
-                    onPress={() => {}}
+                    onPress={() => {
+                      setQuestionStep(3);
+                    }}
                   />
-                  <DifficultyButton
+                  <ActionButton
                     backgroundColor="#EE3E7E"
                     buttonDropShadow="#BC3A66"
                     title="Hard"
-                    onPress={() => {}}
+                    onPress={() => {
+                      setQuestionStep(3);
+                    }}
                   />
-                  <DifficultyButton
+                  <ActionButton
                     backgroundColor="#FF9D22"
                     buttonDropShadow="#D76819"
                     title="Expert"
-                    onPress={() => {}}
+                    onPress={() => {
+                      setQuestionStep(3);
+                    }}
                   />
                 </View>
               </ScrollView>
@@ -334,30 +339,47 @@ export default function BattleScreen() {
                 contentContainerStyle={styles.menuScrollViewContainer}
                 style={{ width: "100%" }}
               >
+                <View style={styles.questionContainer}>
+                  <Heading
+                    style={[{ textAlign: "center" }]}
+                    color={colors.PrimaryWhite}
+                  >
+                    Which woman was healed by touching the hem of Jesus's
+                    garment?
+                  </Heading>
+                </View>
                 <View style={[{ marginTop: 20 }]}>
-                  <DifficultyButton
-                    backgroundColor="#505207"
-                    buttonDropShadow="#424307"
-                    title="Easy"
-                    onPress={() => {}}
+                  <ActionButton
+                    backgroundColor="#565656"
+                    buttonDropShadow="#343434"
+                    title="Mary Magdalene"
+                    onPress={() => {
+                      setQuestionMenuVisible(false);
+                    }}
                   />
-                  <DifficultyButton
-                    backgroundColor="#FE9B96"
-                    buttonDropShadow="#C5736F"
-                    title="Medium"
-                    onPress={() => {}}
+                  <ActionButton
+                    backgroundColor="#565656"
+                    buttonDropShadow="#343434"
+                    title="The woman with the issue of blood"
+                    onPress={() => {
+                      setQuestionMenuVisible(false);
+                    }}
                   />
-                  <DifficultyButton
-                    backgroundColor="#EE3E7E"
-                    buttonDropShadow="#BC3A66"
-                    title="Hard"
-                    onPress={() => {}}
+                  <ActionButton
+                    backgroundColor="#565656"
+                    buttonDropShadow="#343434"
+                    title="Martha of Bethany"
+                    onPress={() => {
+                      setQuestionMenuVisible(false);
+                    }}
                   />
-                  <DifficultyButton
-                    backgroundColor="#FF9D22"
-                    buttonDropShadow="#D76819"
-                    title="Expert"
-                    onPress={() => {}}
+                  <ActionButton
+                    backgroundColor="#565656"
+                    buttonDropShadow="#343434"
+                    title="The Samaritan woman at the well"
+                    onPress={() => {
+                      setQuestionMenuVisible(false);
+                    }}
                   />
                 </View>
               </ScrollView>

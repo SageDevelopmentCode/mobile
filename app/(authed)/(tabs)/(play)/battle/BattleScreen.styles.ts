@@ -100,4 +100,13 @@ export const styles = StyleSheet.create({
     resizeMode: "cover", // Adjust based on your needs
     borderRadius: 10, // Optional for rounded corners
   },
+  questionContainer: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+    borderRadius: 20,
+    padding: 30,
+    backgroundColor: colors.ZoneOneBattleButtonBackground,
+  },
 });

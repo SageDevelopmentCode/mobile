@@ -1,25 +1,21 @@
-import {
-  ButtonText,
-  Heading,
-  SubHeading,
-} from "@/components/Text/TextComponents";
+import { Heading } from "@/components/Text/TextComponents";
 import colors from "@/constants/colors";
-import { Modal, TouchableOpacity, View } from "react-native";
-import { styles } from "./DifficultyButton.styles";
+import { TouchableOpacity, View } from "react-native";
+import { styles } from "./ActionButton.styles";
 
-type DifficultyButtonProps = {
+type ActionButtonProps = {
   backgroundColor: string;
   buttonDropShadow: string;
   title: string;
   onPress: () => void;
 };
 
-export const DifficultyButton = ({
+export const ActionButton = ({
   backgroundColor,
   title,
   onPress,
   buttonDropShadow,
-}: DifficultyButtonProps) => {
+}: ActionButtonProps) => {
   return (
     <TouchableOpacity
       style={[
