@@ -29,6 +29,7 @@ import JudgeWisdomBg from "../../../../../components/Home/Character/Details/Char
 import toggleMenu from "@/utils/animations/toggleMenu";
 import Overlay from "@/components/Overlay/Overlay";
 import { CategoryCard } from "@/components/Battle/BattleScreen/Questions/Categories/CategoryCard/CategoryCard";
+import { DifficultyButton } from "@/components/Battle/BattleScreen/Questions/DifficultyButton/DifficultyButton";
 
 export default function BattleScreen() {
   const [quitModalVisible, setQuitModalVisible] = useState<boolean>(false);
@@ -204,70 +205,164 @@ export default function BattleScreen() {
             },
           ]}
         >
-          <View style={styles.textRow}>
-            <Heading color={colors.PrimaryWhite}>Select a Category</Heading>
-            <View style={styles.timerBox}>
-              <ButtonText color={colors.BattleTimer}>2:24</ButtonText>
-            </View>
-          </View>
-          <ScrollView
-            scrollEnabled={true}
-            horizontal={false} // Prevent horizontal scrolling
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.menuScrollViewContainer}
-            style={{ width: "100%" }}
-          >
-            <View style={[{ marginTop: 20 }]}>
-              <View style={styles.categoryRow}>
-                <CategoryCard
-                  imageSrc={OldTestament}
-                  title="Old Testament Stories"
-                  onPress={() => {
-                    setQuestionStep(2);
-                  }}
-                />
-                <CategoryCard
-                  imageSrc={OldTestament}
-                  title="Old Testament Stories"
-                  onPress={() => {
-                    setQuestionStep(2);
-                  }}
-                />
+          {questionStep === 1 ? (
+            <>
+              <View style={styles.textRow}>
+                <Heading color={colors.PrimaryWhite}>Select a Category</Heading>
+                <View style={styles.timerBox}>
+                  <ButtonText color={colors.BattleTimer}>2:24</ButtonText>
+                </View>
               </View>
-              <View style={styles.categoryRow}>
-                <CategoryCard
-                  imageSrc={OldTestament}
-                  title="Old Testament Stories"
-                  onPress={() => {
-                    setQuestionStep(2);
-                  }}
-                />
-                <CategoryCard
-                  imageSrc={OldTestament}
-                  title="Old Testament Stories"
-                  onPress={() => {
-                    setQuestionStep(2);
-                  }}
-                />
+              <ScrollView
+                scrollEnabled={true}
+                horizontal={false} // Prevent horizontal scrolling
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.menuScrollViewContainer}
+                style={{ width: "100%" }}
+              >
+                <View style={[{ marginTop: 20 }]}>
+                  <View style={styles.categoryRow}>
+                    <CategoryCard
+                      imageSrc={OldTestament}
+                      title="Old Testament Stories"
+                      onPress={() => {
+                        setQuestionStep(2);
+                      }}
+                    />
+                    <CategoryCard
+                      imageSrc={OldTestament}
+                      title="Old Testament Stories"
+                      onPress={() => {
+                        setQuestionStep(2);
+                      }}
+                    />
+                  </View>
+                  <View style={styles.categoryRow}>
+                    <CategoryCard
+                      imageSrc={OldTestament}
+                      title="Old Testament Stories"
+                      onPress={() => {
+                        setQuestionStep(2);
+                      }}
+                    />
+                    <CategoryCard
+                      imageSrc={OldTestament}
+                      title="Old Testament Stories"
+                      onPress={() => {
+                        setQuestionStep(2);
+                      }}
+                    />
+                  </View>
+                  <View style={styles.categoryRow}>
+                    <CategoryCard
+                      imageSrc={OldTestament}
+                      title="Old Testament Stories"
+                      onPress={() => {
+                        setQuestionStep(2);
+                      }}
+                    />
+                    <CategoryCard
+                      imageSrc={OldTestament}
+                      title="Old Testament Stories"
+                      onPress={() => {
+                        setQuestionStep(2);
+                      }}
+                    />
+                  </View>
+                </View>
+              </ScrollView>
+            </>
+          ) : questionStep === 2 ? (
+            <>
+              <View style={styles.textRow}>
+                <Heading color={colors.PrimaryWhite}>
+                  Select a Difficulty
+                </Heading>
+                <View style={styles.timerBox}>
+                  <ButtonText color={colors.BattleTimer}>2:24</ButtonText>
+                </View>
               </View>
-              <View style={styles.categoryRow}>
-                <CategoryCard
-                  imageSrc={OldTestament}
-                  title="Old Testament Stories"
-                  onPress={() => {
-                    setQuestionStep(2);
-                  }}
-                />
-                <CategoryCard
-                  imageSrc={OldTestament}
-                  title="Old Testament Stories"
-                  onPress={() => {
-                    setQuestionStep(2);
-                  }}
-                />
+              <ScrollView
+                scrollEnabled={true}
+                horizontal={false} // Prevent horizontal scrolling
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.menuScrollViewContainer}
+                style={{ width: "100%" }}
+              >
+                <View style={[{ marginTop: 20 }]}>
+                  <DifficultyButton
+                    backgroundColor="#505207"
+                    buttonDropShadow="#424307"
+                    title="Easy"
+                    onPress={() => {}}
+                  />
+                  <DifficultyButton
+                    backgroundColor="#FE9B96"
+                    buttonDropShadow="#C5736F"
+                    title="Medium"
+                    onPress={() => {}}
+                  />
+                  <DifficultyButton
+                    backgroundColor="#EE3E7E"
+                    buttonDropShadow="#BC3A66"
+                    title="Hard"
+                    onPress={() => {}}
+                  />
+                  <DifficultyButton
+                    backgroundColor="#FF9D22"
+                    buttonDropShadow="#D76819"
+                    title="Expert"
+                    onPress={() => {}}
+                  />
+                </View>
+              </ScrollView>
+            </>
+          ) : (
+            <>
+              <View style={styles.textRow}>
+                <Heading color={colors.PrimaryWhite}>
+                  Answer the question
+                </Heading>
+                <View style={styles.timerBox}>
+                  <ButtonText color={colors.BattleTimer}>2:24</ButtonText>
+                </View>
               </View>
-            </View>
-          </ScrollView>
+              <ScrollView
+                scrollEnabled={true}
+                horizontal={false} // Prevent horizontal scrolling
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.menuScrollViewContainer}
+                style={{ width: "100%" }}
+              >
+                <View style={[{ marginTop: 20 }]}>
+                  <DifficultyButton
+                    backgroundColor="#505207"
+                    buttonDropShadow="#424307"
+                    title="Easy"
+                    onPress={() => {}}
+                  />
+                  <DifficultyButton
+                    backgroundColor="#FE9B96"
+                    buttonDropShadow="#C5736F"
+                    title="Medium"
+                    onPress={() => {}}
+                  />
+                  <DifficultyButton
+                    backgroundColor="#EE3E7E"
+                    buttonDropShadow="#BC3A66"
+                    title="Hard"
+                    onPress={() => {}}
+                  />
+                  <DifficultyButton
+                    backgroundColor="#FF9D22"
+                    buttonDropShadow="#D76819"
+                    title="Expert"
+                    onPress={() => {}}
+                  />
+                </View>
+              </ScrollView>
+            </>
+          )}
         </Animated.View>
       )}
 
