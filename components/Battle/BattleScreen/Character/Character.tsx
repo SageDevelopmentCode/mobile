@@ -32,22 +32,69 @@ export const Character = ({
   // Animation style for character image
   const animatedStyle = animatedValue
     ? {
-        transform: [
-          {
-            translateX: animatedValue.interpolate({
-              inputRange: [0, 0.1, 0.2, 1],
-              outputRange: isPlayer
-                ? [0, 50, 0, 0] // Player moves right then back
-                : [0, -20, 0, 0], // Enemy recoils left then back
-            }),
-          },
-          {
-            scale: animatedValue.interpolate({
-              inputRange: [0, 0.1, 0.2, 1],
-              outputRange: [1, 1.1, 1, 1], // Slight scale up during attack
-            }),
-          },
-        ],
+        transform: isPlayer
+          ? [
+              // Player moves forward to attack with enhanced effects
+              {
+                translateX: animatedValue.interpolate({
+                  inputRange: [0, 0.05, 0.15, 0.3, 1],
+                  outputRange: [0, 10, 60, 0, 0], // Faster forward motion with overshoot
+                }),
+              },
+              {
+                translateY: animatedValue.interpolate({
+                  inputRange: [0, 0.1, 0.2, 0.3, 1],
+                  outputRange: [0, -15, -5, 0, 0], // Jump up and then down
+                }),
+              },
+              {
+                scale: animatedValue.interpolate({
+                  inputRange: [0, 0.05, 0.15, 0.2, 0.3, 1],
+                  outputRange: [1, 1.2, 1.3, 1.1, 1, 1], // Pulsing scale effect
+                }),
+              },
+              {
+                rotate: animatedValue.interpolate({
+                  inputRange: [0, 0.1, 0.2, 1],
+                  outputRange: ["0deg", "5deg", "0deg", "0deg"], // Slight rotation for dynamic feeling
+                }),
+              },
+            ]
+          : [
+              // Enemy shake/vibrate animation when hit
+              {
+                translateX: animatedValue.interpolate({
+                  inputRange: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 1],
+                  outputRange: [0, -10, 8, -6, 4, -2, 1, 0, 0], // Vibration pattern
+                }),
+              },
+              {
+                translateY: animatedValue.interpolate({
+                  inputRange: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 1],
+                  outputRange: [0, -5, 3, -2, 1, 0, 0], // Small vertical shake
+                }),
+              },
+              {
+                rotate: animatedValue.interpolate({
+                  inputRange: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 1],
+                  outputRange: [
+                    "0deg",
+                    "-3deg",
+                    "2deg",
+                    "-1deg",
+                    "1deg",
+                    "0deg",
+                    "0deg",
+                  ], // Slight rotation
+                }),
+              },
+              {
+                scale: animatedValue.interpolate({
+                  inputRange: [0, 0.05, 0.1, 1],
+                  outputRange: [1, 0.95, 1, 1], // Brief shrink on impact
+                }),
+              },
+            ],
       }
     : {};
 

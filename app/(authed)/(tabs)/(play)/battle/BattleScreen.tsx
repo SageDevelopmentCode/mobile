@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
+  Dimensions,
   ImageBackground,
   ScrollView,
   TouchableOpacity,
   View,
 } from "react-native";
 import { router, useNavigation } from "expo-router";
+const { width, height } = Dimensions.get("window");
 import colors from "@/constants/colors";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { styles } from "./BattleScreen.styles";
@@ -27,6 +29,8 @@ import toggleMenu from "@/utils/animations/toggleMenu";
 import Overlay from "@/components/Overlay/Overlay";
 import { CategoryCard } from "@/components/Battle/BattleScreen/Questions/Categories/CategoryCard/CategoryCard";
 import { ActionButton } from "@/components/Battle/BattleScreen/Questions/ActionButton/ActionButton";
+import { AttackEffect } from "@/components/Battle/BattleScreen/Animations/AttackEffect";
+import { DamageIndicator } from "@/components/Battle/BattleScreen/Animations/DamageIndicator";
 
 export default function BattleScreen() {
   const [quitModalVisible, setQuitModalVisible] = useState<boolean>(false);
@@ -41,7 +45,21 @@ export default function BattleScreen() {
 
   // Add state for enemy health
   const [enemyHealth, setEnemyHealth] = useState(400);
-  const [playerHealth, setPlayerHealth] = useState(100);
+  const [playerHealth, setPlayerHealth] = useState(99);
+
+  // Add state for damage indicators
+  const [showEnemyDamage, setShowEnemyDamage] = useState(false);
+  const [showPlayerDamage, setShowPlayerDamage] = useState(false);
+  const [damageAmount, setDamageAmount] = useState(0);
+  const [enemyPosition, setEnemyPosition] = useState({ x: 0, y: 0 });
+  const [playerPosition, setPlayerPosition] = useState({ x: 0, y: 0 });
+
+  // Add state for attack effect
+  const [showAttackEffect, setShowAttackEffect] = useState(false);
+  const [attackEffectPosition, setAttackEffectPosition] = useState({
+    x: 0,
+    y: 0,
+  });
 
   const navigation = useNavigation();
 
@@ -83,6 +101,10 @@ export default function BattleScreen() {
     playerAnimValue.setValue(0);
     enemyAnimValue.setValue(0);
 
+    // Calculate damage values
+    const damageValue = isCorrect ? 20 : 10;
+    setDamageAmount(damageValue);
+
     // Sequence: Player attacks -> Enemy reacts -> (optional) Enemy counter-attacks
     Animated.sequence([
       // Player attack animation
@@ -94,23 +116,35 @@ export default function BattleScreen() {
       // Enemy reaction animation (if correct answer)
       Animated.timing(enemyAnimValue, {
         toValue: isCorrect ? 1 : 0, // Only animate if correct
-        duration: 500,
+        duration: isCorrect ? 800 : 500, // Longer duration for shake animation
         useNativeDriver: true,
       }),
     ]).start(() => {
-      // Update health values after animation finishes
+      // Show attack effect if correct answer
       if (isCorrect) {
+        // Position the attack effect near the enemy
+        setAttackEffectPosition({ x: width * 0.75, y: height * 0.25 });
+        setShowAttackEffect(true);
+
+        // Show damage indicator with appropriate position
+        setEnemyPosition({ x: width * 0.7, y: height * 0.3 });
+        setShowEnemyDamage(true);
+
         // Reduce enemy health if correct answer
-        setEnemyHealth((prev) => Math.max(0, prev - 20));
+        setEnemyHealth((prev) => Math.max(0, prev - damageValue));
       } else {
+        // Show damage to player (left side of screen)
+        setPlayerPosition({ x: width * 0.2, y: height * 0.3 });
+        setShowPlayerDamage(true);
+
         // Reduce player health if wrong answer
-        setPlayerHealth((prev) => Math.max(0, prev - 10));
+        setPlayerHealth((prev) => Math.max(0, prev - damageValue));
       }
     });
   };
 
   // Handler for answer selection
-  const handleAnswerSelect = (answer: any) => {
+  const handleAnswerSelect = (answer: string) => {
     // Check if answer is correct (for this example, "The woman with the issue of blood" is correct)
     const isCorrect = answer === "The woman with the issue of blood";
 
@@ -444,6 +478,35 @@ export default function BattleScreen() {
       )}
 
       {questionMenuVisible && <Overlay onPress={toggleQuestionMenu} />}
+
+      {/* Damage Indicators */}
+      {showEnemyDamage && (
+        <DamageIndicator
+          damage={damageAmount}
+          position={enemyPosition}
+          isHeal={false}
+          onAnimationComplete={() => setShowEnemyDamage(false)}
+        />
+      )}
+
+      {showPlayerDamage && (
+        <DamageIndicator
+          damage={damageAmount}
+          position={playerPosition}
+          isHeal={false}
+          onAnimationComplete={() => setShowPlayerDamage(false)}
+        />
+      )}
+
+      {/* Attack Effect */}
+      {showAttackEffect && (
+        <AttackEffect
+          position={attackEffectPosition}
+          size={100}
+          color={colors.PrimaryPurpleBackground}
+          onAnimationComplete={() => setShowAttackEffect(false)}
+        />
+      )}
     </>
   );
 }
