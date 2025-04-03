@@ -35,6 +35,14 @@ export default function BattleScreen() {
     useState<boolean>(false);
   const slideAnim = useRef(new Animated.Value(800)).current;
 
+  // Create animation values for player and enemy
+  const playerAnimValue = useRef(new Animated.Value(0)).current;
+  const enemyAnimValue = useRef(new Animated.Value(0)).current;
+
+  // Add state for enemy health
+  const [enemyHealth, setEnemyHealth] = useState(400);
+  const [playerHealth, setPlayerHealth] = useState(100);
+
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -69,6 +77,51 @@ export default function BattleScreen() {
   const toggleQuestionMenu = () =>
     toggleMenu(questionMenuVisible, setQuestionMenuVisible, slideAnim);
 
+  // Animation sequence for attacking
+  const performAttackAnimation = (isCorrect = true) => {
+    // Reset animations
+    playerAnimValue.setValue(0);
+    enemyAnimValue.setValue(0);
+
+    // Sequence: Player attacks -> Enemy reacts -> (optional) Enemy counter-attacks
+    Animated.sequence([
+      // Player attack animation
+      Animated.timing(playerAnimValue, {
+        toValue: 1,
+        duration: 700,
+        useNativeDriver: true,
+      }),
+      // Enemy reaction animation (if correct answer)
+      Animated.timing(enemyAnimValue, {
+        toValue: isCorrect ? 1 : 0, // Only animate if correct
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      // Update health values after animation finishes
+      if (isCorrect) {
+        // Reduce enemy health if correct answer
+        setEnemyHealth((prev) => Math.max(0, prev - 20));
+      } else {
+        // Reduce player health if wrong answer
+        setPlayerHealth((prev) => Math.max(0, prev - 10));
+      }
+    });
+  };
+
+  // Handler for answer selection
+  const handleAnswerSelect = (answer: any) => {
+    // Check if answer is correct (for this example, "The woman with the issue of blood" is correct)
+    const isCorrect = answer === "The woman with the issue of blood";
+
+    // Run animation
+    performAttackAnimation(isCorrect);
+
+    // Close menu and reset to step 1
+    setQuestionStep(1);
+    setQuestionMenuVisible(false);
+  };
+
   return (
     <>
       <QuitModal
@@ -92,24 +145,30 @@ export default function BattleScreen() {
             <ButtonText color={colors.PrimaryWhite}>Quit</ButtonText>
           </TouchableOpacity>
           <View style={styles.charactersContainer}>
+            {/* Player */}
             <Character
               characterName="Deborah"
               level={12}
-              health={99}
+              health={playerHealth}
               typeImage={SolaraType}
               characterImage={Deborah}
               onPress={() => {}}
               maxHealth={100}
+              animatedValue={playerAnimValue}
+              isPlayer={true}
             />
 
+            {/* Enemy */}
             <Character
               characterName="Gabriel"
               level={12}
-              health={105}
+              health={enemyHealth}
               typeImage={SolaraType}
               characterImage={Gabriel}
               onPress={() => {}}
               maxHealth={400}
+              animatedValue={enemyAnimValue}
+              isPlayer={false}
             />
           </View>
         </ImageBackground>
@@ -353,33 +412,29 @@ export default function BattleScreen() {
                     backgroundColor="#565656"
                     buttonDropShadow="#343434"
                     title="Mary Magdalene"
-                    onPress={() => {
-                      setQuestionMenuVisible(false);
-                    }}
+                    onPress={() => handleAnswerSelect("Mary Magdalene")}
                   />
                   <ActionButton
                     backgroundColor="#565656"
                     buttonDropShadow="#343434"
                     title="The woman with the issue of blood"
-                    onPress={() => {
-                      setQuestionMenuVisible(false);
-                    }}
+                    onPress={() =>
+                      handleAnswerSelect("The woman with the issue of blood")
+                    }
                   />
                   <ActionButton
                     backgroundColor="#565656"
                     buttonDropShadow="#343434"
                     title="Martha of Bethany"
-                    onPress={() => {
-                      setQuestionMenuVisible(false);
-                    }}
+                    onPress={() => handleAnswerSelect("Martha of Bethany")}
                   />
                   <ActionButton
                     backgroundColor="#565656"
                     buttonDropShadow="#343434"
                     title="The Samaritan woman at the well"
-                    onPress={() => {
-                      setQuestionMenuVisible(false);
-                    }}
+                    onPress={() =>
+                      handleAnswerSelect("The Samaritan woman at the well")
+                    }
                   />
                 </View>
               </ScrollView>
