@@ -31,11 +31,15 @@ import { CategoryCard } from "@/components/Battle/BattleScreen/Questions/Categor
 import { ActionButton } from "@/components/Battle/BattleScreen/Questions/ActionButton/ActionButton";
 import { AttackEffect } from "@/components/Battle/BattleScreen/Animations/AttackEffect";
 import { DamageIndicator } from "@/components/Battle/BattleScreen/Animations/DamageIndicator";
+import { VictoryModal } from "@/components/Battle/BattleScreen/VictoryModal/VictoryModal";
+import { Alert } from "react-native";
 
 export default function BattleScreen() {
   const [quitModalVisible, setQuitModalVisible] = useState<boolean>(false);
   const [questionStep, setQuestionStep] = useState<number>(1);
   const [questionMenuVisible, setQuestionMenuVisible] =
+    useState<boolean>(false);
+  const [victoryModalVisible, setVictoryModalVisible] =
     useState<boolean>(false);
   const slideAnim = useRef(new Animated.Value(800)).current;
 
@@ -44,7 +48,7 @@ export default function BattleScreen() {
   const enemyAnimValue = useRef(new Animated.Value(0)).current;
 
   // Add state for enemy health
-  const [enemyHealth, setEnemyHealth] = useState(400);
+  const [enemyHealth, setEnemyHealth] = useState(20);
   const [playerHealth, setPlayerHealth] = useState(99);
 
   // Add state for damage indicators
@@ -77,6 +81,24 @@ export default function BattleScreen() {
         ...tabBarOptions,
       });
   }, [navigation]);
+
+  // Check if enemy is defeated
+  useEffect(() => {
+    if (enemyHealth <= 0 && !victoryModalVisible) {
+      // Add a small delay before showing victory modal
+      setTimeout(() => {
+        setVictoryModalVisible(true);
+      }, 1000);
+    }
+  }, [enemyHealth, victoryModalVisible]);
+
+  // Clean up when component unmounts
+  useEffect(() => {
+    return () => {
+      // Reset any state when leaving the battle screen
+      setVictoryModalVisible(false);
+    };
+  }, []);
 
   const handleQuit = () => {
     // Show confirmation modal
@@ -146,7 +168,7 @@ export default function BattleScreen() {
   // Handler for answer selection
   const handleAnswerSelect = (answer: string) => {
     // Check if answer is correct (for this example, "The woman with the issue of blood" is correct)
-    const isCorrect = answer === "The woman with the issue of blood";
+    const isCorrect = answer === "Adam's Rib";
 
     // Run animation
     performAttackAnimation(isCorrect);
@@ -156,12 +178,54 @@ export default function BattleScreen() {
     setQuestionMenuVisible(false);
   };
 
+  const closeVictoryModal = () => {
+    // First close the modal
+    setVictoryModalVisible(false);
+
+    // Then navigate with a delay to ensure the modal is fully closed
+    setTimeout(() => {
+      // Use replace instead of push to avoid stacking screens
+      router.replace("/(authed)/(tabs)/(play)/BattleHomeScreen");
+    }, 300);
+  };
+
   return (
     <>
       <QuitModal
         visible={quitModalVisible}
         onClose={cancelQuit}
         onConfirm={confirmQuit}
+      />
+      <VictoryModal
+        visible={victoryModalVisible}
+        onClose={closeVictoryModal}
+        character={{
+          name: "Deborah",
+          image: Deborah, // You're already importing this at the top
+          color1: "#E94B8A", // Primary pink color
+          color2: "#F78FB2", // Secondary lighter pink
+        }}
+        rewards={[
+          { type: "Faith Points", amount: 100, icon: "star", color: "#FFC107" },
+          {
+            type: "Wisdom",
+            amount: 50,
+            icon: "auto-awesome",
+            color: "#5E97F6",
+          },
+          { type: "Scripture", amount: 3, icon: "menu-book", color: "#4CAF50" },
+          {
+            type: "Coins",
+            amount: 75,
+            icon: "monetization-on",
+            color: "#FF9800",
+          },
+        ]}
+        unlocks={[
+          { title: "New Devotional Unlocked", icon: "book" },
+          { title: "Path of Deborah Advanced", icon: "map" },
+        ]}
+        xpGained={150}
       />
       <ScrollView scrollEnabled={true} contentContainerStyle={styles.container}>
         <ImageBackground
@@ -437,38 +501,33 @@ export default function BattleScreen() {
                     style={[{ textAlign: "center" }]}
                     color={colors.PrimaryWhite}
                   >
-                    Which woman was healed by touching the hem of Jesus's
-                    garment?
+                    How did God make Eve?
                   </Heading>
                 </View>
                 <View style={[{ marginTop: 20 }]}>
                   <ActionButton
                     backgroundColor="#565656"
                     buttonDropShadow="#343434"
-                    title="Mary Magdalene"
-                    onPress={() => handleAnswerSelect("Mary Magdalene")}
+                    title="Adam's Rib"
+                    onPress={() => handleAnswerSelect("Adam's Rib")}
                   />
                   <ActionButton
                     backgroundColor="#565656"
                     buttonDropShadow="#343434"
-                    title="The woman with the issue of blood"
-                    onPress={() =>
-                      handleAnswerSelect("The woman with the issue of blood")
-                    }
+                    title="Apple"
+                    onPress={() => handleAnswerSelect("Apple")}
                   />
                   <ActionButton
                     backgroundColor="#565656"
                     buttonDropShadow="#343434"
-                    title="Martha of Bethany"
-                    onPress={() => handleAnswerSelect("Martha of Bethany")}
+                    title="Light"
+                    onPress={() => handleAnswerSelect("Light")}
                   />
                   <ActionButton
                     backgroundColor="#565656"
                     buttonDropShadow="#343434"
-                    title="The Samaritan woman at the well"
-                    onPress={() =>
-                      handleAnswerSelect("The Samaritan woman at the well")
-                    }
+                    title="Angel"
+                    onPress={() => handleAnswerSelect("Angel")}
                   />
                 </View>
               </ScrollView>
