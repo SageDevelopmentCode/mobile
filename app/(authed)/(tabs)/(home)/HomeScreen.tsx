@@ -28,6 +28,15 @@ import { getStyles } from "./HomeScreen.styles";
 export default function HomeScreen() {
   const navigation = useNavigation();
   const slideAnim = useRef(new Animated.Value(800)).current;
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const backgroundFadeAnim = useRef(new Animated.Value(1)).current;
+
+  // Character transition state
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionCharacter, setTransitionCharacter] = useState<string | null>(
+    null
+  );
 
   // State
   const [characterMenuVisible, setCharacterMenuVisible] =
@@ -57,6 +66,16 @@ export default function HomeScreen() {
     {
       name: "Deborah",
       image: Deborah,
+      backgroundImage: Background,
+    },
+    {
+      name: "Elijah",
+      image: Gabriel, // Reusing image for demo
+      backgroundImage: GabrielBackground,
+    },
+    {
+      name: "Sarah",
+      image: Deborah, // Reusing image for demo
       backgroundImage: Background,
     },
   ];
@@ -97,8 +116,65 @@ export default function HomeScreen() {
   };
 
   const handleSwitchCharacter = (characterName: string) => {
-    setActiveCharacter(characterName);
-    setCharacterSwitchMenuVisible(false);
+    if (characterName === activeCharacter || isTransitioning) return;
+
+    setTransitionCharacter(characterName);
+    setIsTransitioning(true);
+
+    // Step 1: Highlight selected character in menu (handled by Card component with isActive)
+
+    // Step 2: Animate current character out
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 0.8,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(backgroundFadeAnim, {
+        toValue: 0,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 800,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      // Close menu and update character
+      setCharacterSwitchMenuVisible(false);
+      setActiveCharacter(characterName);
+
+      // Wait a moment for state to update
+      setTimeout(() => {
+        // Step 3: Animate new character in
+        Animated.parallel([
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(scaleAnim, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(backgroundFadeAnim, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+        ]).start(() => {
+          setIsTransitioning(false);
+          setTransitionCharacter(null);
+        });
+      }, 50);
+    });
   };
 
   // Set up navigation options
@@ -172,6 +248,10 @@ export default function HomeScreen() {
           backgroundImage={backgroundImage}
           onCharacterPress={toggleCharacterMenu}
           onSwitchPress={toggleCharacterSwitchMenu}
+          fadeAnim={fadeAnim}
+          scaleAnim={scaleAnim}
+          backgroundFadeAnim={backgroundFadeAnim}
+          isTransitioning={isTransitioning}
         />
 
         {/* Main Content Section */}
@@ -210,7 +290,8 @@ export default function HomeScreen() {
           slideAnim={slideAnim}
           characters={characters}
           onSwitchCharacter={handleSwitchCharacter}
-          activeCharacter={activeCharacter}
+          activeCharacter={transitionCharacter || activeCharacter}
+          typeImage={SolaraType}
         />
       )}
     </View>

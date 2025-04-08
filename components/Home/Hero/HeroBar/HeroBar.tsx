@@ -7,11 +7,15 @@ import { View } from "react-native";
 import { styles } from "./HeroBar.styles";
 
 type HeroBarProps = {
-  onSwitchPress: () => void;
+  onSwitchPress?: () => void;
   characterName: string;
 };
 
 export const HeroBar = ({ onSwitchPress, characterName }: HeroBarProps) => {
+  // Default handler if none provided
+  const handleSwitchPress =
+    onSwitchPress || (() => console.log("Switch pressed but disabled"));
+
   return (
     <View style={styles.heroBar}>
       <Title color={colors.PrimaryWhite}>{characterName}</Title>
@@ -25,8 +29,10 @@ export const HeroBar = ({ onSwitchPress, characterName }: HeroBarProps) => {
           title="🌱"
         />
         <SquareActionButton
-          onPress={onSwitchPress}
+          onPress={handleSwitchPress}
           icon={<Octicons name="arrow-switch" size={20} />}
+          disabled={!onSwitchPress}
+          style={{ opacity: onSwitchPress ? 1 : 0.5 }}
         />
       </View>
     </View>

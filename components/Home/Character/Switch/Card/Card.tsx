@@ -1,84 +1,107 @@
-import { ButtonText, Heading } from "@/components/Text/TextComponents";
-import colors from "@/constants/colors";
 import React from "react";
-import {
-  View,
-  ImageBackground,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
-import { styles } from "./Card.styles";
-
-// Import your assets and colors
-// Replace these with actual imports for your project
+import { View, Image, TouchableOpacity, Text, StyleSheet } from "react-native";
+import colors from "@/constants/colors";
 
 interface CharacterCardProps {
   characterName: string;
-  characterImage: any; // Replace with proper type for your image assets
-  backgroundImage: any; // Replace with proper type for your image assets
+  characterImage: any;
+  backgroundImage: any;
   isActive?: boolean;
-  onSwitch: any;
+  onSwitch: () => void;
+  typeImage?: any;
 }
 
 export const CharacterCard = ({
   characterName,
   characterImage,
-  backgroundImage,
   isActive = false,
   onSwitch,
+  typeImage,
 }: CharacterCardProps) => {
+  // Determine colors based on character name
+  const isDeborahType =
+    characterName === "Deborah" || characterName === "Sarah";
+  const cardColor = isDeborahType
+    ? colors.PrimaryPurpleBackground
+    : colors.SolaraGreen;
+
   return (
-    <View
+    <TouchableOpacity
       style={[
-        {
-          width: "100%",
-          paddingHorizontal: "5%",
-          marginVertical: 20,
-        },
+        styles.cardContainer,
+        isActive && { borderColor: cardColor, borderWidth: 2 },
+        { backgroundColor: isActive ? `${cardColor}10` : "#FFFFFF" },
       ]}
+      onPress={onSwitch}
+      activeOpacity={0.7}
     >
-      <ImageBackground
-        source={backgroundImage}
-        style={[styles.characterSwitchCard, { alignSelf: "center" }]}
-        resizeMode="cover"
-      >
+      <View style={styles.contentContainer}>
+        <View style={styles.textContainer}>
+          <Text style={[styles.nameText, { color: cardColor }]}>
+            {characterName}
+          </Text>
+          <View style={styles.typeContainer}>
+            <Image source={typeImage} style={styles.typeImage} />
+            <Text style={styles.typeText}>Solara</Text>
+          </View>
+        </View>
+
         <Image
           source={characterImage}
-          style={styles.characterSwitchCardImage}
+          style={styles.characterImage}
+          resizeMode="contain"
         />
-      </ImageBackground>
-      <View
-        style={[
-          {
-            flexDirection: "row",
-            alignItems: "center",
-            width: "100%",
-            justifyContent: "space-between",
-            marginTop: 5,
-          },
-        ]}
-      >
-        <Heading color={colors.PrimaryWhite}>{characterName}</Heading>
-        <TouchableOpacity
-          style={{
-            backgroundColor: colors.SolaraGreen,
-            paddingHorizontal: 15,
-            paddingVertical: 6,
-            borderRadius: 10,
-            justifyContent: "center",
-            alignItems: "center",
-            shadowColor: colors.SolaraGreenDropShadow,
-            shadowOffset: { width: 0, height: 3 },
-            shadowOpacity: 1,
-            shadowRadius: 0,
-            elevation: 3,
-          }}
-          onPress={onSwitch}
-        >
-          <ButtonText color={colors.PrimaryWhite}>Switch</ButtonText>
-        </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    width: "100%",
+    height: 88,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 16,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    overflow: "hidden",
+  },
+  contentContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 16,
+    width: "100%",
+    height: "100%",
+  },
+  textContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  nameText: {
+    fontSize: 22,
+    fontWeight: "700",
+    marginBottom: 4,
+  },
+  typeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  typeText: {
+    fontSize: 14,
+    color: "#666666",
+    marginLeft: 5,
+  },
+  typeImage: {
+    width: 18,
+    height: 18,
+  },
+  characterImage: {
+    height: 70,
+    width: 70,
+  },
+});

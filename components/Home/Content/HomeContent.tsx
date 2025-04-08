@@ -76,6 +76,15 @@ export const HomeContent = ({
           activeCharacter={activeCharacter}
         />
       ))}
+      <GoalItem
+        title="Test Test"
+        emoji="📖"
+        description="Read today's devotional"
+        onPress={() => console.log("Icon Button Pressed")}
+        onIconPress={() => console.log("Icon Button Pressed")}
+        newGoal={true}
+        activeCharacter={activeCharacter}
+      />
     </View>
   );
 };
