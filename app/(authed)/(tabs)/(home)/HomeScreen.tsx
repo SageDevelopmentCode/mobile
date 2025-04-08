@@ -1,42 +1,45 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  View,
-  ImageBackground,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  Animated,
-  Text,
-} from "react-native";
+import { View, ScrollView, Animated } from "react-native";
 import { useNavigation } from "expo-router";
 
+// Constants
 import colors from "@/constants/colors";
+import { tabBarOptions } from "@/constants/tabBarOptions";
 
-import Background from "./assets/BackgroundOne.jpg"; // Updated import path
+// Assets
+import Background from "./assets/BackgroundOne.jpg";
 import GabrielBackground from "./assets/GabrielBackground.jpg";
 import Gabriel from "./assets/Gabriel.png";
 import Deborah from "./assets/Deborah.png";
 import SolaraType from "../../../../assets/images/character_types/SolaraType.png";
 import UncommonChest from "../../../../assets/images/chests/UncommonChest.png";
-import ProgressBar from "@/components/ProgressBar/ProgressBar";
-import HeadingBar from "@/components/Heading/HeadingBar";
-import { GoalItem } from "@/components/Goal/GoalItem";
+
+// Components
 import { StatsHeader } from "@/components/Home/StatsHeader/StatsHeader";
+import { HeroSection } from "@/components/Home/Hero/HeroSection";
+import { HomeContent } from "@/components/Home/Content/HomeContent";
+import { CharacterMenu } from "@/components/Home/Character/Menu/CharacterMenu";
+import { CharacterSwitchMenu } from "@/components/Home/Character/Switch/CharacterSwitchMenu";
+import { Backdrop } from "@/components/Overlay/Backdrop";
 import { formatNumber } from "@/utils/format/formatNumber";
-import { HeroBar } from "@/components/Home/Hero/HeroBar/HeroBar";
-import { Chest } from "@/components/Home/Content/Chest/Chest";
 import toggleMenu from "@/utils/animations/toggleMenu";
-import { Paragraph, Title } from "@/components/Text/TextComponents";
-import { tabBarOptions } from "@/constants/tabBarOptions";
-import { CharacterStats } from "@/components/Home/Character/Details/CharacterStats/CharacterStats";
-import { CharacterAbilities } from "@/components/Home/Character/Details/CharacterAbilities/CharacterAbilities";
-import { CharacterRarities } from "@/components/Home/Character/Details/CharacterRarities/CharacterRarities";
-import { CharacterCards } from "@/components/Home/Character/Details/CharacterCards/CharacterCards";
 import { getStyles } from "./HomeScreen.styles";
-import { CharacterCard } from "@/components/Home/Character/Switch/Card/Card";
-import { CharacterTypeDialog } from "@/components/Home/Character/Details/Type/Dialogue/Dialogue";
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
+  const slideAnim = useRef(new Animated.Value(800)).current;
+
+  // State
+  const [characterMenuVisible, setCharacterMenuVisible] =
+    useState<boolean>(false);
+  const [characterSwitchMenuVisible, setCharacterSwitchMenuVisible] =
+    useState<boolean>(false);
+  const [typeDialogVisible, setTypeDialogVisible] = useState(false);
+  const [activeMenuCharacterTab, setActiveMenuCharacterTab] =
+    useState<string>("Stats");
+  const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
+
+  // Tabs for character menu
   const menuCharacterTabs: string[] = [
     "Stats",
     "Abilities",
@@ -44,39 +47,37 @@ export default function HomeScreen() {
     "Your Cards",
   ];
 
-  let CharacterDetailsComponent: JSX.Element | null;
+  // Character data
+  const characters = [
+    {
+      name: "Gabriel",
+      image: Gabriel,
+      backgroundImage: GabrielBackground,
+    },
+    {
+      name: "Deborah",
+      image: Deborah,
+      backgroundImage: Background,
+    },
+  ];
 
-  const navigation = useNavigation();
-  const [characterMenuVisible, setCharacterMenuVisible] =
-    useState<boolean>(false);
-  const [characterSwitchMenuVisible, setCharacterSwitchMenuVisible] =
-    useState<boolean>(false);
-  const [typeDialogVisible, setTypeDialogVisible] = useState(false);
-  const slideAnim = useRef(new Animated.Value(800)).current;
-  const [activeMenuCharacterTab, setActiveMenuCharacterTab] = useState<string>(
-    menuCharacterTabs[0]
-  );
-  const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
+  // Goals data
+  const goals = [
+    {
+      emoji: "📖",
+      title: "Devotional",
+      description: "Read today's devotional",
+    },
+    {
+      emoji: "🏋️",
+      title: "Workout",
+      description: "Complete today's session",
+    },
+  ];
 
   const styles = getStyles(activeCharacter);
 
-  switch (activeMenuCharacterTab) {
-    case "Stats":
-      CharacterDetailsComponent = <CharacterStats />;
-      break;
-    case "Abilities":
-      CharacterDetailsComponent = <CharacterAbilities />;
-      break;
-    case "Rarities":
-      CharacterDetailsComponent = <CharacterRarities />;
-      break;
-    case "Cards":
-      CharacterDetailsComponent = <CharacterCards />;
-      break;
-    default:
-      CharacterDetailsComponent = null;
-  }
-
+  // Toggle functions
   const toggleCharacterSwitchMenu = () =>
     toggleMenu(
       characterSwitchMenuVisible,
@@ -91,35 +92,30 @@ export default function HomeScreen() {
     setTypeDialogVisible(!typeDialogVisible);
   };
 
-  let CharacterMenuComponent: JSX.Element | null;
-
   const handleTabPress = (tab: string): void => {
     setActiveMenuCharacterTab(tab);
   };
 
-  const goals = [
-    {
-      emoji: "📖",
-      title: "Devotional",
-      description: "Read today's devotional",
-    },
-    { emoji: "🏋️", title: "Workout", description: "Complete today's session" },
-  ];
+  const handleSwitchCharacter = (characterName: string) => {
+    setActiveCharacter(characterName);
+    setCharacterSwitchMenuVisible(false);
+  };
 
+  // Set up navigation options
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
 
     const parentNavigation = navigation.getParent();
 
     if (characterMenuVisible || characterSwitchMenuVisible) {
-      // Hide the tab bar when the character menu is open
+      // Hide the tab bar when a menu is open
       parentNavigation?.setOptions({
         tabBarStyle: { display: "none" },
       });
     } else {
-      // Show the tab bar when the character menu is closed
+      // Show the tab bar when menus are closed
       parentNavigation?.setOptions({
-        ...tabBarOptions, // Restore default tabBarOptions
+        ...tabBarOptions,
         tabBarStyle: {
           ...tabBarOptions.tabBarStyle,
           backgroundColor:
@@ -142,272 +138,80 @@ export default function HomeScreen() {
         ...tabBarOptions,
       });
     };
-  }, [navigation, characterMenuVisible, characterSwitchMenuVisible]);
+  }, [
+    navigation,
+    characterMenuVisible,
+    characterSwitchMenuVisible,
+    activeCharacter,
+  ]);
+
+  // Determine the current character's assets
+  const currentCharacter = characters.find(
+    (character) => character.name === activeCharacter
+  );
+  const characterImage = currentCharacter?.image || Deborah;
+  const backgroundImage = currentCharacter?.backgroundImage || Background;
 
   return (
-    <View style={[styles.container]}>
+    <View style={styles.container}>
+      {/* StatsHeader positioned absolutely at the top */}
       <StatsHeader
         userGems={formatNumber(1000)}
         userShards={formatNumber(1240)}
         userStars={formatNumber(1400)}
       />
+
       <ScrollView
         scrollEnabled={true}
         contentContainerStyle={styles.scrollViewContainer}
       >
-        <ImageBackground
-          source={
-            activeCharacter === "Deborah" ? Background : GabrielBackground
-          }
-          style={styles.imageBackground}
-          resizeMode="cover"
-        >
-          <View style={styles.heroContent}>
-            <HeroBar
-              characterName={
-                activeCharacter === "Deborah" ? "Deborah" : "Gabriel"
-              }
-              onSwitchPress={toggleCharacterSwitchMenu}
-            />
+        {/* Hero Section with Character */}
+        <HeroSection
+          characterName={activeCharacter}
+          characterImage={characterImage}
+          backgroundImage={backgroundImage}
+          onCharacterPress={toggleCharacterMenu}
+          onSwitchPress={toggleCharacterSwitchMenu}
+        />
 
-            {/* Character Image */}
-            <TouchableOpacity
-              onPress={toggleCharacterMenu} // TODO: Menu is dynamic
-              style={styles.characterImage}
-            >
-              <Image
-                source={activeCharacter === "Deborah" ? Deborah : Gabriel} // TODO: Dynamic
-                style={styles.character}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </View>
-        </ImageBackground>
-
-        <View style={styles.contentContainer}>
-          <View style={styles.chestRow}>
-            {/* Daily Chest */}
-            <Chest
-              onPress={() => {
-                console.log("Daily");
-              }}
-              type="Daily"
-              timeRemaining="04:06"
-              key="Daily"
-              activeCharacter={activeCharacter}
-            />
-            <Chest
-              onPress={() => {
-                console.log("Weekly");
-              }}
-              type="Weekly"
-              timeRemaining="05:06"
-              key="Weekly"
-              activeCharacter={activeCharacter}
-            />
-          </View>
-
-          {/* Progress Bar */}
-          <ProgressBar
-            height={15}
-            progress={40}
-            backgroundColor={colors.PrimaryWhite} // TODO: Dynamic
-            progressColor={colors.SolaraGreen} // TODO: Dynamic
-            imageSrc={UncommonChest}
-            leftText="0 energy today"
-            rightText="Goal: 20"
-            activeCharacter={activeCharacter}
-          />
-
-          {/* Heading for Goals */}
-          <HeadingBar headingText="Goals for today" />
-          <GoalItem // TODO: This component has to be dynamic
-            title="Test Test"
-            emoji="📖"
-            description="Read today's devotional"
-            onPress={() => console.log("Icon Button Pressed")}
-            onIconPress={() => console.log("Icon Button Pressed")}
-            newGoal={false}
-            activeCharacter={activeCharacter}
-          />
-          <GoalItem
-            title="Test Test"
-            emoji="📖"
-            description="Read today's devotional"
-            onPress={() => console.log("Icon Button Pressed")}
-            onIconPress={() => console.log("Icon Button Pressed")}
-            newGoal={true}
-            activeCharacter={activeCharacter}
-          />
-        </View>
+        {/* Main Content Section */}
+        <HomeContent
+          activeCharacter={activeCharacter}
+          goals={goals}
+          chestImage={UncommonChest}
+        />
       </ScrollView>
 
+      {/* Backdrop Overlays */}
+      {characterMenuVisible && <Backdrop onPress={toggleCharacterMenu} />}
+      {characterSwitchMenuVisible && (
+        <Backdrop onPress={toggleCharacterSwitchMenu} />
+      )}
+
+      {/* Character Menu */}
       {characterMenuVisible && (
-        <TouchableOpacity
-          style={styles.overlay}
-          onPress={toggleCharacterMenu}
+        <CharacterMenu
+          activeCharacter={activeCharacter}
+          characterImage={characterImage}
+          backgroundImage={backgroundImage}
+          typeImage={SolaraType}
+          activeMenuCharacterTab={activeMenuCharacterTab}
+          menuCharacterTabs={menuCharacterTabs}
+          handleTabPress={handleTabPress}
+          toggleDialog={toggleDialog}
+          typeDialogVisible={typeDialogVisible}
+          slideAnim={slideAnim}
         />
       )}
 
+      {/* Character Switch Menu */}
       {characterSwitchMenuVisible && (
-        <TouchableOpacity
-          style={styles.overlay}
-          onPress={toggleCharacterSwitchMenu}
+        <CharacterSwitchMenu
+          slideAnim={slideAnim}
+          characters={characters}
+          onSwitchCharacter={handleSwitchCharacter}
+          activeCharacter={activeCharacter}
         />
-      )}
-
-      {characterMenuVisible && (
-        <Animated.View
-          style={[
-            styles.menu,
-            {
-              transform: [{ translateY: slideAnim }],
-            },
-          ]}
-        >
-          <ScrollView
-            scrollEnabled={true}
-            horizontal={false} // Prevent horizontal scrolling
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.menuScrollViewContainer}
-            style={{ width: "100%" }}
-          >
-            <View style={styles.menuImageContainer}>
-              <ImageBackground
-                source={
-                  activeCharacter === "Deborah" ? Background : GabrielBackground
-                }
-                style={styles.menuImageBackground}
-                resizeMode="cover"
-              >
-                <Image
-                  source={activeCharacter === "Deborah" ? Deborah : Gabriel}
-                  style={styles.menuCharacter}
-                />
-              </ImageBackground>
-              <View style={styles.menuContentContainer}>
-                <Title color={colors.PrimaryWhite}>Nickname</Title>
-                <Paragraph color={colors.GrayText}>Deborah</Paragraph>
-                <TouchableOpacity onPress={toggleDialog}>
-                  <View
-                    style={[
-                      styles.characterTypeContainer,
-                      {
-                        backgroundColor: colors.DarkPurpleButtonDropShadow,
-                        shadowColor: colors.DarkPurpleButtonDropShadow,
-                      },
-                    ]}
-                  >
-                    <View
-                      style={[
-                        styles.typeImageContainer,
-                        { backgroundColor: colors.DarkPurpleButtonDropShadow },
-                      ]} // TODO: Image source is dynamic
-                    >
-                      <Image source={SolaraType} style={styles.typeImage} />
-                    </View>
-                    <View style={styles.typeTextContainer}>
-                      <Paragraph color={colors.PrimaryWhite}>Solara</Paragraph>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-                <ProgressBar
-                  height={15}
-                  progress={40}
-                  backgroundColor={colors.PrimaryWhite}
-                  progressColor={colors.PrimaryPurpleBackground}
-                  imageSrc={UncommonChest}
-                  leftText="Level 19"
-                  rightText="Level 20"
-                  activeCharacter={activeCharacter}
-                />
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={styles.tabContainer}
-                >
-                  {menuCharacterTabs.map((tab, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      style={[
-                        styles.tab,
-                        activeMenuCharacterTab === tab && styles.activeTab,
-                      ]}
-                      onPress={() => handleTabPress(tab)}
-                    >
-                      <Text
-                        style={[
-                          styles.tabText,
-                          {
-                            color:
-                              activeMenuCharacterTab === tab
-                                ? colors.DarkPrimaryText
-                                : colors.PrimaryWhite,
-                          },
-                        ]}
-                      >
-                        {tab}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-                {CharacterDetailsComponent}
-                <HeadingBar headingText="Appears in" />
-                <HeadingBar headingText="Description" />
-              </View>
-            </View>
-            {typeDialogVisible && (
-              <CharacterTypeDialog
-                title="Solara"
-                description="Solara represents the essence of kindness, one of the powerful fruits of the Spirit. Characters of this type are natural peacemakers, capable of calming tensions and inspiring cooperation among allies."
-                typeImage={SolaraType}
-                onClose={toggleDialog}
-                type="Solara"
-              />
-            )}
-          </ScrollView>
-        </Animated.View>
-      )}
-
-      {characterSwitchMenuVisible && (
-        <Animated.View
-          style={[
-            styles.menu,
-            {
-              transform: [{ translateY: slideAnim }],
-            },
-          ]}
-        >
-          <ScrollView
-            scrollEnabled={true}
-            horizontal={false} // Prevent horizontal scrolling
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.menuScrollViewContainer}
-            style={{ width: "100%" }}
-          >
-            <View style={styles.characterSwitchMenuContentContainer}>
-              <HeadingBar headingText="Your Characters" />
-              <CharacterCard
-                characterName="Gabriel"
-                characterImage={Gabriel}
-                backgroundImage={GabrielBackground}
-                onSwitch={() => {
-                  setActiveCharacter("Gabriel");
-                  setCharacterSwitchMenuVisible(false);
-                }}
-              />
-              <CharacterCard
-                characterName="Deborah"
-                characterImage={Deborah}
-                backgroundImage={Background}
-                onSwitch={() => {
-                  setActiveCharacter("Deborah");
-                  setCharacterSwitchMenuVisible(false);
-                }}
-              />
-            </View>
-          </ScrollView>
-        </Animated.View>
       )}
     </View>
   );
