@@ -293,31 +293,34 @@ export default function BattleScreen() {
             <CharacterAbility
               icon={JudgeWisdom}
               name="Judge's Wisdom"
-              defense={15}
-              accuracy={15}
+              statType="defense"
+              statValue={15}
               cardBackground={JudgeWisdomBg}
               onPress={toggleQuestionMenu}
             />
             <CharacterAbility
               icon={JudgeWisdom}
               name="Judge's Wisdom"
-              defense={15}
-              accuracy={15}
+              statType="defense"
+              statValue={15}
               cardBackground={JudgeWisdomBg}
+              onPress={toggleQuestionMenu}
             />
             <CharacterAbility
               icon={JudgeWisdom}
               name="Judge's Wisdom"
-              defense={15}
-              accuracy={15}
+              statType="defense"
+              statValue={15}
               cardBackground={JudgeWisdomBg}
+              onPress={toggleQuestionMenu}
             />
             <CharacterAbility
               icon={JudgeWisdom}
               name="Judge's Wisdom"
-              defense={15}
-              accuracy={15}
+              statType="defense"
+              statValue={15}
               cardBackground={JudgeWisdomBg}
+              onPress={toggleQuestionMenu}
             />
           </ScrollView>
           <View style={styles.textRow}>

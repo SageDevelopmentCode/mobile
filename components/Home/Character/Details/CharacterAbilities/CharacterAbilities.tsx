@@ -18,29 +18,29 @@ export const CharacterAbilities = ({}: CharacterAbilitiesProps) => {
       <CharacterAbility
         icon={JudgeWisdom}
         name="Judge's Wisdom"
-        defense={15}
-        accuracy={15}
+        statType="defense"
+        statValue={15}
         cardBackground={JudgeWisdomBg}
       />
       <CharacterAbility
         icon={JudgeWisdom}
         name="Judge's Wisdom"
-        defense={15}
-        accuracy={15}
+        statType="attack"
+        statValue={20}
         cardBackground={JudgeWisdomBg}
       />
       <CharacterAbility
         icon={JudgeWisdom}
         name="Judge's Wisdom"
-        defense={15}
-        accuracy={15}
+        statType="specialAttack"
+        statValue={18}
         cardBackground={JudgeWisdomBg}
       />
       <CharacterAbility
         icon={JudgeWisdom}
         name="Judge's Wisdom"
-        defense={15}
-        accuracy={15}
+        statType="speed"
+        statValue={12}
         cardBackground={JudgeWisdomBg}
       />
     </ScrollView>

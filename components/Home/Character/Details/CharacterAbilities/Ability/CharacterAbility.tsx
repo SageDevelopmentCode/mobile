@@ -9,11 +9,18 @@ import {
 import { styles } from "./CharacterAbility.styles";
 import colors from "@/constants/colors";
 
+type StatType =
+  | "attack"
+  | "defense"
+  | "specialAttack"
+  | "specialDefense"
+  | "speed";
+
 interface CharacterAbilityProps {
   name: string;
-  icon: any; // For the image source
-  defense: number;
-  accuracy: number;
+  icon: any;
+  statType: StatType;
+  statValue: number;
   cardBackground: any;
   onPress?: () => void;
 }
@@ -22,39 +29,63 @@ export const CharacterAbility = ({
   name = "Judge's Wisdom",
   icon,
   cardBackground,
-  defense = 15,
-  accuracy = 15,
+  statType = "defense",
+  statValue = 15,
   onPress,
 }: CharacterAbilityProps) => {
+  const getStatColor = (type: StatType) => {
+    switch (type) {
+      case "attack":
+        return colors.ZoneOneBattleButtonBackground;
+      case "defense":
+        return colors.PrimaryBlue;
+      case "specialAttack":
+        return colors.PrimaryPurpleBackground;
+      case "specialDefense":
+        return colors.PrimaryGreenBackground;
+      case "speed":
+        return colors.EnergyColor;
+      default:
+        return colors.PrimaryBlue;
+    }
+  };
+
+  const getStatLabel = (type: StatType) => {
+    switch (type) {
+      case "attack":
+        return "ATK";
+      case "defense":
+        return "DEF";
+      case "specialAttack":
+        return "SP.ATK";
+      case "specialDefense":
+        return "SP.DEF";
+      case "speed":
+        return "SPD";
+      default:
+        return "DEF";
+    }
+  };
+
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
       <ImageBackground
         source={cardBackground}
         style={styles.card}
         resizeMode="cover"
       >
-        {/* Black overlay */}
         <View style={styles.overlay} />
-
-        {/* Content */}
         <View style={styles.content}>
           <Image source={icon} style={styles.icon} resizeMode="contain" />
           <Text style={styles.title}>{name}</Text>
           <View style={styles.statsContainer}>
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>+{defense}</Text>
-              <Text style={styles.statLabel}>Def</Text>
-            </View>
-            <View style={styles.statItem}>
               <Text
-                style={[
-                  styles.statValue,
-                  { color: colors.PrimaryPurpleBackground },
-                ]}
+                style={[styles.statValue, { color: getStatColor(statType) }]}
               >
-                +{accuracy}
+                +{statValue}
               </Text>
-              <Text style={styles.statLabel}>Acc</Text>
+              <Text style={styles.statLabel}>{getStatLabel(statType)}</Text>
             </View>
           </View>
         </View>
