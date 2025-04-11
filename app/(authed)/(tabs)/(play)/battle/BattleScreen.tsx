@@ -292,34 +292,58 @@ export default function BattleScreen() {
           >
             <CharacterAbility
               icon={JudgeWisdom}
-              name="Judge's Wisdom"
-              statType="defense"
-              statValue={15}
-              cardBackground={JudgeWisdomBg}
+              name="Prophetic Insight"
+              type="specialDefense"
+              stats={{
+                attack: 0,
+                defense: 0,
+                specialAttack: 0,
+                specialDefense: 15,
+                speed: 0,
+              }}
+              description="Heightened spiritual awareness grants resistance to special attacks and reveals enemy intentions."
               onPress={toggleQuestionMenu}
             />
             <CharacterAbility
               icon={JudgeWisdom}
-              name="Judge's Wisdom"
-              statType="defense"
-              statValue={15}
-              cardBackground={JudgeWisdomBg}
+              name="Judgment Call"
+              type="defense"
+              stats={{
+                attack: 0,
+                defense: 10,
+                specialAttack: 0,
+                specialDefense: 0,
+                speed: 0,
+              }}
+              description="Delivers a wise ruling that steadies the team and reinforces defense."
               onPress={toggleQuestionMenu}
             />
             <CharacterAbility
               icon={JudgeWisdom}
-              name="Judge's Wisdom"
-              statType="defense"
-              statValue={15}
-              cardBackground={JudgeWisdomBg}
+              name="Command Barak"
+              type="specialAttack"
+              stats={{
+                attack: 0,
+                defense: 0,
+                specialAttack: 50,
+                specialDefense: 0,
+                speed: 0,
+              }}
+              description="Inspires an ally to strike with divine power; launches a special attack through leadership."
               onPress={toggleQuestionMenu}
             />
             <CharacterAbility
               icon={JudgeWisdom}
-              name="Judge's Wisdom"
-              statType="defense"
-              statValue={15}
-              cardBackground={JudgeWisdomBg}
+              name="Swift Wind"
+              type="speed"
+              stats={{
+                attack: 0,
+                defense: 0,
+                specialAttack: 0,
+                specialDefense: 0,
+                speed: 25,
+              }}
+              description="A divine wind stirs at Deborah's command, increasing her speed or hastening allies."
               onPress={toggleQuestionMenu}
             />
           </ScrollView>
