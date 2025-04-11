@@ -10,8 +10,10 @@ import {
 } from "react-native";
 import { styles } from "./CharacterAbility.styles";
 import colors from "@/constants/colors";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import React from "react";
+import { StatBar } from "../../CharacterStats/StatBar";
+import { BuffStatBar } from "../../CharacterStats/BuffStatBar";
 
 type StatType =
   | "attack"
@@ -20,51 +22,62 @@ type StatType =
   | "specialDefense"
   | "speed";
 
-interface AbilityStats {
-  attack: number;
-  defense: number;
-  specialAttack: number;
-  specialDefense: number;
-  speed: number;
+interface AbilityEffect {
+  type: "damage" | "buff";
+  value: number;
+  stat?: StatType;
 }
 
 interface CharacterAbilityProps {
   name: string;
   icon: any;
   type: StatType;
-  stats: AbilityStats;
+  effects: AbilityEffect[];
   description: string;
+  uses: number;
   onPress?: () => void;
 }
+
+// Base stats for visualization
+const BASE_STATS = {
+  attack: 150,
+  defense: 150,
+  specialAttack: 100,
+  specialDefense: 150,
+  speed: 150,
+};
+
+const MAX_STAT = 1000;
+
+const getStatColor = (statType: StatType) => {
+  switch (statType) {
+    case "attack":
+      return "#BF8EFF"; // Purple
+    case "defense":
+      return "#7DD1F8"; // Blue
+    case "specialAttack":
+      return "#80F9B7"; // Green
+    case "specialDefense":
+      return "#FF9D9D"; // Red
+    case "speed":
+      return "#FFEB99"; // Yellow
+    default:
+      return "#7DD1F8";
+  }
+};
 
 export const CharacterAbility = ({
   name = "Judge's Wisdom",
   icon,
   type = "defense",
-  stats,
+  effects,
   description,
+  uses = 3,
   onPress,
 }: CharacterAbilityProps) => {
   const [showDetails, setShowDetails] = useState(false);
   const flipAnim = useRef(new Animated.Value(0)).current;
   const [isFlipped, setIsFlipped] = useState(false);
-
-  const getStatColor = (type: StatType) => {
-    switch (type) {
-      case "attack":
-        return "#FF6B6B";
-      case "defense":
-        return "#4ECDC4";
-      case "specialAttack":
-        return "#FF9F1C";
-      case "specialDefense":
-        return "#2EC4B6";
-      case "speed":
-        return "#FFD166";
-      default:
-        return "#4ECDC4";
-    }
-  };
 
   const getIconStyle = (type: StatType) => {
     switch (type) {
@@ -172,6 +185,48 @@ export const CharacterAbility = ({
     transform: [{ rotateY: backInterpolate }],
   };
 
+  // Get primary effect (damage for attacks, highest buff for others)
+  const getPrimaryEffect = () => {
+    if (type === "attack" || type === "specialAttack") {
+      return effects.find((effect) => effect.type === "damage");
+    }
+    return effects.reduce(
+      (prev, curr) =>
+        curr.type === "buff" &&
+        Math.abs(curr.value) > Math.abs(prev?.value || 0)
+          ? curr
+          : prev,
+      effects[0]
+    );
+  };
+
+  const primaryEffect = getPrimaryEffect();
+  const additionalEffects = effects.filter(
+    (effect) => effect !== primaryEffect
+  );
+
+  const renderStatBars = (effect: AbilityEffect) => {
+    if (effect.type !== "buff" || !effect.stat) return null;
+
+    const baseStat = BASE_STATS[effect.stat];
+    const buffedStat = baseStat + effect.value;
+    const statName =
+      effect.stat.charAt(0).toUpperCase() +
+      effect.stat.slice(1).replace(/([A-Z])/g, "\n$1");
+
+    return (
+      <View style={styles.statBarContainer}>
+        <BuffStatBar
+          name={statName}
+          baseValue={baseStat}
+          buffedValue={buffedStat}
+          color={getStatColor(effect.stat)}
+          maxValue={MAX_STAT}
+        />
+      </View>
+    );
+  };
+
   return (
     <>
       <TouchableOpacity
@@ -197,36 +252,30 @@ export const CharacterAbility = ({
               )}
             </View>
             <Text style={styles.title}>{name}</Text>
+            <View style={styles.usesContainer}>
+              <Text style={styles.usesText}>Uses: {uses}</Text>
+            </View>
             <View style={styles.statsContainer}>
-              {Object.entries(stats).map(([statType, value]) => {
-                if (value === 0) return null;
-                return (
-                  <View
-                    key={statType}
-                    style={[
-                      styles.statPill,
-                      getStatPillStyle(statType as StatType),
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.statValue,
-                        { color: getStatColor(statType as StatType) },
-                      ]}
-                    >
-                      +{value}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.statLabel,
-                        { color: getStatColor(statType as StatType) },
-                      ]}
-                    >
-                      {getStatLabel(statType as StatType)}
-                    </Text>
-                  </View>
-                );
-              })}
+              <View style={[styles.statPill, getStatPillStyle(type)]}>
+                <Text style={[styles.statValue, { color: getStatColor(type) }]}>
+                  {primaryEffect?.type === "damage" ? (
+                    `${primaryEffect.value} DMG`
+                  ) : (
+                    <>
+                      {primaryEffect && primaryEffect.value > 0 ? "+" : ""}
+                      {primaryEffect?.value}{" "}
+                      {primaryEffect?.stat && getStatLabel(primaryEffect.stat)}
+                    </>
+                  )}
+                </Text>
+              </View>
+              {additionalEffects.length > 0 && (
+                <View style={styles.additionalStatsIndicator}>
+                  <Text style={styles.additionalStatsText}>
+                    +{additionalEffects.length}
+                  </Text>
+                </View>
+              )}
             </View>
           </View>
         </Animated.View>
@@ -249,40 +298,80 @@ export const CharacterAbility = ({
                 { backgroundColor: getStatColor(type) },
               ]}
             >
-              <Image
-                source={icon}
-                style={styles.modalIcon}
-                resizeMode="contain"
-              />
-              <Text style={styles.modalTitle}>{name}</Text>
+              <View
+                style={[
+                  styles.modalIconWrapper,
+                  { borderColor: getStatColor(type) },
+                  { backgroundColor: "rgba(0, 0, 0, 0.3)" },
+                ]}
+              >
+                <Image
+                  source={icon}
+                  style={styles.modalIcon}
+                  resizeMode="contain"
+                />
+              </View>
+              <View style={styles.modalHeaderContent}>
+                <Text style={styles.modalTitle}>{name}</Text>
+                <Text style={styles.modalType}>
+                  {type.charAt(0).toUpperCase() +
+                    type.slice(1).replace(/([A-Z])/g, " $1")}{" "}
+                  Type
+                </Text>
+              </View>
             </View>
             <View style={styles.modalBody}>
               <Text style={styles.modalDescription}>{description}</Text>
+              <Text style={styles.modalStatsTitle}>
+                {type === "attack" || type === "specialAttack"
+                  ? "Damage & Effects"
+                  : "Effects"}
+              </Text>
               <View style={styles.modalStats}>
-                {Object.entries(stats).map(([statType, value]) => {
-                  if (value === 0) return null;
-                  return (
+                {effects.map((effect, index) => (
+                  <React.Fragment key={index}>
                     <View
-                      key={statType}
                       style={[
                         styles.modalStatItem,
-                        { borderColor: getStatColor(statType as StatType) },
+                        {
+                          borderColor:
+                            effect.type === "damage"
+                              ? getStatColor(type)
+                              : getStatColor(effect.stat as StatType),
+                          width: effect.type === "buff" ? "100%" : "48%",
+                        },
                       ]}
                     >
-                      <Text style={styles.modalStatLabel}>
-                        {getStatLabel(statType as StatType)}
-                      </Text>
-                      <Text
-                        style={[
-                          styles.modalStatValue,
-                          { color: getStatColor(statType as StatType) },
-                        ]}
-                      >
-                        +{value}
-                      </Text>
+                      <View style={styles.modalStatHeader}>
+                        <Text style={styles.modalStatLabel}>
+                          {effect.type === "damage"
+                            ? "Damage"
+                            : getStatLabel(effect.stat as StatType)}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.modalStatValue,
+                            {
+                              color:
+                                effect.type === "damage"
+                                  ? getStatColor(type)
+                                  : getStatColor(effect.stat as StatType),
+                            },
+                          ]}
+                        >
+                          {effect.type === "damage"
+                            ? `${effect.value}`
+                            : `${effect.value > 0 ? "+" : ""}${effect.value}`}
+                        </Text>
+                      </View>
+                      {effect.type === "buff" && renderStatBars(effect)}
                     </View>
-                  );
-                })}
+                  </React.Fragment>
+                ))}
+              </View>
+              <View style={styles.modalUsesContainer}>
+                <Text style={styles.modalUsesText}>Uses per Battle:</Text>
+                <Text style={styles.modalUsesCount}>{uses}</Text>
               </View>
             </View>
           </View>

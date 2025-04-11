@@ -18,78 +18,127 @@ interface AbilityStats {
   speed: number;
 }
 
+interface AbilityEffect {
+  type: "damage" | "buff";
+  value: number;
+  stat?: StatType;
+}
+
 interface Ability {
   name: string;
   type: StatType;
-  stats: AbilityStats;
+  effects: AbilityEffect[];
   description: string;
+  uses: number;
 }
 
 const abilities: Ability[] = [
   {
-    name: "Prophetic Insight",
-    type: "specialDefense",
-    stats: {
-      attack: 0,
-      defense: 0,
-      specialAttack: 0,
-      specialDefense: 15,
-      speed: 0,
-    },
-    description:
-      "Heightened spiritual awareness grants resistance to special attacks and reveals enemy intentions.",
-  },
-  {
-    name: "Judgment Call",
-    type: "defense",
-    stats: {
-      attack: 0,
-      defense: 10,
-      specialAttack: 0,
-      specialDefense: 0,
-      speed: 0,
-    },
-    description:
-      "Delivers a wise ruling that steadies the team and reinforces defense.",
-  },
-  {
-    name: "Command Barak",
+    name: "Voice of Thunder",
     type: "specialAttack",
-    stats: {
-      attack: 0,
-      defense: 0,
-      specialAttack: 50,
-      specialDefense: 0,
-      speed: 0,
-    },
+    effects: [
+      { type: "damage", value: 120 },
+      { type: "buff", value: -10, stat: "speed" },
+    ],
     description:
-      "Inspires an ally to strike with divine power; launches a special attack through leadership.",
+      "Unleashes divine power with a thunderous voice, dealing heavy special damage and possibly stunning.",
+    uses: 2,
   },
   {
-    name: "Palm Tree Wisdom",
+    name: "Shield of Faith",
+    type: "specialDefense",
+    effects: [{ type: "buff", value: 30, stat: "specialDefense" }],
+    description:
+      "Summons a spiritual barrier, greatly increasing resistance to special damage.",
+    uses: 4,
+  },
+  {
+    name: "Call to Arms",
+    type: "attack",
+    effects: [
+      { type: "damage", value: 85 },
+      { type: "buff", value: 10, stat: "defense" },
+      { type: "buff", value: 10, stat: "speed" },
+    ],
+    description:
+      "A rallying cry that raises physical attack power while boosting minor speed and defense.",
+    uses: 3,
+  },
+  {
+    name: "Encampment of Peace",
     type: "defense",
-    stats: {
-      attack: 0,
-      defense: 5,
-      specialAttack: 0,
-      specialDefense: 5,
-      speed: 0,
-    },
+    effects: [
+      { type: "buff", value: 20, stat: "defense" },
+      { type: "buff", value: 10, stat: "specialDefense" },
+    ],
     description:
-      "Passive aura of wisdom emanates from Deborah, gently boosting both defense and special defense over time.",
+      "Fortifies an area with divine protection, enhancing defense and special defense.",
+    uses: 4,
   },
   {
-    name: "Swift Wind",
-    type: "speed",
-    stats: {
-      attack: 0,
-      defense: 0,
-      specialAttack: 0,
-      specialDefense: 0,
-      speed: 25,
-    },
+    name: "Holy Surge",
+    type: "specialAttack",
+    effects: [
+      { type: "damage", value: 95 },
+      { type: "buff", value: 15, stat: "speed" },
+    ],
     description:
-      "A divine wind stirs at Deborah's command, increasing her speed or hastening allies.",
+      "Strikes with sacred energy, hitting faster and harder if used after defensive moves.",
+    uses: 3,
+  },
+  {
+    name: "Heavenly Counsel",
+    type: "specialDefense",
+    effects: [
+      { type: "buff", value: 25, stat: "specialDefense" },
+      { type: "buff", value: 10, stat: "specialAttack" },
+      { type: "buff", value: 5, stat: "speed" },
+    ],
+    description:
+      "Receives divine insight, improving resistance and boosting focus for precise counterattacks.",
+    uses: 3,
+  },
+  {
+    name: "Wise Delay",
+    type: "defense",
+    effects: [
+      { type: "buff", value: 25, stat: "defense" },
+      { type: "buff", value: -5, stat: "speed" },
+    ],
+    description:
+      "With calculated patience, delays conflict and builds up defensive posture.",
+    uses: 4,
+  },
+  {
+    name: "Sacrifice of Praise",
+    type: "specialDefense",
+    effects: [
+      { type: "buff", value: 30, stat: "specialDefense" },
+      { type: "buff", value: -10, stat: "speed" },
+    ],
+    description:
+      "Offers up protection through worship, granting powerful spiritual resistance at a cost of speed.",
+    uses: 2,
+  },
+  {
+    name: "Chainbreaker",
+    type: "speed",
+    effects: [{ type: "buff", value: 30, stat: "speed" }],
+    description:
+      "Breaks free from restraints, boosting speed dramatically and removing all slow effects.",
+    uses: 3,
+  },
+  {
+    name: "Banner of Victory",
+    type: "attack",
+    effects: [
+      { type: "damage", value: 75 },
+      { type: "buff", value: 10, stat: "defense" },
+      { type: "buff", value: 10, stat: "speed" },
+    ],
+    description:
+      "Raises a symbol of triumph that empowers physical might and boosts forward momentum.",
+    uses: 4,
   },
 ];
 
@@ -111,8 +160,9 @@ export const CharacterAbilities = ({}: CharacterAbilitiesProps) => {
           icon={JudgeWisdom}
           name={ability.name}
           type={ability.type}
-          stats={ability.stats}
+          effects={ability.effects}
           description={ability.description}
+          uses={ability.uses}
         />
       ))}
     </ScrollView>

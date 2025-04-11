@@ -294,56 +294,36 @@ export default function BattleScreen() {
               icon={JudgeWisdom}
               name="Prophetic Insight"
               type="specialDefense"
-              stats={{
-                attack: 0,
-                defense: 0,
-                specialAttack: 0,
-                specialDefense: 15,
-                speed: 0,
-              }}
+              effects={[{ type: "buff", value: 15, stat: "specialDefense" }]}
               description="Heightened spiritual awareness grants resistance to special attacks and reveals enemy intentions."
+              uses={4}
               onPress={toggleQuestionMenu}
             />
             <CharacterAbility
               icon={JudgeWisdom}
               name="Judgment Call"
               type="defense"
-              stats={{
-                attack: 0,
-                defense: 10,
-                specialAttack: 0,
-                specialDefense: 0,
-                speed: 0,
-              }}
+              effects={[{ type: "buff", value: 10, stat: "defense" }]}
               description="Delivers a wise ruling that steadies the team and reinforces defense."
+              uses={3}
               onPress={toggleQuestionMenu}
             />
             <CharacterAbility
               icon={JudgeWisdom}
               name="Command Barak"
               type="specialAttack"
-              stats={{
-                attack: 0,
-                defense: 0,
-                specialAttack: 50,
-                specialDefense: 0,
-                speed: 0,
-              }}
+              effects={[{ type: "damage", value: 100 }]}
               description="Inspires an ally to strike with divine power; launches a special attack through leadership."
+              uses={2}
               onPress={toggleQuestionMenu}
             />
             <CharacterAbility
               icon={JudgeWisdom}
               name="Swift Wind"
               type="speed"
-              stats={{
-                attack: 0,
-                defense: 0,
-                specialAttack: 0,
-                specialDefense: 0,
-                speed: 25,
-              }}
+              effects={[{ type: "buff", value: 25, stat: "speed" }]}
               description="A divine wind stirs at Deborah's command, increasing her speed or hastening allies."
+              uses={3}
               onPress={toggleQuestionMenu}
             />
           </ScrollView>
