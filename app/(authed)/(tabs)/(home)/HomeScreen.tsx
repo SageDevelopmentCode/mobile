@@ -3,6 +3,7 @@ import { View, ScrollView, Animated } from "react-native";
 import { useNavigation } from "expo-router";
 import { supabase } from "@/lib/supabase/supabase";
 import * as SecureStore from "expo-secure-store";
+import { getUserCharacters } from "@/lib/supabase/db/characters/user_characters";
 
 // Constants
 import colors from "@/constants/colors";
@@ -195,12 +196,15 @@ export default function HomeScreen() {
         const storedUserData = await SecureStore.getItemAsync(USER_DATA_KEY);
         const storedUserId = await SecureStore.getItemAsync(USER_ID_KEY);
 
+        let currentUserId = null;
+
         if (storedUserData && storedUserId) {
           // If we have stored data, use it
           const userData = JSON.parse(storedUserData);
           console.log("Using locally stored user data");
           console.log("User ID from storage:", storedUserId);
 
+          currentUserId = storedUserId;
           setUserId(storedUserId);
           setUserData(userData);
         } else {
@@ -219,8 +223,19 @@ export default function HomeScreen() {
             await SecureStore.setItemAsync(USER_DATA_KEY, JSON.stringify(user));
             await SecureStore.setItemAsync(USER_ID_KEY, userId);
 
+            currentUserId = userId;
             setUserId(userId);
             setUserData(user);
+          }
+        }
+
+        // Fetch user characters if we have a userId
+        if (currentUserId) {
+          try {
+            const userCharacters = await getUserCharacters(currentUserId);
+            console.log("User Characters:", userCharacters);
+          } catch (error) {
+            console.error("Error fetching user characters:", error);
           }
         }
       } catch (error) {

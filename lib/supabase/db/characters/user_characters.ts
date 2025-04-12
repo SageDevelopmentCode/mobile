@@ -28,7 +28,12 @@ export interface UserCharacterWithDetails extends UserCharacter {
 export async function getUserCharacters(userId: string) {
   const { data, error } = await supabase
     .from("user_characters")
-    .select("*")
+    .select(
+      `
+      *,
+      character:character_id(name, image_url)
+    `
+    )
     .eq("user_id", userId)
     .order("level", { ascending: false });
 
