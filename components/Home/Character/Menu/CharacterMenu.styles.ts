@@ -36,6 +36,7 @@ export const getCharacterMenuStyles = (activeCharacter: string) => {
       position: "relative",
     },
     menuCharacter: {
+      width: "60%",
       height: "85%",
       resizeMode: "contain",
       position: "absolute",

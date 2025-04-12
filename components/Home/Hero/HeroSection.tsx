@@ -39,8 +39,9 @@ export const HeroSection = ({
   const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
 
-  // Animation for loading indicator
+  // Loading animation
   const loadingFadeAnim = useRef(new Animated.Value(0)).current;
+  const loadingScaleAnim = useRef(new Animated.Value(0.8)).current;
 
   // Animation values
   const floatAnim = useRef(new Animated.Value(0)).current;
@@ -77,25 +78,45 @@ export const HeroSection = ({
     setImageLoading(true);
     setImageError(false);
 
-    // Start fade-in animation for loading indicator
-    Animated.timing(loadingFadeAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+    // Start loading animation
+    Animated.parallel([
+      Animated.timing(loadingFadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(loadingScaleAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    return () => {
+      // Reset animation values when component updates
+      loadingFadeAnim.setValue(0);
+      loadingScaleAnim.setValue(0.8);
+    };
   }, [characterImage]);
 
-  // When loading state changes, animate the loading indicator
-  useEffect(() => {
-    if (!imageLoading) {
-      // Fade out loading indicator when image is loaded
+  // Handle image load completion
+  const handleImageLoaded = () => {
+    // Fade out the loading indicator
+    Animated.parallel([
       Animated.timing(loadingFadeAnim, {
         toValue: 0,
         duration: 300,
         useNativeDriver: true,
-      }).start();
-    }
-  }, [imageLoading]);
+      }),
+      Animated.timing(loadingScaleAnim, {
+        toValue: 0.8,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setImageLoading(false);
+    });
+  };
 
   // Interpolate the float animation to translate Y
   const translateY = floatAnim.interpolate({
@@ -112,9 +133,6 @@ export const HeroSection = ({
     typeof characterImage === "object" &&
     "uri" in characterImage;
   console.log("Is remote image:", isRemoteImage);
-
-  // Determine if we need to show placeholder or image
-  const showPlaceholder = !characterImage || imageError;
 
   return (
     <Animated.View style={{ opacity: backgroundFadeAnim }}>
@@ -134,7 +152,8 @@ export const HeroSection = ({
             style={styles.characterImage}
             activeOpacity={isTransitioning ? 1 : 0.8}
           >
-            {!showPlaceholder ? (
+            {/* Character Image */}
+            {characterImage && !imageError ? (
               <Animated.Image
                 source={characterImage}
                 style={[
@@ -148,7 +167,7 @@ export const HeroSection = ({
                 ]}
                 resizeMode="contain"
                 onLoadStart={() => setImageLoading(true)}
-                onLoad={() => setImageLoading(false)}
+                onLoad={handleImageLoaded}
                 onError={(e) => {
                   console.error(
                     "Error loading character image:",
@@ -166,28 +185,34 @@ export const HeroSection = ({
               <Animated.View
                 style={[
                   styles.character,
-                  characterPlaceholderStyles.container,
                   {
                     transform: [{ translateY }, { scale: scaleAnim }],
                     opacity: fadeAnim,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: 300,
+                    height: 300,
                   },
                 ]}
               >
-                <View style={characterPlaceholderStyles.circle}>
+                <View style={loadingContainerStyle.container}>
                   <ActivityIndicator size="large" color="#FFFFFF" />
                 </View>
               </Animated.View>
             )}
 
             {/* Loading Overlay */}
-            {imageLoading && !imageError && !showPlaceholder && (
+            {imageLoading && !imageError && (
               <Animated.View
                 style={[
-                  characterPlaceholderStyles.loadingOverlay,
-                  { opacity: loadingFadeAnim },
+                  loadingContainerStyle.overlay,
+                  {
+                    opacity: loadingFadeAnim,
+                    transform: [{ scale: loadingScaleAnim }],
+                  },
                 ]}
               >
-                <View style={characterPlaceholderStyles.loadingContainer}>
+                <View style={loadingContainerStyle.container}>
                   <ActivityIndicator size="large" color="#FFFFFF" />
                 </View>
               </Animated.View>
@@ -199,44 +224,42 @@ export const HeroSection = ({
   );
 };
 
-// Define styles for the placeholder and loading indicator
-const characterPlaceholderStyles = StyleSheet.create({
-  container: {
+// Define loading style separately
+const loadingContainerStyle = StyleSheet.create({
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     justifyContent: "center",
     alignItems: "center",
-    width: 300,
-    height: 300,
+    backgroundColor: "rgba(0,0,0,0.3)",
+    borderRadius: 20,
   },
-  circle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
-    justifyContent: "center",
-    alignItems: "center",
+  container: {
+    backgroundColor: "rgba(0,0,0,0.6)",
+    padding: 20,
+    borderRadius: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
   },
-  loadingOverlay: {
+});
+
+// Define static styles for the glow effect
+const characterGlowStyles = StyleSheet.create({
+  glow: {
     position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 20,
-  },
-  loadingContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    justifyContent: "center",
-    alignItems: "center",
+    width: "70%",
+    height: "70%",
+    borderRadius: 100,
+    alignSelf: "center",
+    top: "25%",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    elevation: 10,
   },
 });

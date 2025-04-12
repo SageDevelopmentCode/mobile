@@ -31,9 +31,6 @@ import { getStyles } from "./HomeScreen.styles";
 // Keys for secure storage
 const USER_DATA_KEY = "userData";
 const USER_ID_KEY = "userId";
-const USER_CHARACTERS_KEY = "userCharacters";
-const CACHE_EXPIRY_KEY = "charactersExpiry";
-const CACHE_DURATION = 1000 * 60 * 15; // 15 minutes in milliseconds
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -193,52 +190,6 @@ export default function HomeScreen() {
     });
   };
 
-  // Utility function to check if cache is expired
-  const isCacheExpired = async () => {
-    const expiryTimestamp = await SecureStore.getItemAsync(CACHE_EXPIRY_KEY);
-    if (!expiryTimestamp) return true;
-
-    const expiryTime = parseInt(expiryTimestamp);
-    return Date.now() > expiryTime;
-  };
-
-  // Utility function to save characters to cache
-  const saveCharactersToCache = async (characters: any[]) => {
-    try {
-      await SecureStore.setItemAsync(
-        USER_CHARACTERS_KEY,
-        JSON.stringify(characters)
-      );
-      await SecureStore.setItemAsync(
-        CACHE_EXPIRY_KEY,
-        (Date.now() + CACHE_DURATION).toString()
-      );
-      console.log(
-        "Saved characters to cache with expiry:",
-        new Date(Date.now() + CACHE_DURATION).toLocaleString()
-      );
-    } catch (error) {
-      console.error("Error saving characters to cache:", error);
-    }
-  };
-
-  // Fetch user characters from API
-  const fetchUserCharactersFromAPI = async (userId: string) => {
-    try {
-      console.log("Fetching characters from API for user:", userId);
-      const characters = await getUserCharacters(userId);
-      console.log("Fetched characters count:", characters?.length || 0);
-
-      // Save to cache for next time
-      await saveCharactersToCache(characters);
-
-      return characters;
-    } catch (error) {
-      console.error("Error fetching user characters from API:", error);
-      return [];
-    }
-  };
-
   // Update activeCharacterData whenever activeCharacter changes
   useEffect(() => {
     // Find the character data for the active character
@@ -298,41 +249,32 @@ export default function HomeScreen() {
 
         // Fetch user characters if we have a userId
         if (currentUserId) {
-          // Check if we have cached characters that aren't expired
-          const cachedCharactersJSON = await SecureStore.getItemAsync(
-            USER_CHARACTERS_KEY
-          );
-          const cacheExpired = await isCacheExpired();
+          try {
+            const userCharacters = await getUserCharacters(currentUserId);
+            console.log("User Characters:", userCharacters);
 
-          let characters;
+            // Store the user characters in state
+            setUserCharacters(userCharacters || []);
 
-          if (cachedCharactersJSON && !cacheExpired) {
-            // Use cached characters if available and not expired
-            characters = JSON.parse(cachedCharactersJSON);
-            console.log("Using cached characters, count:", characters.length);
-          } else {
-            // Otherwise fetch from API
-            characters = await fetchUserCharactersFromAPI(currentUserId);
-          }
+            // If there's at least one character, set the active character to the first one's name
+            if (
+              userCharacters &&
+              userCharacters.length > 0 &&
+              userCharacters[0].character?.name
+            ) {
+              // Set the active character to the first character's name
+              const firstCharacter = userCharacters[0];
+              console.log(
+                "Setting active character to:",
+                firstCharacter.character.name
+              );
+              setActiveCharacter(firstCharacter.character.name);
 
-          setUserCharacters(characters || []);
-
-          // If there's at least one character, set the active character to the first one's name
-          if (
-            characters &&
-            characters.length > 0 &&
-            characters[0].character?.name
-          ) {
-            // Set the active character to the first character's name
-            const firstCharacter = characters[0];
-            console.log(
-              "Setting active character to:",
-              firstCharacter.character.name
-            );
-            setActiveCharacter(firstCharacter.character.name);
-
-            // Also set the active character data
-            setActiveCharacterData(firstCharacter);
+              // Also set the active character data
+              setActiveCharacterData(firstCharacter);
+            }
+          } catch (error) {
+            console.error("Error fetching user characters:", error);
           }
         }
       } catch (error) {
@@ -462,7 +404,7 @@ export default function HomeScreen() {
       {characterMenuVisible && (
         <CharacterMenu
           activeCharacter={activeCharacter}
-          characterImage={localCharacterImage}
+          characterImage={characterImageSource}
           backgroundImage={backgroundImage}
           typeImage={SolaraType}
           activeMenuCharacterTab={activeMenuCharacterTab}

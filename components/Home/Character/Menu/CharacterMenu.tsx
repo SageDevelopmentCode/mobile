@@ -46,6 +46,8 @@ export const CharacterMenu = ({
 }: CharacterMenuProps) => {
   const styles = getCharacterMenuStyles(activeCharacter);
 
+  console.log("Character Image in CharacterMenu", characterImage);
+
   let CharacterDetailsComponent: JSX.Element | null;
 
   switch (activeMenuCharacterTab) {
@@ -87,7 +89,13 @@ export const CharacterMenu = ({
             style={styles.menuImageBackground}
             resizeMode="cover"
           >
-            <Image source={characterImage} style={styles.menuCharacter} />
+            <Image
+              source={characterImage}
+              style={styles.menuCharacter}
+              onError={(error) =>
+                console.error("Image loading error:", error.nativeEvent.error)
+              }
+            />
           </ImageBackground>
           <View style={styles.menuContentContainer}>
             <Title color={colors.PrimaryWhite}>Nickname</Title>
