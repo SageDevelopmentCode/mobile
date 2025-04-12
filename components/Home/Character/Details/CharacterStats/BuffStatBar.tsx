@@ -79,13 +79,14 @@ export const BuffStatBar = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: 120,
-    marginHorizontal: 8,
+    width: "100%",
+    marginHorizontal: 0,
+    paddingHorizontal: 4,
   },
   barContainer: {
-    height: 8,
+    height: 12,
     backgroundColor: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 4,
+    borderRadius: 6,
     overflow: "hidden",
     flexDirection: "row",
   },
@@ -98,15 +99,15 @@ const styles = StyleSheet.create({
   labelContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 4,
+    marginTop: 8,
   },
   name: {
     color: "rgba(255, 255, 255, 0.7)",
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: "600",
   },
   value: {
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: "bold",
   },
 });
