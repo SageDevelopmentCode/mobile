@@ -31,6 +31,9 @@ import { getStyles } from "./HomeScreen.styles";
 // Keys for secure storage
 const USER_DATA_KEY = "userData";
 const USER_ID_KEY = "userId";
+const USER_CHARACTERS_KEY = "userCharacters";
+const CACHE_EXPIRY_KEY = "charactersExpiry";
+const CACHE_DURATION = 1000 * 60 * 15; // 15 minutes in milliseconds
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -42,6 +45,8 @@ export default function HomeScreen() {
   // Add state for user data
   const [userId, setUserId] = useState<string | null>(null);
   const [userData, setUserData] = useState<any>(null);
+  const [userCharacters, setUserCharacters] = useState<any[]>([]);
+  const [activeCharacterData, setActiveCharacterData] = useState<any>(null);
 
   // Character transition state
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -76,7 +81,7 @@ export default function HomeScreen() {
     },
     {
       name: "Deborah",
-      image: Deborah,
+      image: Gabriel,
       backgroundImage: Background,
     },
     {
@@ -188,6 +193,68 @@ export default function HomeScreen() {
     });
   };
 
+  // Utility function to check if cache is expired
+  const isCacheExpired = async () => {
+    const expiryTimestamp = await SecureStore.getItemAsync(CACHE_EXPIRY_KEY);
+    if (!expiryTimestamp) return true;
+
+    const expiryTime = parseInt(expiryTimestamp);
+    return Date.now() > expiryTime;
+  };
+
+  // Utility function to save characters to cache
+  const saveCharactersToCache = async (characters: any[]) => {
+    try {
+      await SecureStore.setItemAsync(
+        USER_CHARACTERS_KEY,
+        JSON.stringify(characters)
+      );
+      await SecureStore.setItemAsync(
+        CACHE_EXPIRY_KEY,
+        (Date.now() + CACHE_DURATION).toString()
+      );
+      console.log(
+        "Saved characters to cache with expiry:",
+        new Date(Date.now() + CACHE_DURATION).toLocaleString()
+      );
+    } catch (error) {
+      console.error("Error saving characters to cache:", error);
+    }
+  };
+
+  // Fetch user characters from API
+  const fetchUserCharactersFromAPI = async (userId: string) => {
+    try {
+      console.log("Fetching characters from API for user:", userId);
+      const characters = await getUserCharacters(userId);
+      console.log("Fetched characters count:", characters?.length || 0);
+
+      // Save to cache for next time
+      await saveCharactersToCache(characters);
+
+      return characters;
+    } catch (error) {
+      console.error("Error fetching user characters from API:", error);
+      return [];
+    }
+  };
+
+  // Update activeCharacterData whenever activeCharacter changes
+  useEffect(() => {
+    // Find the character data for the active character
+    if (userCharacters && userCharacters.length > 0) {
+      const characterData = userCharacters.find(
+        (char) => char.character?.name === activeCharacter
+      );
+
+      if (characterData) {
+        console.log("Updated active character data:", characterData);
+        console.log("Character image URL:", characterData.character?.image_url);
+        setActiveCharacterData(characterData);
+      }
+    }
+  }, [activeCharacter, userCharacters]);
+
   // Fetch user data from local storage or Supabase if not available
   useEffect(() => {
     const fetchUserData = async () => {
@@ -231,11 +298,41 @@ export default function HomeScreen() {
 
         // Fetch user characters if we have a userId
         if (currentUserId) {
-          try {
-            const userCharacters = await getUserCharacters(currentUserId);
-            console.log("User Characters:", userCharacters);
-          } catch (error) {
-            console.error("Error fetching user characters:", error);
+          // Check if we have cached characters that aren't expired
+          const cachedCharactersJSON = await SecureStore.getItemAsync(
+            USER_CHARACTERS_KEY
+          );
+          const cacheExpired = await isCacheExpired();
+
+          let characters;
+
+          if (cachedCharactersJSON && !cacheExpired) {
+            // Use cached characters if available and not expired
+            characters = JSON.parse(cachedCharactersJSON);
+            console.log("Using cached characters, count:", characters.length);
+          } else {
+            // Otherwise fetch from API
+            characters = await fetchUserCharactersFromAPI(currentUserId);
+          }
+
+          setUserCharacters(characters || []);
+
+          // If there's at least one character, set the active character to the first one's name
+          if (
+            characters &&
+            characters.length > 0 &&
+            characters[0].character?.name
+          ) {
+            // Set the active character to the first character's name
+            const firstCharacter = characters[0];
+            console.log(
+              "Setting active character to:",
+              firstCharacter.character.name
+            );
+            setActiveCharacter(firstCharacter.character.name);
+
+            // Also set the active character data
+            setActiveCharacterData(firstCharacter);
           }
         }
       } catch (error) {
@@ -290,12 +387,34 @@ export default function HomeScreen() {
     activeCharacter,
   ]);
 
-  // Determine the current character's assets
+  // Determine the current character's assets and prepare image sources
   const currentCharacter = characters.find(
     (character) => character.name === activeCharacter
   );
-  const characterImage = currentCharacter?.image || Deborah;
+  const localCharacterImage = currentCharacter?.image || Deborah;
   const backgroundImage = currentCharacter?.backgroundImage || Background;
+
+  // Prepare the character image source
+  const characterImageSource = React.useMemo(() => {
+    // Check if we have a valid image URL from the database
+    if (
+      activeCharacterData?.character?.image_url &&
+      activeCharacterData.character.image_url.trim() !== ""
+    ) {
+      // Make sure the URL has a proper protocol
+      let imageUrl = activeCharacterData.character.image_url;
+      if (!imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")) {
+        imageUrl = "https://" + imageUrl.replace(/^\/\//, "");
+      }
+
+      console.log("Using image URL:", imageUrl);
+      return { uri: imageUrl };
+    }
+
+    // Return null to trigger the loading indicator
+    console.log("No image available, will show loading indicator");
+    return null;
+  }, [activeCharacterData, localCharacterImage]);
 
   return (
     <View style={styles.container}>
@@ -312,8 +431,10 @@ export default function HomeScreen() {
       >
         {/* Hero Section with Character */}
         <HeroSection
-          characterName={activeCharacter}
-          characterImage={characterImage}
+          characterName={
+            activeCharacterData?.character?.name || activeCharacter
+          }
+          characterImage={characterImageSource}
           backgroundImage={backgroundImage}
           onCharacterPress={toggleCharacterMenu}
           onSwitchPress={toggleCharacterSwitchMenu}
@@ -341,7 +462,7 @@ export default function HomeScreen() {
       {characterMenuVisible && (
         <CharacterMenu
           activeCharacter={activeCharacter}
-          characterImage={characterImage}
+          characterImage={localCharacterImage}
           backgroundImage={backgroundImage}
           typeImage={SolaraType}
           activeMenuCharacterTab={activeMenuCharacterTab}
