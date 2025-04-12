@@ -3,7 +3,7 @@ import { Alert, StyleSheet, View } from "react-native";
 import { Button, Input } from "@rneui/themed";
 import { styles } from "./login.styles"; // Adjust this path
 import { router } from "expo-router";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase/supabase";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
