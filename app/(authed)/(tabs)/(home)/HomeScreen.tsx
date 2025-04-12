@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, ScrollView, Animated } from "react-native";
 import { useNavigation } from "expo-router";
+import { supabase } from "@/lib/supabase/supabase";
+import * as SecureStore from "expo-secure-store";
 
 // Constants
 import colors from "@/constants/colors";
@@ -25,12 +27,20 @@ import { formatNumber } from "@/utils/format/formatNumber";
 import toggleMenu from "@/utils/animations/toggleMenu";
 import { getStyles } from "./HomeScreen.styles";
 
+// Keys for secure storage
+const USER_DATA_KEY = "userData";
+const USER_ID_KEY = "userId";
+
 export default function HomeScreen() {
   const navigation = useNavigation();
   const slideAnim = useRef(new Animated.Value(800)).current;
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const backgroundFadeAnim = useRef(new Animated.Value(1)).current;
+
+  // Add state for user data
+  const [userId, setUserId] = useState<string | null>(null);
+  const [userData, setUserData] = useState<any>(null);
 
   // Character transition state
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -176,6 +186,50 @@ export default function HomeScreen() {
       }, 50);
     });
   };
+
+  // Fetch user data from local storage or Supabase if not available
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // First try to get data from secure storage
+        const storedUserData = await SecureStore.getItemAsync(USER_DATA_KEY);
+        const storedUserId = await SecureStore.getItemAsync(USER_ID_KEY);
+
+        if (storedUserData && storedUserId) {
+          // If we have stored data, use it
+          const userData = JSON.parse(storedUserData);
+          console.log("Using locally stored user data");
+          console.log("User ID from storage:", storedUserId);
+
+          setUserId(storedUserId);
+          setUserData(userData);
+        } else {
+          // If not, fetch from Supabase
+          console.log("No stored user data, fetching from Supabase");
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+
+          if (user) {
+            console.log("Fetched user from Supabase");
+            const userId = user.id;
+            console.log("User ID:", userId);
+
+            // Store the data for future use
+            await SecureStore.setItemAsync(USER_DATA_KEY, JSON.stringify(user));
+            await SecureStore.setItemAsync(USER_ID_KEY, userId);
+
+            setUserId(userId);
+            setUserData(user);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   // Set up navigation options
   useEffect(() => {
