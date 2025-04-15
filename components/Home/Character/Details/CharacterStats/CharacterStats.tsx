@@ -3,8 +3,7 @@ import { View, ScrollView, StyleSheet, Animated } from "react-native";
 import colors from "@/constants/colors";
 import { StatBar } from "./StatBar";
 import { Title } from "@/components/Text/TextComponents";
-
-interface CharacterStatsProps {}
+import { UserCharacterProps, UserCharacterStats } from "@/types/UserCharacter";
 
 interface StatData {
   name: string;
@@ -13,7 +12,14 @@ interface StatData {
   maxValue: number;
 }
 
-export const CharacterStats = ({}: CharacterStatsProps) => {
+export const CharacterStats = ({
+  attack,
+  defense,
+  special_attack,
+  special_defense,
+  speed,
+  hit_points,
+}: UserCharacterStats) => {
   // Animation values for bars appearing
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0)).current;
@@ -36,12 +42,22 @@ export const CharacterStats = ({}: CharacterStatsProps) => {
 
   // Mock data for character stats with maxValue of 1,000
   const stats: StatData[] = [
-    { name: "HP", value: 100, color: "#FFD699", maxValue: 1000 },
-    { name: "Attack", value: 150, color: "#BF8EFF", maxValue: 1000 },
-    { name: "Defense", value: 150, color: "#7DD1F8", maxValue: 1000 },
-    { name: "Special\nAttack", value: 100, color: "#80F9B7", maxValue: 1000 },
-    { name: "Special\nDefense", value: 150, color: "#FF9D9D", maxValue: 1000 },
-    { name: "Speed", value: 150, color: "#FFEB99", maxValue: 1000 },
+    { name: "HP", value: hit_points, color: "#FFD699", maxValue: 1000 },
+    { name: "Attack", value: attack, color: "#BF8EFF", maxValue: 1000 },
+    { name: "Defense", value: defense, color: "#7DD1F8", maxValue: 1000 },
+    {
+      name: "Special\nAttack",
+      value: special_attack,
+      color: "#80F9B7",
+      maxValue: 1000,
+    },
+    {
+      name: "Special\nDefense",
+      value: special_defense,
+      color: "#FF9D9D",
+      maxValue: 1000,
+    },
+    { name: "Speed", value: speed, color: "#FFEB99", maxValue: 1000 },
   ];
 
   return (

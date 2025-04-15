@@ -18,10 +18,12 @@ import { CharacterRarities } from "@/components/Home/Character/Details/Character
 import { CharacterCards } from "@/components/Home/Character/Details/CharacterCards/CharacterCards";
 import { CharacterTypeDialog } from "@/components/Home/Character/Details/Type/Dialogue/Dialogue";
 import { getCharacterMenuStyles } from "./CharacterMenu.styles";
+import { UserCharacterProps } from "@/types/UserCharacter";
 
 interface CharacterMenuProps {
   activeCharacter: string;
   characterImage: any;
+  activeCharacterData: UserCharacterProps;
   backgroundImage: any;
   typeImage: any;
   activeMenuCharacterTab: string;
@@ -43,6 +45,7 @@ export const CharacterMenu = ({
   toggleDialog,
   typeDialogVisible,
   slideAnim,
+  activeCharacterData,
 }: CharacterMenuProps) => {
   const styles = getCharacterMenuStyles(activeCharacter);
 
@@ -52,7 +55,16 @@ export const CharacterMenu = ({
 
   switch (activeMenuCharacterTab) {
     case "Stats":
-      CharacterDetailsComponent = <CharacterStats />;
+      CharacterDetailsComponent = (
+        <CharacterStats
+          attack={activeCharacterData.attack}
+          defense={activeCharacterData.defense}
+          special_attack={activeCharacterData.special_attack}
+          special_defense={activeCharacterData.special_defense}
+          speed={activeCharacterData.speed}
+          hit_points={activeCharacterData.hit_points}
+        />
+      );
       break;
     case "Abilities":
       CharacterDetailsComponent = <CharacterAbilities />;
@@ -98,7 +110,9 @@ export const CharacterMenu = ({
             />
           </ImageBackground>
           <View style={styles.menuContentContainer}>
-            <Title color={colors.PrimaryWhite}>Nickname</Title>
+            <Title color={colors.PrimaryWhite}>
+              {activeCharacterData && activeCharacterData.nickname}
+            </Title>
             <Paragraph color={colors.GrayText}>{activeCharacter}</Paragraph>
             <TouchableOpacity onPress={toggleDialog}>
               <View

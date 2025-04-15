@@ -413,6 +413,7 @@ export default function HomeScreen() {
           toggleDialog={toggleDialog}
           typeDialogVisible={typeDialogVisible}
           slideAnim={slideAnim}
+          activeCharacterData={activeCharacterData}
         />
       )}
 
