@@ -67,7 +67,11 @@ export const CharacterMenu = ({
       );
       break;
     case "Abilities":
-      CharacterDetailsComponent = <CharacterAbilities />;
+      CharacterDetailsComponent = (
+        <CharacterAbilities
+          characterMoves={activeCharacterData.character_moves}
+        />
+      );
       break;
     case "Rarities":
       CharacterDetailsComponent = <CharacterRarities />;
