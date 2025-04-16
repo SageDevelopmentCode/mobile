@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import { View, ScrollView, Animated } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, ScrollView, Animated, ActivityIndicator } from "react-native";
 import { useNavigation } from "expo-router";
 import { supabase } from "@/lib/supabase/supabase";
 import * as SecureStore from "expo-secure-store";
 import { getUserCharacters } from "@/lib/supabase/db/characters/user_characters";
+import { useCharacterContext } from "@/lib/context/CharacterContext";
 
 // Constants
 import colors from "@/constants/colors";
@@ -27,6 +28,7 @@ import { Backdrop } from "@/components/Overlay/Backdrop";
 import { formatNumber } from "@/utils/format/formatNumber";
 import toggleMenu from "@/utils/animations/toggleMenu";
 import { getStyles } from "./HomeScreen.styles";
+import { Heading } from "@/components/Text/TextComponents";
 
 // Keys for secure storage
 const USER_DATA_KEY = "userData";
@@ -39,27 +41,31 @@ export default function HomeScreen() {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const backgroundFadeAnim = useRef(new Animated.Value(1)).current;
 
-  // Add state for user data
-  const [userId, setUserId] = useState<string | null>(null);
-  const [userData, setUserData] = useState<any>(null);
-  const [userCharacters, setUserCharacters] = useState<any[]>([]);
-  const [activeCharacterData, setActiveCharacterData] = useState<any>(null);
+  // Get character context
+  const {
+    activeCharacterData,
+    setActiveCharacterData,
+    userCharacters,
+    setUserCharacters,
+    activeCharacter,
+    setActiveCharacter,
+    isLoading,
+  } = useCharacterContext();
 
   // Character transition state
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [transitionCharacter, setTransitionCharacter] = useState<string | null>(
-    null
-  );
+  const [isTransitioning, setIsTransitioning] = React.useState(false);
+  const [transitionCharacter, setTransitionCharacter] = React.useState<
+    string | null
+  >(null);
 
   // State
   const [characterMenuVisible, setCharacterMenuVisible] =
-    useState<boolean>(false);
+    React.useState<boolean>(false);
   const [characterSwitchMenuVisible, setCharacterSwitchMenuVisible] =
-    useState<boolean>(false);
-  const [typeDialogVisible, setTypeDialogVisible] = useState(false);
+    React.useState<boolean>(false);
+  const [typeDialogVisible, setTypeDialogVisible] = React.useState(false);
   const [activeMenuCharacterTab, setActiveMenuCharacterTab] =
-    useState<string>("Stats");
-  const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
+    React.useState<string>("Stats");
 
   // Tabs for character menu
   const menuCharacterTabs: string[] = [
@@ -204,86 +210,7 @@ export default function HomeScreen() {
         setActiveCharacterData(characterData);
       }
     }
-  }, [activeCharacter, userCharacters]);
-
-  // Fetch user data from local storage or Supabase if not available
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // First try to get data from secure storage
-        const storedUserData = await SecureStore.getItemAsync(USER_DATA_KEY);
-        const storedUserId = await SecureStore.getItemAsync(USER_ID_KEY);
-
-        let currentUserId = null;
-
-        if (storedUserData && storedUserId) {
-          // If we have stored data, use it
-          const userData = JSON.parse(storedUserData);
-          console.log("Using locally stored user data");
-          console.log("User ID from storage:", storedUserId);
-
-          currentUserId = storedUserId;
-          setUserId(storedUserId);
-          setUserData(userData);
-        } else {
-          // If not, fetch from Supabase
-          console.log("No stored user data, fetching from Supabase");
-          const {
-            data: { user },
-          } = await supabase.auth.getUser();
-
-          if (user) {
-            console.log("Fetched user from Supabase");
-            const userId = user.id;
-            console.log("User ID:", userId);
-
-            // Store the data for future use
-            await SecureStore.setItemAsync(USER_DATA_KEY, JSON.stringify(user));
-            await SecureStore.setItemAsync(USER_ID_KEY, userId);
-
-            currentUserId = userId;
-            setUserId(userId);
-            setUserData(user);
-          }
-        }
-
-        // Fetch user characters if we have a userId
-        if (currentUserId) {
-          try {
-            const userCharacters = await getUserCharacters(currentUserId);
-            console.log("User Characters:", userCharacters);
-
-            // Store the user characters in state
-            setUserCharacters(userCharacters || []);
-
-            // If there's at least one character, set the active character to the first one's name
-            if (
-              userCharacters &&
-              userCharacters.length > 0 &&
-              userCharacters[0].character?.name
-            ) {
-              // Set the active character to the first character's name
-              const firstCharacter = userCharacters[0];
-              console.log(
-                "Setting active character to:",
-                firstCharacter.character.name
-              );
-              setActiveCharacter(firstCharacter.character.name);
-
-              // Also set the active character data
-              setActiveCharacterData(firstCharacter);
-            }
-          } catch (error) {
-            console.error("Error fetching user characters:", error);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
+  }, [activeCharacter, userCharacters, setActiveCharacterData]);
 
   // Set up navigation options
   useEffect(() => {
@@ -357,6 +284,26 @@ export default function HomeScreen() {
     console.log("No image available, will show loading indicator");
     return null;
   }, [activeCharacterData, localCharacterImage]);
+
+  // Display loading state
+  if (isLoading) {
+    return (
+      <View
+        style={[
+          styles.container,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
+        <ActivityIndicator
+          size="large"
+          color={colors.PrimaryPurpleBackground}
+        />
+        <Heading color={colors.PrimaryWhite} style={{ marginTop: 20 }}>
+          Loading character data...
+        </Heading>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

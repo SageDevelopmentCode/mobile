@@ -9,6 +9,35 @@ export const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 100,
   },
+
+  // Full screen loading state
+  loadingScreen: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    backgroundColor: colors.ZoneOneBattleBackground,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 30,
+  },
+
+  // Return button for error state
+  returnButton: {
+    marginTop: 30,
+    backgroundColor: colors.PrimaryPurpleBackground,
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+
   imageBackground: {
     height: height * 0.48, // Convert flex ratio to fixed height
     width: "100%",
@@ -108,5 +137,13 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 30,
     backgroundColor: colors.ZoneOneBattleButtonBackground,
+  },
+  loadingContainer: {
+    flex: 1,
+    width: "100%",
+    height: 150,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
   },
 });

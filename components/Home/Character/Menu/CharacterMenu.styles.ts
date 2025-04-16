@@ -18,6 +18,7 @@ export const getCharacterMenuStyles = (activeCharacter: string) => {
       borderTopLeftRadius: 40,
       borderTopRightRadius: 40,
       zIndex: 25,
+      overflow: "hidden",
     },
     menuScrollViewContainer: {
       flexGrow: 1,

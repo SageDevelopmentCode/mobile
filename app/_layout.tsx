@@ -3,6 +3,7 @@ import { Redirect, Slot, useSegments, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
+import { CharacterProvider } from "@/lib/context/CharacterContext";
 
 // This component handles authentication routing after the layout is mounted
 function AuthHandler() {
@@ -42,8 +43,10 @@ function AuthHandler() {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <StatusBar style="dark" />
-      <AuthHandler />
+      <CharacterProvider>
+        <StatusBar style="dark" />
+        <AuthHandler />
+      </CharacterProvider>
     </AuthProvider>
   );
 }

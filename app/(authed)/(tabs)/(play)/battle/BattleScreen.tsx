@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from "react-native";
 import { router, useNavigation } from "expo-router";
 const { width, height } = Dimensions.get("window");
@@ -33,6 +34,29 @@ import { AttackEffect } from "@/components/Battle/BattleScreen/Animations/Attack
 import { DamageIndicator } from "@/components/Battle/BattleScreen/Animations/DamageIndicator";
 import { VictoryModal } from "@/components/Battle/BattleScreen/VictoryModal/VictoryModal";
 import { Alert } from "react-native";
+import { useCharacterContext } from "@/lib/context/CharacterContext";
+
+// Define types matching the CharacterAbility component
+type StatType =
+  | "attack"
+  | "defense"
+  | "specialAttack"
+  | "specialDefense"
+  | "speed";
+
+type AbilityEffect = {
+  type: "damage" | "buff";
+  value: number;
+  stat?: StatType;
+};
+
+type CharacterMove = {
+  name: string;
+  type: StatType;
+  effects: AbilityEffect[];
+  description: string;
+  uses: number;
+};
 
 export default function BattleScreen() {
   const [quitModalVisible, setQuitModalVisible] = useState<boolean>(false);
@@ -42,6 +66,57 @@ export default function BattleScreen() {
   const [victoryModalVisible, setVictoryModalVisible] =
     useState<boolean>(false);
   const slideAnim = useRef(new Animated.Value(800)).current;
+
+  // Get character data from context
+  const { activeCharacterData, activeCharacter, userCharacters, isLoading } =
+    useCharacterContext();
+
+  console.log(
+    "activeCharacterData in battle screen context",
+    activeCharacterData
+  );
+
+  // If we're still loading character data, show a loading screen
+  if (isLoading) {
+    return (
+      <View style={styles.loadingScreen}>
+        <ActivityIndicator
+          size="large"
+          color={colors.PrimaryPurpleBackground}
+        />
+        <Heading color={colors.PrimaryWhite} style={{ marginTop: 20 }}>
+          Loading character data...
+        </Heading>
+      </View>
+    );
+  }
+
+  // If character data failed to load, show an error and a button to go back
+  if (!activeCharacterData) {
+    return (
+      <View style={styles.loadingScreen}>
+        <MaterialIcons
+          name="error-outline"
+          size={60}
+          color={colors.PrimaryWhite}
+        />
+        <Heading
+          color={colors.PrimaryWhite}
+          style={{ marginTop: 20, textAlign: "center" }}
+        >
+          Could not load character data
+        </Heading>
+        <TouchableOpacity
+          style={styles.returnButton}
+          onPress={() => router.back()}
+        >
+          <ButtonText color={colors.PrimaryWhite}>
+            Return to previous screen
+          </ButtonText>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   // Create animation values for player and enemy
   const playerAnimValue = useRef(new Animated.Value(0)).current;
@@ -66,6 +141,26 @@ export default function BattleScreen() {
   });
 
   const navigation = useNavigation();
+
+  // Prepare the character image source
+  const characterImageSource = React.useMemo(() => {
+    // Check if we have a valid image URL from the database
+    if (
+      activeCharacterData?.character?.image_url &&
+      activeCharacterData.character.image_url.trim() !== ""
+    ) {
+      // Make sure the URL has a proper protocol
+      let imageUrl = activeCharacterData.character.image_url;
+      if (!imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")) {
+        imageUrl = "https://" + imageUrl.replace(/^\/\//, "");
+      }
+
+      return { uri: imageUrl };
+    }
+
+    // Fallback to local image
+    return Deborah;
+  }, [activeCharacterData]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -189,6 +284,52 @@ export default function BattleScreen() {
     }, 300);
   };
 
+  // Prepare character data for victory modal
+  const characterData = {
+    name: activeCharacterData?.character?.name || "Deborah",
+    image: characterImageSource || Deborah,
+    color1: "#E94B8A", // Primary pink color
+    color2: "#F78FB2", // Secondary lighter pink
+  };
+
+  // Function to map data types from API to component types
+  const mapMoveToAbility = (move: any): CharacterMove => {
+    // Default effects if none provided
+    const defaultEffects: AbilityEffect[] = [{ type: "damage", value: 50 }];
+
+    // Make sure the type is valid
+    const validTypes: StatType[] = [
+      "attack",
+      "defense",
+      "specialAttack",
+      "specialDefense",
+      "speed",
+    ];
+    const type = validTypes.includes(move.type as StatType)
+      ? (move.type as StatType)
+      : "specialAttack";
+
+    // Map and validate effects
+    const mappedEffects = Array.isArray(move.effects)
+      ? move.effects.map((effect: any) => ({
+          type:
+            effect.type === "buff" || effect.type === "damage"
+              ? effect.type
+              : "damage",
+          value: typeof effect.value === "number" ? effect.value : 50,
+          stat: effect.stat as StatType,
+        }))
+      : defaultEffects;
+
+    return {
+      name: move.name || "Unknown Ability",
+      type,
+      effects: mappedEffects,
+      description: move.description || "No description available",
+      uses: typeof move.uses === "number" ? move.uses : 3,
+    };
+  };
+
   return (
     <>
       <QuitModal
@@ -199,12 +340,7 @@ export default function BattleScreen() {
       <VictoryModal
         visible={victoryModalVisible}
         onClose={closeVictoryModal}
-        character={{
-          name: "Deborah",
-          image: Deborah, // You're already importing this at the top
-          color1: "#E94B8A", // Primary pink color
-          color2: "#F78FB2", // Secondary lighter pink
-        }}
+        character={characterData}
         rewards={[
           { type: "Faith Points", amount: 100, icon: "star", color: "#FFC107" },
           {
@@ -245,11 +381,14 @@ export default function BattleScreen() {
           <View style={styles.charactersContainer}>
             {/* Player */}
             <Character
-              characterName="Deborah"
-              level={12}
+              characterName={
+                activeCharacterData?.nickname ||
+                activeCharacterData?.character?.name
+              }
+              level={activeCharacterData?.level || 12}
               health={playerHealth}
               typeImage={SolaraType}
-              characterImage={Deborah}
+              characterImage={characterImageSource || Deborah}
               onPress={() => {}}
               maxHealth={100}
               animatedValue={playerAnimValue}
@@ -274,7 +413,10 @@ export default function BattleScreen() {
           <View style={styles.textRow}>
             <Heading color={colors.PrimaryWhite}>
               What will{" "}
-              <Heading color={colors.PrimaryPurpleBackground}>Deborah</Heading>{" "}
+              <Heading color={colors.PrimaryPurpleBackground}>
+                {activeCharacterData?.nickname ||
+                  activeCharacterData?.character?.name}
+              </Heading>{" "}
               do?
             </Heading>
             <View style={styles.timerBox}>
@@ -290,42 +432,35 @@ export default function BattleScreen() {
               alignItems: "center",
             }}
           >
-            <CharacterAbility
-              icon={JudgeWisdom}
-              name="Prophetic Insight"
-              type="specialDefense"
-              effects={[{ type: "buff", value: 15, stat: "specialDefense" }]}
-              description="Heightened spiritual awareness grants resistance to special attacks and reveals enemy intentions."
-              uses={4}
-              onPress={toggleQuestionMenu}
-            />
-            <CharacterAbility
-              icon={JudgeWisdom}
-              name="Judgment Call"
-              type="defense"
-              effects={[{ type: "buff", value: 10, stat: "defense" }]}
-              description="Delivers a wise ruling that steadies the team and reinforces defense."
-              uses={3}
-              onPress={toggleQuestionMenu}
-            />
-            <CharacterAbility
-              icon={JudgeWisdom}
-              name="Command Barak"
-              type="specialAttack"
-              effects={[{ type: "damage", value: 100 }]}
-              description="Inspires an ally to strike with divine power; launches a special attack through leadership."
-              uses={2}
-              onPress={toggleQuestionMenu}
-            />
-            <CharacterAbility
-              icon={JudgeWisdom}
-              name="Swift Wind"
-              type="speed"
-              effects={[{ type: "buff", value: 25, stat: "speed" }]}
-              description="A divine wind stirs at Deborah's command, increasing her speed or hastening allies."
-              uses={3}
-              onPress={toggleQuestionMenu}
-            />
+            {activeCharacterData?.character_moves &&
+            activeCharacterData.character_moves.length > 0 ? (
+              activeCharacterData.character_moves.map(
+                (ability: any, index: number) => (
+                  <CharacterAbility
+                    key={index}
+                    icon={JudgeWisdom}
+                    name={ability.name}
+                    type={ability.type}
+                    effects={ability.effects}
+                    description={ability.description}
+                    uses={ability.uses}
+                  />
+                )
+              )
+            ) : (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator
+                  size="large"
+                  color={colors.PrimaryPurpleBackground}
+                />
+                <ButtonText
+                  color={colors.PrimaryWhite}
+                  style={{ marginTop: 10 }}
+                >
+                  Loading abilities...
+                </ButtonText>
+              </View>
+            )}
           </ScrollView>
           <View style={styles.textRow}>
             <Heading color={colors.PrimaryWhite}>Switch</Heading>
@@ -338,21 +473,25 @@ export default function BattleScreen() {
               alignItems: "center",
             }}
           >
-            <CharacterSwitchCard
-              characterImage={Gabriel}
-              characterName="Gabriel"
-              health={99}
-            />
-            <CharacterSwitchCard
-              characterImage={Gabriel}
-              characterName="Gabriel"
-              health={99}
-            />
-            <CharacterSwitchCard
-              characterImage={Gabriel}
-              characterName="Gabriel"
-              health={99}
-            />
+            {userCharacters.map((character, index) => (
+              <CharacterSwitchCard
+                key={index}
+                characterImage={
+                  character.character?.image_url
+                    ? { uri: character.character.image_url }
+                    : Gabriel
+                }
+                characterName={character.character?.name || "Unknown"}
+                health={character.health || 99}
+              />
+            ))}
+            {userCharacters.length === 0 && (
+              <CharacterSwitchCard
+                characterImage={Gabriel}
+                characterName="Gabriel"
+                health={99}
+              />
+            )}
           </ScrollView>
         </View>
       </ScrollView>
