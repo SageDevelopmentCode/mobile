@@ -1,17 +1,5 @@
 import { makeSupabaseRequest } from "../../rest-api";
 
-// Define the User interface based on the database schema
-export interface User {
-  id: string;
-  created_at: string;
-  username: string;
-  last_login: string;
-  energy_points: number;
-  energy_last_reset: string;
-  level: number;
-  experience_points: number;
-}
-
 // Function to get a user by ID
 export async function getUserById(id: string) {
   const { data, error } = await makeSupabaseRequest("rest/v1/users", "GET", {

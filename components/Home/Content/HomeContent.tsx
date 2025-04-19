@@ -6,6 +6,7 @@ import { GoalItem } from "@/components/Goal/GoalItem";
 import { Chest } from "./Chest/Chest";
 import colors from "@/constants/colors";
 import { getHomeContentStyles } from "./HomeContent.styles";
+import { User } from "@/types/User";
 
 interface HomeContentProps {
   activeCharacter: string;
@@ -16,12 +17,14 @@ interface HomeContentProps {
     isNew?: boolean;
   }[];
   chestImage: any;
+  userData: User | null;
 }
 
 export const HomeContent = ({
   activeCharacter,
   goals,
   chestImage,
+  userData,
 }: HomeContentProps) => {
   const styles = getHomeContentStyles();
 
@@ -50,7 +53,7 @@ export const HomeContent = ({
 
       <ProgressBar
         height={15}
-        progress={40}
+        progress={userData ? (userData.energy_points / 20) * 100 : 0}
         backgroundColor={colors.PrimaryWhite}
         progressColor={
           activeCharacter === "Deborah"
@@ -58,7 +61,7 @@ export const HomeContent = ({
             : colors.SolaraGreen
         }
         imageSrc={chestImage}
-        leftText="0 energy today"
+        leftText={`${userData?.energy_points || 0} energy today`}
         rightText="Goal: 20"
         activeCharacter={activeCharacter}
       />

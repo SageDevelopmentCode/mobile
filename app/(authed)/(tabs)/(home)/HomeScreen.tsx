@@ -337,6 +337,7 @@ export default function HomeScreen() {
           activeCharacter={activeCharacter}
           goals={goals}
           chestImage={UncommonChest}
+          userData={userData}
         />
       </ScrollView>
 

@@ -8,7 +8,8 @@ import React, {
 import * as SecureStore from "expo-secure-store";
 import { supabase } from "@/lib/supabase/supabase";
 import { getUserCharacters } from "@/lib/supabase/db/user-characters";
-import { getUserById, User } from "@/lib/supabase/db/user";
+import { getUserById } from "@/lib/supabase/db/user";
+import { User } from "@/types/User";
 
 // Keys for secure storage
 const USER_DATA_KEY = "userData";
