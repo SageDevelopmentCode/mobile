@@ -7,7 +7,7 @@ import {
   getCharactersByRarity,
   searchCharactersByName,
   updateCharacter,
-} from "./characters";
+} from "../characters";
 
 import {
   UserCharacter,
@@ -21,7 +21,7 @@ import {
   getUserCharacterWithDetailsById,
   updateUserCharacter,
   updateUserCharacterXP,
-} from "./user_characters";
+} from "../user-characters";
 
 /**
  * CharacterService provides an easier interface to work with character data

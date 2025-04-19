@@ -1,9 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { View, ScrollView, Animated, ActivityIndicator } from "react-native";
 import { useNavigation } from "expo-router";
-import { supabase } from "@/lib/supabase/supabase";
-import * as SecureStore from "expo-secure-store";
-import { getUserCharacters } from "@/lib/supabase/db/characters/user_characters";
 import { useCharacterContext } from "@/lib/context/CharacterContext";
 
 // Constants

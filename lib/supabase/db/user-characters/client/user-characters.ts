@@ -1,5 +1,5 @@
-import { supabase } from "../../supabase";
-import { Character } from "./characters";
+import { supabase } from "../../../supabase";
+import { Character } from "../../characters/client/characters";
 
 // Define the UserCharacter interface based on the database schema
 export interface UserCharacter {

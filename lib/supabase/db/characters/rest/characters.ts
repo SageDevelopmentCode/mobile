@@ -1,4 +1,4 @@
-import { supabase } from "../../supabase";
+import { makeSupabaseRequest } from "../../../rest-api";
 
 // Define types for character abilities
 export type StatType =
@@ -39,12 +39,13 @@ export interface Character {
   base_hit_points: number;
 }
 
-// Function to get all characters
+// Function to get all characters using REST API
 export async function getAllCharacters() {
-  const { data, error } = await supabase
-    .from("characters")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const { data, error } = await makeSupabaseRequest(
+    "rest/v1/characters",
+    "GET",
+    { order: "created_at.desc" }
+  );
 
   if (error) {
     console.error("Error fetching characters:", error);
@@ -54,31 +55,38 @@ export async function getAllCharacters() {
   return data;
 }
 
-// Function to get a single character by ID
+// Function to get a single character by ID using REST API
 export async function getCharacterById(id: string) {
-  const { data, error } = await supabase
-    .from("characters")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const { data, error } = await makeSupabaseRequest(
+    "rest/v1/characters",
+    "GET",
+    { "id.eq": id },
+    null
+  );
 
   if (error) {
     console.error(`Error fetching character with ID ${id}:`, error);
     throw error;
   }
 
-  return data;
+  // REST API returns an array, but we want a single object
+  if (Array.isArray(data) && data.length > 0) {
+    return data[0];
+  }
+
+  throw new Error(`Character with ID ${id} not found`);
 }
 
-// Function to create a new character
+// Function to create a new character using REST API
 export async function createCharacter(
   character: Omit<Character, "id" | "created_at">
 ) {
-  const { data, error } = await supabase
-    .from("characters")
-    .insert(character)
-    .select()
-    .single();
+  const { data, error } = await makeSupabaseRequest(
+    "rest/v1/characters",
+    "POST",
+    {},
+    character
+  );
 
   if (error) {
     console.error("Error creating character:", error);
@@ -88,29 +96,38 @@ export async function createCharacter(
   return data;
 }
 
-// Function to update an existing character
+// Function to update an existing character using REST API
 export async function updateCharacter(
   id: string,
   characterData: Partial<Omit<Character, "id" | "created_at">>
 ) {
-  const { data, error } = await supabase
-    .from("characters")
-    .update(characterData)
-    .eq("id", id)
-    .select()
-    .single();
+  const { data, error } = await makeSupabaseRequest(
+    "rest/v1/characters",
+    "PATCH",
+    { "id.eq": id },
+    characterData
+  );
 
   if (error) {
     console.error(`Error updating character with ID ${id}:`, error);
     throw error;
   }
 
+  // REST API might return multiple records, we want the updated one
+  if (Array.isArray(data) && data.length > 0) {
+    return data[0];
+  }
+
   return data;
 }
 
-// Function to delete a character
+// Function to delete a character using REST API
 export async function deleteCharacter(id: string) {
-  const { error } = await supabase.from("characters").delete().eq("id", id);
+  const { data, error } = await makeSupabaseRequest(
+    "rest/v1/characters",
+    "DELETE",
+    { "id.eq": id }
+  );
 
   if (error) {
     console.error(`Error deleting character with ID ${id}:`, error);
@@ -120,13 +137,13 @@ export async function deleteCharacter(id: string) {
   return true;
 }
 
-// Function to search characters by name
+// Function to search characters by name using REST API
 export async function searchCharactersByName(query: string) {
-  const { data, error } = await supabase
-    .from("characters")
-    .select("*")
-    .ilike("name", `%${query}%`)
-    .order("name");
+  const { data, error } = await makeSupabaseRequest(
+    "rest/v1/characters",
+    "GET",
+    { "name.ilike": `%${query}%`, order: "name" }
+  );
 
   if (error) {
     console.error("Error searching characters:", error);
@@ -136,13 +153,13 @@ export async function searchCharactersByName(query: string) {
   return data;
 }
 
-// Function to filter characters by rarity
+// Function to filter characters by rarity using REST API
 export async function getCharactersByRarity(rarity: string) {
-  const { data, error } = await supabase
-    .from("characters")
-    .select("*")
-    .eq("rarity", rarity)
-    .order("name");
+  const { data, error } = await makeSupabaseRequest(
+    "rest/v1/characters",
+    "GET",
+    { "rarity.eq": rarity, order: "name" }
+  );
 
   if (error) {
     console.error(`Error fetching characters with rarity ${rarity}:`, error);

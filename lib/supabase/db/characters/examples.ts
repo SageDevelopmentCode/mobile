@@ -1,6 +1,9 @@
-import { CharacterService, UserCharacterService } from "./characterService";
-import { Character, CharacterAbility } from "./characters";
-import { UserCharacter } from "./user_characters";
+import {
+  CharacterService,
+  UserCharacterService,
+} from "../services/characterService";
+import { Character, CharacterAbility } from "./index";
+import { UserCharacter } from "../user-characters";
 
 /**
  * Examples of how to use the CharacterService and UserCharacterService
