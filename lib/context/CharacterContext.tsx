@@ -8,6 +8,7 @@ import React, {
 import * as SecureStore from "expo-secure-store";
 import { supabase } from "@/lib/supabase/supabase";
 import { getUserCharacters } from "@/lib/supabase/db/user-characters";
+import { getUserById, User } from "@/lib/supabase/db/user";
 
 // Keys for secure storage
 const USER_DATA_KEY = "userData";
@@ -21,6 +22,9 @@ type CharacterContextType = {
   activeCharacter: string;
   setActiveCharacter: (name: string) => void;
   isLoading: boolean;
+  userData: User | null;
+  setUserData: (data: User | null) => void;
+  refreshUserData: () => Promise<void>;
 };
 
 const CharacterContext = createContext<CharacterContextType | undefined>(
@@ -46,6 +50,22 @@ export function CharacterProvider({ children }: CharacterProviderProps) {
   const [userCharacters, setUserCharacters] = useState<any[]>([]);
   const [activeCharacter, setActiveCharacter] = useState<string>("Deborah");
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [userData, setUserData] = useState<User | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Function to refresh user data
+  const refreshUserData = async () => {
+    if (userId) {
+      try {
+        const data = await getUserById(userId);
+        if (data) {
+          setUserData(data);
+        }
+      } catch (error) {
+        console.error("Context: Error refreshing user data:", error);
+      }
+    }
+  };
 
   // Load character data on context initialization
   useEffect(() => {
@@ -85,8 +105,24 @@ export function CharacterProvider({ children }: CharacterProviderProps) {
           }
         }
 
-        // Fetch user characters if we have a userId
+        // Set the userId in state
+        setUserId(currentUserId);
+
+        // Fetch user data from the users table
         if (currentUserId) {
+          try {
+            const user = await getUserById(currentUserId);
+            if (user) {
+              console.log("Context: User data fetched:", user);
+              setUserData(user);
+            } else {
+              console.log("Context: No user data found for ID:", currentUserId);
+            }
+          } catch (error) {
+            console.error("Context: Error fetching user data:", error);
+          }
+
+          // Fetch user characters if we have a userId
           try {
             const characters = await getUserCharacters(currentUserId);
             console.log("Context: User Characters:", characters);
@@ -133,6 +169,9 @@ export function CharacterProvider({ children }: CharacterProviderProps) {
     activeCharacter,
     setActiveCharacter,
     isLoading,
+    userData,
+    setUserData,
+    refreshUserData,
   };
 
   return (

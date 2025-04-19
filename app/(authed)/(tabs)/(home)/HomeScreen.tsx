@@ -43,11 +43,13 @@ export default function HomeScreen() {
     activeCharacterData,
     setActiveCharacterData,
     userCharacters,
-    setUserCharacters,
     activeCharacter,
     setActiveCharacter,
     isLoading,
+    userData,
   } = useCharacterContext();
+
+  console.log("User data from context:", userData);
 
   // Character transition state
   const [isTransitioning, setIsTransitioning] = React.useState(false);
