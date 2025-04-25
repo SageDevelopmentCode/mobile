@@ -15,6 +15,9 @@ import { tabBarOptions } from "@/constants/tabBarOptions";
 import { styles } from "./BattleScreen.styles";
 import ZoneOneBattleBackground from "../assets/ZoneOneBattle.jpg";
 import OldTestament from "../assets/OldTestament.jpg";
+import BibleGeography from "../assets/BibleGeography.jpg";
+import NewTestament from "../assets/NewTestament.jpg";
+import NewTestament2 from "../assets/NewTestament2.jpg";
 import Deborah from "../../../../../assets/images/characters/Deborah.png";
 import Gabriel from "../../../../../assets/images/characters/Gabriel.png";
 import SolaraType from "../../../../../assets/images/character_types/SolaraType.png";
@@ -444,6 +447,7 @@ export default function BattleScreen() {
                     effects={ability.effects}
                     description={ability.description}
                     uses={ability.uses}
+                    onPress={toggleQuestionMenu}
                   />
                 )
               )
@@ -530,8 +534,8 @@ export default function BattleScreen() {
                       }}
                     />
                     <CategoryCard
-                      imageSrc={OldTestament}
-                      title="Old Testament Stories"
+                      imageSrc={BibleGeography}
+                      title="Bible Geography"
                       onPress={() => {
                         setQuestionStep(2);
                       }}
@@ -539,15 +543,15 @@ export default function BattleScreen() {
                   </View>
                   <View style={styles.categoryRow}>
                     <CategoryCard
-                      imageSrc={OldTestament}
-                      title="Old Testament Stories"
+                      imageSrc={NewTestament}
+                      title="New Testament Stories"
                       onPress={() => {
                         setQuestionStep(2);
                       }}
                     />
                     <CategoryCard
-                      imageSrc={OldTestament}
-                      title="Old Testament Stories"
+                      imageSrc={NewTestament2}
+                      title="Jesus Stories"
                       onPress={() => {
                         setQuestionStep(2);
                       }}
