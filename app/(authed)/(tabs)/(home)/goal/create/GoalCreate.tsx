@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { useNavigation } from "expo-router";
 import {
-  Button,
-  Modal,
   ScrollView,
   Text,
   TextInput,
@@ -15,7 +13,6 @@ import { FontAwesome6, MaterialIcons } from "@/utils/icons";
 import { styles } from "./GoalCreate.styles";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { Paragraph, Title } from "@/components/Text/TextComponents";
-import EmojiSelector from "react-native-emoji-selector";
 import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
 import {
   ClassroomSuggestions,
@@ -26,6 +23,7 @@ import {
   ScriptureSuggestions,
   WorkplaceSuggestions,
 } from "@/components/Suggestion";
+import { EmojiSelectorBottomSheet } from "@/components/Goal/EmojiSelectorBottomSheet";
 
 export default function CreateGoalScreen() {
   const navigation = useNavigation();
@@ -69,7 +67,7 @@ export default function CreateGoalScreen() {
 
   const onEmojiSelect = (emoji: string): void => {
     setSelectedEmoji(emoji);
-    setEmojiPickerVisible(false); // Close picker after selection
+    // No need to close the picker here as the bottom sheet will handle closing itself
   };
 
   const handleSuggestionSelect = (item: {
@@ -190,22 +188,14 @@ export default function CreateGoalScreen() {
         {SuggestionsComponent}
       </View>
 
-      <Modal
+      {/* Emoji Selector Bottom Sheet */}
+      <EmojiSelectorBottomSheet
         visible={isEmojiPickerVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setEmojiPickerVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.pickerContainer}>
-            <Button
-              title="Close"
-              onPress={() => setEmojiPickerVisible(false)}
-            />
-            <EmojiSelector onEmojiSelected={onEmojiSelect} />
-          </View>
-        </View>
-      </Modal>
+        onClose={() => setEmojiPickerVisible(false)}
+        onEmojiSelected={onEmojiSelect}
+        activeCharacter="Deborah" // You may want to pass the actual active character from your state
+      />
+
       <View style={styles.suggestionsNavigator}>
         <ScrollView
           horizontal
