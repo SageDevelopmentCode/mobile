@@ -8,7 +8,18 @@ import {
 } from "react-native";
 import { Heading, StatText, ButtonText } from "../Text/TextComponents";
 import colors from "@/constants/colors";
-import { FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  FontAwesome6,
+  Ionicons,
+  MaterialIcons,
+  FontAwesome,
+} from "@expo/vector-icons";
+import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+  State,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
 
 type GoalItemBottomSheetProps = {
   visible: boolean;
@@ -20,6 +31,7 @@ type GoalItemBottomSheetProps = {
   onSkip: () => void;
   onComplete: () => void;
   onSnooze: () => void;
+  onEdit?: () => void;
   activeCharacter: string;
 };
 
@@ -33,12 +45,19 @@ export const GoalItemBottomSheet = ({
   onSkip,
   onComplete,
   onSnooze,
+  onEdit,
   activeCharacter,
 }: GoalItemBottomSheetProps) => {
   const isDeborah = activeCharacter === "Deborah";
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(300)).current;
   const [modalVisible, setModalVisible] = useState(visible);
+  const panY = useRef(new Animated.Value(0)).current;
+
+  // Function to reset the pan position when the modal is shown
+  const resetPanPosition = () => {
+    panY.setValue(0);
+  };
 
   const closeWithAnimation = () => {
     // Fade out overlay and slide down sheet
@@ -57,6 +76,7 @@ export const GoalItemBottomSheet = ({
       // Only hide the modal after animation completes
       setModalVisible(false);
       onClose();
+      resetPanPosition();
     });
   };
 
@@ -64,6 +84,7 @@ export const GoalItemBottomSheet = ({
     if (visible) {
       // Show modal immediately when requested
       setModalVisible(true);
+      resetPanPosition();
 
       // Fade in overlay and slide up sheet
       Animated.parallel([
@@ -94,6 +115,41 @@ export const GoalItemBottomSheet = ({
     closeWithAnimation();
   };
 
+  const handleEditPress = () => {
+    if (onEdit) {
+      onEdit();
+      closeWithAnimation();
+    }
+  };
+
+  // Gesture handler for bottom sheet swiping
+  const onGestureEvent = Animated.event(
+    [{ nativeEvent: { translationY: panY } }],
+    { useNativeDriver: true }
+  );
+
+  // Handle when the gesture ends
+  const onHandlerStateChange = (event: PanGestureHandlerGestureEvent) => {
+    if (event.nativeEvent.state === State.END) {
+      const { translationY } = event.nativeEvent;
+
+      // If user has swiped down more than 50 pixels, close the sheet
+      if (translationY > 50) {
+        closeWithAnimation();
+      } else {
+        // If not, snap back to original position
+        Animated.spring(panY, {
+          toValue: 0,
+          useNativeDriver: true,
+          bounciness: 5,
+        }).start();
+      }
+    }
+  };
+
+  // Combine both the slideAnim and panY for the sheet's translation
+  const translateY = Animated.add(slideAnim, panY);
+
   return (
     <Modal
       transparent
@@ -114,89 +170,120 @@ export const GoalItemBottomSheet = ({
           activeOpacity={1}
           onPress={handleOverlayPress}
         />
-        <Animated.View
-          style={[
-            styles.bottomSheet,
-            {
-              backgroundColor: isDeborah
-                ? colors.DarkPurpleBackground
-                : colors.GabrielBackground,
-              transform: [{ translateY: slideAnim }],
-            },
-          ]}
-        >
-          {/* Book emoji container */}
-          <View style={styles.emojiContainer}>
-            <Heading style={styles.emoji}>{emoji}</Heading>
-          </View>
 
-          {/* Devotional title */}
-          <Heading color={colors.PrimaryWhite} style={styles.title}>
-            {title}
-          </Heading>
-
-          {/* Read Today's Devotional text */}
-          <StatText color="#AAAAAA" style={styles.description}>
-            {description}
-          </StatText>
-
-          {/* Energy count */}
-          <View style={styles.energyContainer}>
-            <Heading color={colors.PrimaryWhite} style={styles.energyCount}>
-              {energyCount}
-            </Heading>
-            <MaterialIcons name="bolt" size={24} color="#F6C833" />
-          </View>
-
-          {/* Action buttons */}
-          <View style={styles.buttonContainer}>
-            {/* Skip button */}
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => handleActionPress(onSkip)}
-            >
-              <View style={styles.iconContainer}>
-                <FontAwesome6 name="forward-fast" size={24} color="#D95858" />
-              </View>
-              <ButtonText color={colors.PrimaryWhite}>Skip</ButtonText>
-            </TouchableOpacity>
-
-            {/* Complete button */}
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => handleActionPress(onComplete)}
-            >
-              <View
-                style={[
-                  styles.iconContainer,
-                  { backgroundColor: "rgba(103, 205, 149, 0.15)" },
-                ]}
-              >
-                <FontAwesome6 name="play" size={24} color="#67CD95" />
-              </View>
-              <ButtonText color={colors.PrimaryWhite}>Complete</ButtonText>
-            </TouchableOpacity>
-
-            {/* Snooze button */}
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => handleActionPress(onSnooze)}
-            >
-              <View style={styles.iconContainer}>
-                <Ionicons name="calendar-outline" size={24} color="#5878D9" />
-              </View>
-              <ButtonText color={colors.PrimaryWhite}>Snooze</ButtonText>
-            </TouchableOpacity>
-          </View>
-
-          {/* Close button */}
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={closeWithAnimation}
+        <GestureHandlerRootView style={{ flex: 0 }}>
+          <PanGestureHandler
+            onGestureEvent={onGestureEvent}
+            onHandlerStateChange={onHandlerStateChange}
           >
-            <Ionicons name="close" size={24} color={colors.PrimaryWhite} />
-          </TouchableOpacity>
-        </Animated.View>
+            <Animated.View
+              style={[
+                styles.bottomSheet,
+                {
+                  backgroundColor: isDeborah
+                    ? colors.DarkPurpleBackground
+                    : colors.GabrielBackground,
+                  transform: [{ translateY }],
+                },
+              ]}
+            >
+              {/* Swipe indicator bar */}
+              <View style={styles.swipeIndicator} />
+
+              {/* Book emoji container */}
+              <View style={styles.emojiContainer}>
+                <Heading style={styles.emoji}>{emoji}</Heading>
+              </View>
+
+              {/* Devotional title */}
+              <Heading color={colors.PrimaryWhite} style={styles.title}>
+                {title}
+              </Heading>
+
+              {/* Read Today's Devotional text */}
+              <StatText color="#AAAAAA" style={styles.description}>
+                {description}
+              </StatText>
+
+              {/* Energy count */}
+              <View style={styles.energyContainer}>
+                <Heading color={colors.PrimaryWhite} style={styles.energyCount}>
+                  {energyCount}
+                </Heading>
+                <MaterialIcons name="bolt" size={24} color="#F6C833" />
+              </View>
+
+              {/* Action buttons */}
+              <View style={styles.buttonContainer}>
+                {/* Skip button */}
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => handleActionPress(onSkip)}
+                >
+                  <View style={styles.iconContainer}>
+                    <FontAwesome6
+                      name="forward-fast"
+                      size={24}
+                      color="#D95858"
+                    />
+                  </View>
+                  <ButtonText color={colors.PrimaryWhite}>Skip</ButtonText>
+                </TouchableOpacity>
+
+                {/* Complete button */}
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => handleActionPress(onComplete)}
+                >
+                  <View
+                    style={[
+                      styles.iconContainer,
+                      { backgroundColor: "rgba(103, 205, 149, 0.15)" },
+                    ]}
+                  >
+                    <FontAwesome6 name="play" size={24} color="#67CD95" />
+                  </View>
+                  <ButtonText color={colors.PrimaryWhite}>Complete</ButtonText>
+                </TouchableOpacity>
+
+                {/* Snooze button */}
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => handleActionPress(onSnooze)}
+                >
+                  <View style={styles.iconContainer}>
+                    <Ionicons
+                      name="calendar-outline"
+                      size={24}
+                      color="#5878D9"
+                    />
+                  </View>
+                  <ButtonText color={colors.PrimaryWhite}>Snooze</ButtonText>
+                </TouchableOpacity>
+              </View>
+
+              {/* Edit button */}
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={handleEditPress}
+              >
+                <FontAwesome
+                  name="pencil"
+                  size={20}
+                  color={colors.PrimaryWhite}
+                />
+              </TouchableOpacity>
+
+              {/* Close button */}
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={closeWithAnimation}
+              >
+                <Ionicons name="close" size={24} color={colors.PrimaryWhite} />
+              </TouchableOpacity>
+            </Animated.View>
+          </PanGestureHandler>
+        </GestureHandlerRootView>
       </Animated.View>
     </Modal>
   );
@@ -219,6 +306,16 @@ const styles = StyleSheet.create({
     paddingVertical: 32,
     alignItems: "center",
   },
+  swipeIndicator: {
+    width: 40,
+    height: 5,
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    borderRadius: 5,
+    marginBottom: 16,
+    position: "absolute",
+    top: 10,
+    alignSelf: "center",
+  },
   emojiContainer: {
     width: 60,
     height: 60,
@@ -227,6 +324,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 16,
+    marginTop: 10,
   },
   emoji: {
     fontSize: 28,
@@ -272,6 +370,17 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 20,
     right: 20,
+    width: 40,
+    height: 40,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  editButton: {
+    position: "absolute",
+    top: 20,
+    right: 70, // Position it to the left of the close button
     width: 40,
     height: 40,
     backgroundColor: "rgba(255, 255, 255, 0.1)",

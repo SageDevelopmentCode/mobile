@@ -16,6 +16,7 @@ type GoalItemProps = {
   description?: string;
   onPress: () => void;
   onIconPress: () => void;
+  id?: string; // Adding an optional ID for the goal
 };
 
 export const GoalItem = ({
@@ -26,6 +27,7 @@ export const GoalItem = ({
   onPress,
   onIconPress,
   newGoal,
+  id,
 }: GoalItemProps) => {
   const styles = getStyles(activeCharacter);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
@@ -39,19 +41,35 @@ export const GoalItem = ({
   };
 
   const handleCloseBottomSheet = () => {
+    // The closeWithAnimation function in GoalItemBottomSheet
+    // will handle the animation and call this when done
     setBottomSheetVisible(false);
   };
 
   const handleSkip = () => {
     console.log("Skip pressed");
+    // No need to handle close here as the bottom sheet will do it
   };
 
   const handleComplete = () => {
     console.log("Complete pressed");
+    // No need to handle close here as the bottom sheet will do it
   };
 
   const handleSnooze = () => {
     console.log("Snooze pressed");
+    // No need to handle close here as the bottom sheet will do it
+  };
+
+  const handleEdit = () => {
+    console.log("Edit goal pressed", id);
+    // Navigate to edit screen or open edit modal
+    if (id) {
+      router.push({
+        pathname: "/(authed)/(tabs)/(home)/goal/create/GoalCreate",
+        params: { id }, // Pass the ID as a param for editing existing goal
+      });
+    }
   };
 
   return (
@@ -97,6 +115,7 @@ export const GoalItem = ({
             onSkip={handleSkip}
             onComplete={handleComplete}
             onSnooze={handleSnooze}
+            onEdit={handleEdit}
             activeCharacter={activeCharacter}
           />
         </>
