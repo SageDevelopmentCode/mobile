@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons"; // Ensure you have this library installed
 import { Heading, StatText } from "../Text/TextComponents";
@@ -6,6 +6,7 @@ import colors from "@/constants/colors";
 import SquareActionButton from "../Buttons/SquareActionButtons/SquareActionButtons";
 import { router } from "expo-router";
 import { getStyles } from "./GoalItem.styles";
+import { GoalItemBottomSheet } from "./GoalItemBottomSheet";
 
 type GoalItemProps = {
   activeCharacter: string;
@@ -27,33 +28,78 @@ export const GoalItem = ({
   newGoal,
 }: GoalItemProps) => {
   const styles = getStyles(activeCharacter);
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+
+  const handlePress = () => {
+    setBottomSheetVisible(true);
+  };
+
+  const handleLongPress = () => {
+    setBottomSheetVisible(true);
+  };
+
+  const handleCloseBottomSheet = () => {
+    setBottomSheetVisible(false);
+  };
+
+  const handleSkip = () => {
+    console.log("Skip pressed");
+  };
+
+  const handleComplete = () => {
+    console.log("Complete pressed");
+  };
+
+  const handleSnooze = () => {
+    console.log("Snooze pressed");
+  };
 
   return (
     <View>
       {!newGoal ? (
-        <TouchableOpacity onPress={onPress} style={styles.goalContainer}>
-          <View style={styles.goalLeftContainer}>
-            <View style={styles.goalEmoji}>
-              <Heading>{emoji}</Heading>
+        <>
+          <TouchableOpacity
+            onPress={handlePress}
+            onLongPress={handleLongPress}
+            delayLongPress={300}
+            style={styles.goalContainer}
+          >
+            <View style={styles.goalLeftContainer}>
+              <View style={styles.goalEmoji}>
+                <Heading>{emoji}</Heading>
+              </View>
+              <View style={{ marginLeft: 15 }}>
+                <Heading color={colors.PrimaryWhite}>{title}</Heading>
+                <StatText color="#AAAAAA">{description}</StatText>
+              </View>
             </View>
-            <View style={{ marginLeft: 15 }}>
-              <Heading color={colors.PrimaryWhite}>{title}</Heading>
-              <StatText color="#AAAAAA">{description}</StatText>
+            <View style={styles.goalRightContainer}>
+              <SquareActionButton
+                onPress={onIconPress}
+                icon={
+                  <FontAwesome6
+                    color={colors.SolaraGreen}
+                    name="play"
+                    size={23}
+                  />
+                }
+              />
             </View>
-          </View>
-          <View style={styles.goalRightContainer}>
-            <SquareActionButton
-              onPress={onIconPress}
-              icon={
-                <FontAwesome6
-                  color={colors.SolaraGreen}
-                  name="play"
-                  size={23}
-                />
-              }
-            />
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+
+          <GoalItemBottomSheet
+            visible={bottomSheetVisible}
+            onClose={handleCloseBottomSheet}
+            emoji={emoji}
+            title={title}
+            description={description}
+            energyCount={2}
+            onSkip={handleSkip}
+            onComplete={handleComplete}
+            onSnooze={handleSnooze}
+            activeCharacter={activeCharacter}
+          />
+        </>
       ) : (
         <TouchableOpacity
           onPress={() =>
