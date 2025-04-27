@@ -116,6 +116,20 @@ export default function CreateGoalSuccessScreen() {
               />
             }
           />
+
+          <ActionButton
+            type="PrimaryGray"
+            title="See what others are doing"
+            onPress={() => console.log("View community activity")}
+            icon={
+              <FontAwesome6
+                name="users"
+                size={20}
+                color={colors.DarkPrimaryText}
+              />
+            }
+            style={{ marginTop: 10 }}
+          />
         </View>
       </View>
       <ImageBackground
