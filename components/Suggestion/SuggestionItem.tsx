@@ -13,6 +13,7 @@ interface SuggestionItemProps {
   emoji?: string;
   title?: string;
   style?: any;
+  verse?: string;
   onPress: () => void;
 }
 
@@ -21,6 +22,7 @@ export const SuggestionItem = ({
   emoji,
   title,
   style,
+  verse,
 }: SuggestionItemProps) => {
   return (
     <TouchableOpacity onPress={onPress} style={[styles.goalContainer, style]}>
