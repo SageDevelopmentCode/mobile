@@ -66,7 +66,7 @@ export const HomeContent = ({
         activeCharacter={activeCharacter}
       />
 
-      <HeadingBar headingText="Goals for today" />
+      <HeadingBar headingText={`${goals.length} Goals for today`} />
       {goals.map((goal, index) => (
         <GoalItem
           key={index}
