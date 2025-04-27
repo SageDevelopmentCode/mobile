@@ -30,8 +30,14 @@ export const SuggestionItem = ({
         <View style={styles.goalEmoji}>
           <Heading>{emoji}</Heading>
         </View>
-        <View style={{ marginLeft: 15 }}>
-          <Heading color={colors.DarkSecondaryText}>{title}</Heading>
+        <View style={{ marginLeft: 15, flex: 1 }}>
+          <Heading
+            color={colors.DarkSecondaryText}
+            style={{ flexWrap: "wrap", flexShrink: 1 }}
+            numberOfLines={2}
+          >
+            {title}
+          </Heading>
         </View>
       </View>
     </TouchableOpacity>

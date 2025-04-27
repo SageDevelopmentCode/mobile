@@ -57,6 +57,7 @@ export default function CreateGoalScreen() {
     useState<boolean>(false);
   const [selectedEmoji, setSelectedEmoji] = useState<string>("🎯");
   const [userGoal, setUserGoal] = useState<string>("");
+  const [selectedVerse, setSelectedVerse] = useState<string | undefined>();
   const [activeSuggestionTab, setActiveSuggestionTab] = useState<string>(
     suggestionTabs[0]
   );
@@ -73,10 +74,12 @@ export default function CreateGoalScreen() {
   const handleSuggestionSelect = (item: {
     title: string;
     emoji: string;
+    verse?: string;
   }): void => {
     console.log("Selected Suggestion:", item);
     setUserGoal(item.title);
     setSelectedEmoji(item.emoji);
+    setSelectedVerse(item.verse);
   };
 
   let SuggestionsComponent: JSX.Element | null;
@@ -163,6 +166,7 @@ export default function CreateGoalScreen() {
               params: {
                 goal: userGoal,
                 emoji: selectedEmoji,
+                verse: selectedVerse,
               },
             })
           }

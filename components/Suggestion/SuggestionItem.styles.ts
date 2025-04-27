@@ -15,8 +15,9 @@ export const styles = StyleSheet.create({
     elevation: 4,
     flexDirection: "row",
     justifyContent: "flex-start",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginVertical: 6,
+    minHeight: 68,
   },
   goalEmoji: {
     width: 40,
@@ -28,7 +29,8 @@ export const styles = StyleSheet.create({
   },
   goalLeftContainer: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "flex-start",
+    flex: 1,
   },
 });
