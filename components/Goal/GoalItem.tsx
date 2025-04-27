@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View, StyleSheet } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons"; // Ensure you have this library installed
 import { Heading, StatText } from "../Text/TextComponents";
 import colors from "@/constants/colors";
@@ -17,6 +17,7 @@ type GoalItemProps = {
   onPress: () => void;
   onIconPress: () => void;
   id?: string; // Adding an optional ID for the goal
+  energyCount?: number; // Adding energy count prop
 };
 
 export const GoalItem = ({
@@ -28,6 +29,7 @@ export const GoalItem = ({
   onIconPress,
   newGoal,
   id,
+  energyCount = 2, // Default to 2 if not provided
 }: GoalItemProps) => {
   const styles = getStyles(activeCharacter);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
@@ -92,6 +94,15 @@ export const GoalItem = ({
               </View>
             </View>
             <View style={styles.goalRightContainer}>
+              <View style={energyStyles.energyContainer}>
+                <FontAwesome6
+                  name="bolt"
+                  size={14}
+                  color={colors.EnergyColor}
+                  style={energyStyles.energyIcon}
+                />
+                <StatText color={colors.EnergyColor}>{energyCount}</StatText>
+              </View>
               <SquareActionButton
                 onPress={onIconPress}
                 icon={
@@ -111,7 +122,7 @@ export const GoalItem = ({
             emoji={emoji}
             title={title}
             description={description}
-            energyCount={2}
+            energyCount={energyCount}
             onSkip={handleSkip}
             onComplete={handleComplete}
             onSnooze={handleSnooze}
@@ -167,3 +178,19 @@ export const GoalItem = ({
     </View>
   );
 };
+
+// Add styles for the energy count display
+const energyStyles = StyleSheet.create({
+  energyContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 10,
+    backgroundColor: "rgba(255, 204, 0, 0.15)",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  energyIcon: {
+    marginRight: 4,
+  },
+});

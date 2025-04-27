@@ -3,7 +3,12 @@ import { SuggestionItem } from "../SuggestionItem";
 import { useEffect, useRef } from "react";
 
 interface KindnessSuggestionsProps {
-  onSelect: (item: { title: string; emoji: string; verse?: string }) => void;
+  onSelect: (item: {
+    title: string;
+    emoji: string;
+    verse?: string;
+    energyCount?: number;
+  }) => void;
 }
 
 export const KindnessSuggestions = ({ onSelect }: KindnessSuggestionsProps) => {
@@ -46,51 +51,61 @@ export const KindnessSuggestions = ({ onSelect }: KindnessSuggestionsProps) => {
       title: "Pay for a stranger's coffee today",
       emoji: "☕",
       verse: "Proverbs 11:25",
+      energyCount: 2,
     },
     {
       title: "Write an encouraging note to a friend",
       emoji: "✉️",
       verse: "1 Thessalonians 5:11",
+      energyCount: 1,
     },
     {
       title: "Give a specific compliment to 3 people",
       emoji: "👏",
       verse: "Ephesians 4:29",
+      energyCount: 1,
     },
     {
       title: "Bring a meal to someone in need",
       emoji: "🍲",
       verse: "Matthew 25:35",
+      energyCount: 3,
     },
     {
       title: "Let someone go ahead of you in line",
       emoji: "🚶",
       verse: "Philippians 2:3-4",
+      energyCount: 1,
     },
     {
       title: "Send an encouraging text to 5 friends",
       emoji: "📱",
       verse: "Hebrews 10:24-25",
+      energyCount: 2,
     },
     {
       title: "Hold the door for 10 people today",
       emoji: "🚪",
       verse: "Romans 12:10",
+      energyCount: 1,
     },
     {
       title: "Leave a generous tip for your server",
       emoji: "💰",
       verse: "Luke 6:38",
+      energyCount: 2,
     },
     {
       title: "Help a neighbor with a specific chore",
       emoji: "🏡",
       verse: "Galatians 5:13-14",
+      energyCount: 3,
     },
     {
       title: "Visit an elderly person for 30 minutes",
       emoji: "👵",
       verse: "James 1:27",
+      energyCount: 3,
     },
   ];
 
@@ -114,10 +129,12 @@ export const KindnessSuggestions = ({ onSelect }: KindnessSuggestionsProps) => {
                 title: item.title,
                 emoji: item.emoji,
                 verse: item.verse,
+                energyCount: item.energyCount,
               })
             }
             emoji={item.emoji}
             verse={item.verse}
+            energyCount={item.energyCount}
           />
         </Animated.View>
       ))}

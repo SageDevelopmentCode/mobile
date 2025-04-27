@@ -3,7 +3,12 @@ import { SuggestionItem } from "../SuggestionItem";
 import { useEffect, useRef } from "react";
 
 interface ScriptureSuggestionsProps {
-  onSelect: (item: { title: string; emoji: string; verse?: string }) => void;
+  onSelect: (item: {
+    title: string;
+    emoji: string;
+    verse?: string;
+    energyCount?: number;
+  }) => void;
 }
 
 export const ScriptureSuggestions = ({
@@ -48,51 +53,61 @@ export const ScriptureSuggestions = ({
       title: "Read John 3",
       emoji: "📖",
       verse: "John 3:1-36",
+      energyCount: 1,
     },
     {
       title: "Read Psalm 23",
       emoji: "🙏",
       verse: "Psalm 23:1-6",
+      energyCount: 1,
     },
     {
       title: "Read Matthew 5 (Beatitudes)",
       emoji: "✝️",
       verse: "Matthew 5:1-12",
+      energyCount: 1,
     },
     {
       title: "Read Romans 8",
       emoji: "📚",
       verse: "Romans 8:1-39",
+      energyCount: 2,
     },
     {
       title: "Read 1 Corinthians 13",
       emoji: "❤️",
       verse: "1 Corinthians 13:1-13",
+      energyCount: 1,
     },
     {
       title: "Read Proverbs 31",
       emoji: "👑",
       verse: "Proverbs 31:10-31",
+      energyCount: 2,
     },
     {
       title: "Read Genesis 1",
       emoji: "🌎",
       verse: "Genesis 1:1-31",
+      energyCount: 2,
     },
     {
       title: "Read Exodus 20",
       emoji: "🗿",
       verse: "Exodus 20:1-17",
+      energyCount: 1,
     },
     {
       title: "Study the Lord's Prayer",
       emoji: "🧎",
       verse: "Matthew 6:9-13",
+      energyCount: 2,
     },
     {
       title: "Read James 1",
       emoji: "🔍",
       verse: "James 1:1-27",
+      energyCount: 2,
     },
   ];
 
@@ -116,10 +131,12 @@ export const ScriptureSuggestions = ({
                 title: item.title,
                 emoji: item.emoji,
                 verse: item.verse,
+                energyCount: item.energyCount,
               })
             }
             emoji={item.emoji}
             verse={item.verse}
+            energyCount={item.energyCount}
           />
         </Animated.View>
       ))}

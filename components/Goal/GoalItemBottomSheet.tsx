@@ -207,10 +207,13 @@ export const GoalItemBottomSheet = ({
 
               {/* Energy count */}
               <View style={styles.energyContainer}>
-                <Heading color={colors.PrimaryWhite} style={styles.energyCount}>
-                  {energyCount}
-                </Heading>
-                <MaterialIcons name="bolt" size={24} color="#F6C833" />
+                <FontAwesome6
+                  name="bolt"
+                  size={16}
+                  color={colors.EnergyColor}
+                  style={{ marginRight: 4 }}
+                />
+                <StatText color={colors.EnergyColor}>{energyCount}</StatText>
               </View>
 
               {/* Action buttons */}
@@ -342,9 +345,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 32,
-  },
-  energyCount: {
-    marginRight: 4,
+    backgroundColor: "rgba(255, 204, 0, 0.15)",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
   },
   buttonContainer: {
     flexDirection: "row",

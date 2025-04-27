@@ -3,7 +3,12 @@ import { SuggestionItem } from "../SuggestionItem";
 import { useEffect, useRef } from "react";
 
 interface WorkplaceSuggestionsProps {
-  onSelect: (item: { title: string; emoji: string; verse?: string }) => void;
+  onSelect: (item: {
+    title: string;
+    emoji: string;
+    verse?: string;
+    energyCount?: number;
+  }) => void;
 }
 
 export const WorkplaceSuggestions = ({
@@ -48,51 +53,61 @@ export const WorkplaceSuggestions = ({
       title: "Handwrite a thank-you note to a colleague",
       emoji: "✍️",
       verse: "1 Thessalonians 5:18",
+      energyCount: 2,
     },
     {
       title: "Pray for 3 coworkers by name today",
       emoji: "🙏",
       verse: "1 Timothy 2:1",
+      energyCount: 1,
     },
     {
       title: "Bring coffee for a stressed teammate",
       emoji: "☕",
       verse: "Galatians 6:2",
+      energyCount: 2,
     },
     {
       title: "Reply to emails with grace and kindness",
       emoji: "📧",
       verse: "Colossians 4:6",
+      energyCount: 1,
     },
     {
       title: "Take 10 mins to help someone's project",
       emoji: "⏱️",
       verse: "Philippians 2:4",
+      energyCount: 2,
     },
     {
       title: "Admit a mistake without making excuses",
       emoji: "🙌",
       verse: "Proverbs 28:13",
+      energyCount: 2,
     },
     {
       title: "Start team meeting with words of encouragement",
       emoji: "🗣️",
       verse: "1 Thessalonians 5:11",
+      energyCount: 1,
     },
     {
       title: "Complete one difficult task before lunch",
       emoji: "✅",
       verse: "Colossians 3:23",
+      energyCount: 3,
     },
     {
       title: "Listen fully without interrupting today",
       emoji: "👂",
       verse: "James 1:19",
+      energyCount: 2,
     },
     {
       title: "Share credit for a success with your team",
       emoji: "🏆",
       verse: "Romans 12:10",
+      energyCount: 1,
     },
   ];
 
@@ -116,10 +131,12 @@ export const WorkplaceSuggestions = ({
                 title: item.title,
                 emoji: item.emoji,
                 verse: item.verse,
+                energyCount: item.energyCount,
               })
             }
             emoji={item.emoji}
             verse={item.verse}
+            energyCount={item.energyCount}
           />
         </Animated.View>
       ))}

@@ -6,14 +6,16 @@ import {
   GestureResponderEvent,
 } from "react-native";
 import { styles } from "./SuggestionItem.styles";
-import { Heading } from "../Text/TextComponents";
+import { Heading, StatText } from "../Text/TextComponents";
 import colors from "@/constants/colors";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 interface SuggestionItemProps {
   emoji?: string;
   title?: string;
   style?: any;
   verse?: string;
+  energyCount?: number;
   onPress: () => void;
 }
 
@@ -23,6 +25,7 @@ export const SuggestionItem = ({
   title,
   style,
   verse,
+  energyCount = 1,
 }: SuggestionItemProps) => {
   return (
     <TouchableOpacity onPress={onPress} style={[styles.goalContainer, style]}>
@@ -40,6 +43,33 @@ export const SuggestionItem = ({
           </Heading>
         </View>
       </View>
+      {energyCount > 0 && (
+        <View style={energyStyles.energyContainer}>
+          <FontAwesome6
+            name="bolt"
+            size={14}
+            color={colors.EnergyColor}
+            style={energyStyles.energyIcon}
+          />
+          <StatText color={colors.EnergyColor}>{energyCount}</StatText>
+        </View>
+      )}
     </TouchableOpacity>
   );
 };
+
+// Add styles for the energy count display
+const energyStyles = StyleSheet.create({
+  energyContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 204, 0, 0.15)",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginLeft: 8,
+  },
+  energyIcon: {
+    marginRight: 4,
+  },
+});
