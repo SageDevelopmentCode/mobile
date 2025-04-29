@@ -5,6 +5,7 @@ import {
   Animated,
   Image,
   ImageBackground,
+  ScrollView,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -34,18 +35,25 @@ export default function CreateGoalSuccessScreen() {
   const searchParams = useSearchParams();
   const goal: any = searchParams.get("goal");
   const emoji: any = searchParams.get("emoji");
+  const verse: any = searchParams.get("verse");
 
-  const repeatOptions = ["Every day", "Every weekday", "Custom"];
-  const dateAndTimeOptions = ["Every day", "Today", "Tomorrow", "On a date..."];
+  // Console log all goal data when component mounts
+  useEffect(() => {
+    console.log("Goal data:", {
+      goal,
+      emoji,
+      verse,
+      dateTime: new Date().toISOString(),
+      repeatSelection,
+    });
+  }, []);
 
-  const [dateMenuVisible, setDateMenuVisible] = useState(false); // State for submenu visibility
-  const [repeatMenuVisible, setRepeatMenuVisible] = useState(false); // State for submenu visibility
-  const [repeatSelection, setRepeatSelection] = useState("Does not repeat");
-  const [dateAndTimeSelection, setDateAndTimeSelection] = useState("Every day");
+  const repeatOptions = ["Every day", "Every weekday"];
   const slideAnim = useRef(new Animated.Value(800)).current;
 
-  const toggleDateMenu = () =>
-    toggleMenu(dateMenuVisible, setDateMenuVisible, slideAnim);
+  const [repeatMenuVisible, setRepeatMenuVisible] = useState(false); // State for submenu visibility
+  const [repeatSelection, setRepeatSelection] = useState("Does not repeat");
+
   const toggleRepeatMenu = () =>
     toggleMenu(repeatMenuVisible, setRepeatMenuVisible, slideAnim);
 
@@ -80,9 +88,8 @@ export default function CreateGoalSuccessScreen() {
               marginBottom: 10,
             }}
           />
-          <ToggleMenuButton label="Today" onPress={toggleDateMenu} />
           <ToggleMenuButton
-            label="Does not repeat"
+            label={repeatSelection}
             onPress={toggleRepeatMenu}
           />
         </View>
@@ -116,20 +123,6 @@ export default function CreateGoalSuccessScreen() {
               />
             }
           />
-
-          <ActionButton
-            type="PrimaryGray"
-            title="See what others are doing"
-            onPress={() => console.log("View community activity")}
-            icon={
-              <FontAwesome6
-                name="users"
-                size={20}
-                color={colors.DarkPrimaryText}
-              />
-            }
-            style={{ marginTop: 10 }}
-          />
         </View>
       </View>
       <ImageBackground
@@ -141,74 +134,11 @@ export default function CreateGoalSuccessScreen() {
       </ImageBackground>
 
       {/* Background Tint when Menu is Open */}
-      {dateMenuVisible && (
-        <TouchableOpacity style={styles.overlay} onPress={toggleDateMenu} />
-      )}
-
       {repeatMenuVisible && (
         <TouchableOpacity style={styles.overlay} onPress={toggleRepeatMenu} />
       )}
 
       {/* Submenu */}
-      {dateMenuVisible && (
-        <Animated.View
-          style={[
-            styles.menu,
-            {
-              transform: [{ translateY: slideAnim }],
-            },
-          ]}
-        >
-          <Title style={{ marginBottom: 10 }} color={colors.PrimaryWhite}>
-            Date and Time
-          </Title>
-          <View style={[styles.multipleActionContainer, { marginTop: 10 }]}>
-            {dateAndTimeOptions.map((option, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => setDateAndTimeSelection(option)}
-              >
-                <View
-                  style={[
-                    styles.actionRowContainer,
-                    index === dateAndTimeOptions.length - 1
-                      ? { borderBottomWidth: 0 }
-                      : {},
-                  ]}
-                >
-                  <SubHeading color={colors.PrimaryWhite}>{option}</SubHeading>
-                  {dateAndTimeSelection === option && (
-                    <FontAwesome6
-                      name="circle-check"
-                      size={20}
-                      color={colors.PrimaryWhite}
-                    />
-                  )}
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
-          <TouchableOpacity>
-            <View style={[styles.actionContainer, { marginTop: 10 }]}>
-              <SubHeading color={colors.PrimaryWhite}>Ends</SubHeading>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <SubHeading
-                  style={{ marginRight: 10 }}
-                  color={colors.PrimaryWhite}
-                >
-                  Any time
-                </SubHeading>
-                <FontAwesome6
-                  name="chevron-right"
-                  size={20}
-                  color={colors.PrimaryWhite}
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
-        </Animated.View>
-      )}
-
       {repeatMenuVisible && (
         <Animated.View
           style={[
@@ -222,69 +152,104 @@ export default function CreateGoalSuccessScreen() {
           <Title color={colors.PrimaryWhite} style={{ marginBottom: 10 }}>
             Repeat
           </Title>
-          <TouchableOpacity
-            onPress={() => setRepeatSelection("Does not repeat")}
+          <ScrollView
+            style={styles.scrollContainer}
+            contentContainerStyle={styles.scrollContentContainer}
+            showsVerticalScrollIndicator={false}
           >
-            <View style={[styles.actionContainer, { marginTop: 10 }]}>
-              <SubHeading color={colors.PrimaryWhite}>
-                Does not repeat
-              </SubHeading>
-              <FontAwesome6
-                name="circle-check"
-                size={20}
+            <View style={styles.menuContent}>
+              <Paragraph
                 color={colors.PrimaryWhite}
-                style={
-                  repeatSelection === "Does not repeat"
-                    ? {}
-                    : { color: colors.PrimarySecondaryPurpleDropShadow }
-                }
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={[styles.actionContainer, { marginTop: 10 }]}>
-              <SubHeading color={colors.PrimaryWhite}>Ends</SubHeading>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <SubHeading
-                  style={{ marginRight: 10 }}
-                  color={colors.PrimaryWhite}
-                >
-                  Never
-                </SubHeading>
-                <FontAwesome6
-                  name="chevron-right"
-                  size={20}
-                  color={colors.PrimaryWhite}
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
-          <View style={[styles.multipleActionContainer, { marginTop: 10 }]}>
-            {repeatOptions.map((option, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => setRepeatSelection(option)}
+                style={styles.explanationText}
               >
-                <View
+                Choose how often this goal should repeat:
+              </Paragraph>
+
+              <SubHeading
+                color={colors.PrimaryWhite}
+                style={{ marginBottom: 10, marginTop: 15 }}
+              >
+                Frequency
+              </SubHeading>
+
+              <View style={styles.timeOptionsContainer}>
+                <TouchableOpacity
                   style={[
-                    styles.actionRowContainer,
-                    index === repeatOptions.length - 1
-                      ? { borderBottomWidth: 0 }
-                      : {},
+                    styles.timeOption,
+                    repeatSelection === "Does not repeat" &&
+                      styles.selectedTimeOption,
+                    { width: "100%" },
                   ]}
+                  onPress={() => setRepeatSelection("Does not repeat")}
                 >
-                  <SubHeading color={colors.PrimaryWhite}>{option}</SubHeading>
-                  {repeatSelection === option && (
-                    <FontAwesome6
-                      name="circle-check"
-                      size={20}
-                      color={colors.PrimaryWhite}
-                    />
-                  )}
-                </View>
+                  <View style={styles.optionContentContainer}>
+                    <SubHeading
+                      color={
+                        repeatSelection === "Does not repeat"
+                          ? colors.PrimaryWhite
+                          : colors.PrimaryWhite
+                      }
+                      style={styles.optionText}
+                    >
+                      Does not repeat
+                    </SubHeading>
+                    {repeatSelection === "Does not repeat" && (
+                      <FontAwesome6
+                        name="circle-check"
+                        size={20}
+                        color={colors.PrimaryWhite}
+                        style={styles.checkIcon}
+                      />
+                    )}
+                  </View>
+                </TouchableOpacity>
+
+                {repeatOptions.map((option, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={[
+                      styles.timeOption,
+                      repeatSelection === option && styles.selectedTimeOption,
+                    ]}
+                    onPress={() => setRepeatSelection(option)}
+                  >
+                    <View style={styles.optionContentContainer}>
+                      <SubHeading
+                        color={
+                          repeatSelection === option
+                            ? colors.PrimaryWhite
+                            : colors.PrimaryWhite
+                        }
+                        style={styles.optionText}
+                      >
+                        {option}
+                      </SubHeading>
+                      {repeatSelection === option && (
+                        <FontAwesome6
+                          name="circle-check"
+                          size={20}
+                          color={colors.PrimaryWhite}
+                          style={styles.checkIcon}
+                        />
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <TouchableOpacity
+                style={styles.doneButton}
+                onPress={toggleRepeatMenu}
+              >
+                <SubHeading
+                  color={colors.PrimaryWhite}
+                  style={styles.optionText}
+                >
+                  Done
+                </SubHeading>
               </TouchableOpacity>
-            ))}
-          </View>
+            </View>
+          </ScrollView>
         </Animated.View>
       )}
     </View>
