@@ -1,4 +1,4 @@
-import { makeSupabaseRequest } from "../../../rest-api";
+import { makeSupabaseRequest } from "../rest-api";
 
 // Define types for character abilities
 export type StatType =

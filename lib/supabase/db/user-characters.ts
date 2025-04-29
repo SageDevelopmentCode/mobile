@@ -1,5 +1,5 @@
-import { makeSupabaseRequest } from "../../../rest-api";
-import { Character } from "../../characters/rest/characters";
+import { makeSupabaseRequest } from "../rest-api";
+import { Character } from "./characters";
 
 // Define the UserCharacter interface based on the database schema
 export interface UserCharacter {

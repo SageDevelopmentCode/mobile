@@ -1,4 +1,4 @@
-import { makeSupabaseRequest } from "../../rest-api";
+import { makeSupabaseRequest } from "../rest-api";
 
 // Function to get a user by ID
 export async function getUserById(id: string) {
