@@ -124,15 +124,11 @@ export const HeroSection = ({
     outputRange: [0, -3], // Move up 3 pixels
   });
 
-  // Log the character image to debug
-  console.log("Character Image in HeroSection:", characterImage);
-
   // Check if this is a remote image (has uri property) or local image
   const isRemoteImage =
     characterImage &&
     typeof characterImage === "object" &&
     "uri" in characterImage;
-  console.log("Is remote image:", isRemoteImage);
 
   return (
     <Animated.View style={{ opacity: backgroundFadeAnim }}>

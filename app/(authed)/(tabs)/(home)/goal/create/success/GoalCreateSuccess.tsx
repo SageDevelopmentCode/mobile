@@ -36,6 +36,12 @@ export default function CreateGoalSuccessScreen() {
   const goal: any = searchParams.get("goal");
   const emoji: any = searchParams.get("emoji");
   const verse: any = searchParams.get("verse");
+  const category: any = searchParams.get("category") || "Custom";
+  const repeatOptions = ["Every day", "Every weekday"];
+  const slideAnim = useRef(new Animated.Value(800)).current;
+
+  const [repeatMenuVisible, setRepeatMenuVisible] = useState(false); // State for submenu visibility
+  const [repeatSelection, setRepeatSelection] = useState("Does not repeat");
 
   // Console log all goal data when component mounts
   useEffect(() => {
@@ -43,16 +49,11 @@ export default function CreateGoalSuccessScreen() {
       goal,
       emoji,
       verse,
+      category,
       dateTime: new Date().toISOString(),
       repeatSelection,
     });
-  }, []);
-
-  const repeatOptions = ["Every day", "Every weekday"];
-  const slideAnim = useRef(new Animated.Value(800)).current;
-
-  const [repeatMenuVisible, setRepeatMenuVisible] = useState(false); // State for submenu visibility
-  const [repeatSelection, setRepeatSelection] = useState("Does not repeat");
+  }, [repeatSelection]);
 
   const toggleRepeatMenu = () =>
     toggleMenu(repeatMenuVisible, setRepeatMenuVisible, slideAnim);
@@ -112,6 +113,9 @@ export default function CreateGoalSuccessScreen() {
                 params: {
                   goal: goal,
                   emoji: emoji,
+                  verse: verse,
+                  category: category,
+                  repeatSelection: repeatSelection,
                 },
               })
             }

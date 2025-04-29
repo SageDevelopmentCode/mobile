@@ -167,6 +167,7 @@ export default function CreateGoalScreen() {
                 goal: userGoal,
                 emoji: selectedEmoji,
                 verse: selectedVerse,
+                category: selectedVerse ? activeSuggestionTab : "Custom",
               },
             })
           }
