@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from "react-native";
 import { FontAwesome6 } from "@/utils/icons";
 import { tabBarOptions } from "@/constants/tabBarOptions";
@@ -30,6 +31,7 @@ import Deborah from "../../../assets/Deborah.png";
 import toggleMenu from "@/utils/animations/toggleMenu";
 import ToggleMenuButton from "@/components/Goal/Create/Success/ToggleMenuButton/ToggleMenuButton";
 import { useCharacterContext } from "@/lib/context/CharacterContext";
+import { createUserGoal } from "@/lib/supabase/db/user_goals";
 
 export default function CreateGoalSuccessScreen() {
   const navigation = useNavigation();
@@ -49,6 +51,7 @@ export default function CreateGoalSuccessScreen() {
   const [repeatMenuVisible, setRepeatMenuVisible] = useState(false); // State for submenu visibility
   const [repeatSelection, setRepeatSelection] = useState("Does not repeat");
   const [energyCount, setEnergyCount] = useState(category === "Custom" ? 1 : 2);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Console log all goal data when component mounts
   useEffect(() => {
@@ -80,6 +83,45 @@ export default function CreateGoalSuccessScreen() {
         ...tabBarOptions,
       });
   }, [navigation]);
+
+  const handleCreateGoal = async () => {
+    setIsLoading(true);
+    try {
+      // Check if userData exists
+      if (!userData) {
+        console.error("User data is not available");
+        router.push({
+          pathname: "/(authed)/(tabs)/(home)/HomeScreen",
+        });
+        return;
+      }
+
+      // Create the user goal in the database
+      await createUserGoal({
+        user_id: userData.id,
+        title: goal,
+        energy_count: category === "Custom" ? 1 : energyCount,
+        experience_reward: 20,
+        goal_repeat: repeatSelection,
+        related_verse: verse,
+        category: category,
+        emoji: emoji,
+      });
+
+      // Navigate to home screen after successful creation
+      router.push({
+        pathname: "/(authed)/(tabs)/(home)/HomeScreen",
+      });
+    } catch (error) {
+      console.error("Failed to create goal:", error);
+      // Navigate anyway, but log the error
+      router.push({
+        pathname: "/(authed)/(tabs)/(home)/HomeScreen",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -114,26 +156,22 @@ export default function CreateGoalSuccessScreen() {
 
           <ActionButton
             type="PrimaryGray"
-            title="Done"
-            onPress={() =>
-              router.push({
-                pathname: "/(authed)/(tabs)/(home)/HomeScreen",
-                params: {
-                  goal: goal,
-                  emoji: emoji,
-                  verse: verse,
-                  category: category,
-                  repeatSelection: repeatSelection,
-                  energyCount: category === "Custom" ? 1 : energyCount,
-                },
-              })
-            }
+            title={isLoading ? "Saving..." : "Done"}
+            onPress={handleCreateGoal}
+            disabled={isLoading}
             icon={
-              <FontAwesome6
-                name="check"
-                size={20}
-                color={colors.DarkPrimaryText}
-              />
+              isLoading ? (
+                <ActivityIndicator
+                  size="small"
+                  color={colors.DarkPrimaryText}
+                />
+              ) : (
+                <FontAwesome6
+                  name="check"
+                  size={20}
+                  color={colors.DarkPrimaryText}
+                />
+              )
             }
           />
         </View>

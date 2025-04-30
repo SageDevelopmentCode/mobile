@@ -5,10 +5,10 @@ export interface UserGoal {
   id?: string;
   user_id: string;
   title: string;
-  energy_reward: number;
+  energy_count: number;
   experience_reward: number;
-  goal_repeat: boolean;
-  goal_repeat_ends: string;
+  goal_repeat: string;
+  emoji?: string;
   completed_at?: string;
   goal_time_set?: string;
   related_verse?: string;
