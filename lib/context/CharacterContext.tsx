@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import * as SecureStore from "expo-secure-store";
 import { supabase } from "@/lib/supabase/supabase";
-import { getUserCharacters } from "@/lib/supabase/db/user-characters";
+import { getUserCharacters } from "@/lib/supabase/db/user_characters";
 import { getUserById } from "@/lib/supabase/db/user";
 import { User } from "@/types/User";
 

@@ -4,14 +4,14 @@ import { makeSupabaseRequest } from "../rest-api";
 export interface UserGoal {
   id?: string;
   user_id: string;
-  created_at?: string;
   title: string;
   energy_reward: number;
   experience_reward: number;
-  goal_repeat: string;
+  goal_repeat: boolean;
   goal_repeat_ends: string;
   completed_at?: string;
   goal_time_set?: string;
+  related_verse?: string;
   category: string;
 }
 

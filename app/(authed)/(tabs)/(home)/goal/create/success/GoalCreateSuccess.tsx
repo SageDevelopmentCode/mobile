@@ -29,6 +29,7 @@ import Background from "../../assets/GoalSuccessBackground.jpg";
 import Deborah from "../../../assets/Deborah.png";
 import toggleMenu from "@/utils/animations/toggleMenu";
 import ToggleMenuButton from "@/components/Goal/Create/Success/ToggleMenuButton/ToggleMenuButton";
+import { useCharacterContext } from "@/lib/context/CharacterContext";
 
 export default function CreateGoalSuccessScreen() {
   const navigation = useNavigation();
@@ -40,8 +41,14 @@ export default function CreateGoalSuccessScreen() {
   const repeatOptions = ["Every day", "Every weekday"];
   const slideAnim = useRef(new Animated.Value(800)).current;
 
+  // Get character context
+  const { userData } = useCharacterContext();
+
+  console.log("User data:", userData);
+
   const [repeatMenuVisible, setRepeatMenuVisible] = useState(false); // State for submenu visibility
   const [repeatSelection, setRepeatSelection] = useState("Does not repeat");
+  const [energyCount, setEnergyCount] = useState(category === "Custom" ? 1 : 2);
 
   // Console log all goal data when component mounts
   useEffect(() => {
@@ -52,6 +59,7 @@ export default function CreateGoalSuccessScreen() {
       category,
       dateTime: new Date().toISOString(),
       repeatSelection,
+      energyCount: category === "Custom" ? 1 : energyCount,
     });
   }, [repeatSelection]);
 
@@ -116,6 +124,7 @@ export default function CreateGoalSuccessScreen() {
                   verse: verse,
                   category: category,
                   repeatSelection: repeatSelection,
+                  energyCount: category === "Custom" ? 1 : energyCount,
                 },
               })
             }
