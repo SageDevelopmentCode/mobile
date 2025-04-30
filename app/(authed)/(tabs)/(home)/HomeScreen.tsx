@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, ScrollView, Animated, ActivityIndicator } from "react-native";
 import { useNavigation } from "expo-router";
 import { useCharacterContext } from "@/lib/context/CharacterContext";
+import { getUserGoals } from "@/lib/supabase/db/user_goals";
 
 // Constants
 import colors from "@/constants/colors";
@@ -65,6 +66,7 @@ export default function HomeScreen() {
   const [typeDialogVisible, setTypeDialogVisible] = React.useState(false);
   const [activeMenuCharacterTab, setActiveMenuCharacterTab] =
     React.useState<string>("Stats");
+  const [userGoals, setUserGoals] = useState([]);
 
   // Tabs for character menu
   const menuCharacterTabs: string[] = [
@@ -210,6 +212,26 @@ export default function HomeScreen() {
       }
     }
   }, [activeCharacter, userCharacters, setActiveCharacterData]);
+
+  // Fetch user goals when component mounts
+  useEffect(() => {
+    const fetchUserGoals = async () => {
+      if (!userData || !userData.id) {
+        console.log("User data not available yet, can't fetch goals");
+        return;
+      }
+
+      try {
+        const goals = await getUserGoals(userData.id);
+        console.log("User goals:", goals);
+        setUserGoals(goals);
+      } catch (error) {
+        console.error("Failed to fetch user goals:", error);
+      }
+    };
+
+    fetchUserGoals();
+  }, [userData]);
 
   // Set up navigation options
   useEffect(() => {
