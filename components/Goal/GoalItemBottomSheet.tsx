@@ -210,6 +210,21 @@ export const GoalItemBottomSheet = ({
                 {title}
               </Heading>
 
+              {/* Related Verse */}
+              {related_verse && (
+                <View style={styles.verseContainer}>
+                  <FontAwesome
+                    name="book"
+                    size={16}
+                    color="#AAAAAA"
+                    style={styles.verseIcon}
+                  />
+                  <StatText color="#AAAAAA" style={styles.verse}>
+                    {related_verse}
+                  </StatText>
+                </View>
+              )}
+
               {/* Read Today's Devotional text */}
               <StatText color="#AAAAAA" style={styles.description}>
                 {description}
@@ -401,5 +416,24 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
+  },
+  verseContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    alignSelf: "center",
+    maxWidth: "90%",
+  },
+  verseIcon: {
+    marginRight: 8,
+  },
+  verse: {
+    fontSize: 14,
+    fontStyle: "italic",
+    textAlign: "center",
   },
 });

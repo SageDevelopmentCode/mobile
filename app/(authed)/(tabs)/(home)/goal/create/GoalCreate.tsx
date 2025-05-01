@@ -58,6 +58,9 @@ export default function CreateGoalScreen() {
   const [selectedEmoji, setSelectedEmoji] = useState<string>("🎯");
   const [userGoal, setUserGoal] = useState<string>("");
   const [selectedVerse, setSelectedVerse] = useState<string | undefined>();
+  const [selectedVerseText, setSelectedVerseText] = useState<
+    string | undefined
+  >();
   const [activeSuggestionTab, setActiveSuggestionTab] = useState<string>(
     suggestionTabs[0]
   );
@@ -75,11 +78,14 @@ export default function CreateGoalScreen() {
     title: string;
     emoji: string;
     verse?: string;
+    verseText?: string;
+    energyCount?: number;
   }): void => {
     console.log("Selected Suggestion:", item);
     setUserGoal(item.title);
     setSelectedEmoji(item.emoji);
     setSelectedVerse(item.verse);
+    setSelectedVerseText(item.verseText);
   };
 
   let SuggestionsComponent: JSX.Element | null;
@@ -161,12 +167,12 @@ export default function CreateGoalScreen() {
           title="Create Goal"
           onPress={() =>
             router.push({
-              pathname:
-                "/(authed)/(tabs)/(home)/goal/create/success/GoalCreateSuccess",
+              pathname: "/(authed)/(tabs)/(home)/goal/create/BibleVerseSelect",
               params: {
                 goal: userGoal,
                 emoji: selectedEmoji,
                 verse: selectedVerse,
+                verseText: selectedVerseText,
                 category: selectedVerse ? activeSuggestionTab : "Custom",
               },
             })

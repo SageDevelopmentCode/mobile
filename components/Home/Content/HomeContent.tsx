@@ -15,6 +15,7 @@ interface HomeContentProps {
     title: string;
     description: string;
     isNew?: boolean;
+    related_verse?: string;
   }[];
   chestImage: any;
   userData: User | null;
@@ -135,6 +136,7 @@ export const HomeContent = ({
                 onIconPress={() => console.log(`Goal ${index} icon pressed`)}
                 newGoal={goal.isNew || false}
                 activeCharacter={activeCharacter}
+                related_verse={goal.related_verse}
               />
             </Animated.View>
           ))}

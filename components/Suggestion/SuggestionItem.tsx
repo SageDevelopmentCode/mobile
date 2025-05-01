@@ -15,6 +15,7 @@ interface SuggestionItemProps {
   title?: string;
   style?: any;
   verse?: string;
+  verseText?: string;
   energyCount?: number;
   onPress: () => void;
 }
@@ -25,6 +26,7 @@ export const SuggestionItem = ({
   title,
   style,
   verse,
+  verseText,
   energyCount = 1,
 }: SuggestionItemProps) => {
   return (
