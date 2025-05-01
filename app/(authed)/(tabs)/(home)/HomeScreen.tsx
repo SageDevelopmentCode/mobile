@@ -59,6 +59,8 @@ export default function HomeScreen() {
   >(null);
 
   // State
+  const [userGoals, setUserGoals] = useState([]);
+  const [goalsLoading, setGoalsLoading] = useState(true);
   const [characterMenuVisible, setCharacterMenuVisible] =
     React.useState<boolean>(false);
   const [characterSwitchMenuVisible, setCharacterSwitchMenuVisible] =
@@ -66,7 +68,6 @@ export default function HomeScreen() {
   const [typeDialogVisible, setTypeDialogVisible] = React.useState(false);
   const [activeMenuCharacterTab, setActiveMenuCharacterTab] =
     React.useState<string>("Stats");
-  const [userGoals, setUserGoals] = useState([]);
 
   // Tabs for character menu
   const menuCharacterTabs: string[] = [
@@ -100,19 +101,29 @@ export default function HomeScreen() {
     },
   ];
 
-  // Goals data
-  const goals = [
-    {
-      emoji: "📖",
-      title: "Devotional",
-      description: "Read today's devotional",
-    },
-    {
-      emoji: "🏋️",
-      title: "Workout",
-      description: "Complete today's session",
-    },
-  ];
+  // Fetch user goals when component mounts
+  useEffect(() => {
+    const fetchUserGoals = async () => {
+      if (!userData || !userData.id) {
+        console.log("User data not available yet, can't fetch goals");
+        setGoalsLoading(false);
+        return;
+      }
+
+      setGoalsLoading(true);
+      try {
+        const goals = await getUserGoals(userData.id);
+        console.log("User goals:", goals);
+        setUserGoals(goals);
+      } catch (error) {
+        console.error("Failed to fetch user goals:", error);
+      } finally {
+        setGoalsLoading(false);
+      }
+    };
+
+    fetchUserGoals();
+  }, [userData]);
 
   const styles = getStyles(activeCharacter);
 
@@ -212,26 +223,6 @@ export default function HomeScreen() {
       }
     }
   }, [activeCharacter, userCharacters, setActiveCharacterData]);
-
-  // Fetch user goals when component mounts
-  useEffect(() => {
-    const fetchUserGoals = async () => {
-      if (!userData || !userData.id) {
-        console.log("User data not available yet, can't fetch goals");
-        return;
-      }
-
-      try {
-        const goals = await getUserGoals(userData.id);
-        console.log("User goals:", goals);
-        setUserGoals(goals);
-      } catch (error) {
-        console.error("Failed to fetch user goals:", error);
-      }
-    };
-
-    fetchUserGoals();
-  }, [userData]);
 
   // Set up navigation options
   useEffect(() => {
@@ -360,6 +351,7 @@ export default function HomeScreen() {
           goals={userGoals}
           chestImage={UncommonChest}
           userData={userData}
+          isLoading={goalsLoading}
         />
       </ScrollView>
 
