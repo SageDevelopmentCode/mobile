@@ -33,6 +33,11 @@ type GoalItemBottomSheetProps = {
   onSnooze: () => void;
   onEdit?: () => void;
   activeCharacter: string;
+  related_verse?: string;
+  goal_repeat?: string;
+  energy_count?: number;
+  experience_reward?: number;
+  category?: string;
 };
 
 export const GoalItemBottomSheet = ({
@@ -47,6 +52,11 @@ export const GoalItemBottomSheet = ({
   onSnooze,
   onEdit,
   activeCharacter,
+  related_verse,
+  goal_repeat,
+  energy_count,
+  experience_reward,
+  category,
 }: GoalItemBottomSheetProps) => {
   const isDeborah = activeCharacter === "Deborah";
   const fadeAnim = useRef(new Animated.Value(0)).current;

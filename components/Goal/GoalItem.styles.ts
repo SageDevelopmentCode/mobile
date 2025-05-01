@@ -31,17 +31,24 @@ export const getStyles = (activeCharacter: string) => {
       justifyContent: "center",
       borderRadius: 5,
       alignItems: "center",
-      backgroundColor: colors.EmojiGrayBackground,
+      backgroundColor: isDeborah
+        ? "rgba(255, 255, 255, 0.2)" // Lighter background for Deborah's theme
+        : "rgba(255, 255, 255, 0.25)", // Light background for other themes
+      flexShrink: 0,
     },
     goalLeftContainer: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "flex-start",
+      flexShrink: 1,
+      flex: 1,
+      marginRight: 10,
     },
     goalRightContainer: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "flex-end",
+      flexShrink: 0,
     },
   });
 };

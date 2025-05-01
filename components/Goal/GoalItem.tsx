@@ -13,7 +13,11 @@ type GoalItemProps = {
   newGoal: boolean;
   emoji?: string;
   title?: string;
-  description?: string;
+  related_verse?: string;
+  goal_repeat?: string;
+  energy_count?: number;
+  experience_reward?: number;
+  category?: string;
   onPress: () => void;
   onIconPress: () => void;
   id?: string; // Adding an optional ID for the goal
@@ -24,7 +28,11 @@ export const GoalItem = ({
   activeCharacter,
   emoji,
   title,
-  description,
+  related_verse,
+  goal_repeat,
+  energy_count,
+  experience_reward,
+  category,
   onPress,
   onIconPress,
   newGoal,
@@ -33,6 +41,9 @@ export const GoalItem = ({
 }: GoalItemProps) => {
   const styles = getStyles(activeCharacter);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+
+  // Default emoji if none provided
+  const displayEmoji = emoji || "🎯";
 
   const handlePress = () => {
     setBottomSheetVisible(true);
@@ -86,11 +97,15 @@ export const GoalItem = ({
           >
             <View style={styles.goalLeftContainer}>
               <View style={styles.goalEmoji}>
-                <Heading>{emoji}</Heading>
+                <Heading>{displayEmoji}</Heading>
               </View>
-              <View style={{ marginLeft: 15 }}>
-                <Heading color={colors.PrimaryWhite}>{title}</Heading>
-                <StatText color="#AAAAAA">{description}</StatText>
+              <View style={additionalStyles.textContainer}>
+                <Heading
+                  color={colors.PrimaryWhite}
+                  style={additionalStyles.titleText}
+                >
+                  {title}
+                </Heading>
               </View>
             </View>
             <View style={styles.goalRightContainer}>
@@ -119,9 +134,13 @@ export const GoalItem = ({
           <GoalItemBottomSheet
             visible={bottomSheetVisible}
             onClose={handleCloseBottomSheet}
-            emoji={emoji}
+            emoji={displayEmoji}
             title={title}
-            description={description}
+            related_verse={related_verse}
+            goal_repeat={goal_repeat}
+            energy_count={energy_count}
+            experience_reward={experience_reward}
+            category={category}
             energyCount={energyCount}
             onSkip={handleSkip}
             onComplete={handleComplete}
@@ -192,5 +211,17 @@ const energyStyles = StyleSheet.create({
   },
   energyIcon: {
     marginRight: 4,
+  },
+});
+
+// Additional styles for text wrapping
+const additionalStyles = StyleSheet.create({
+  textContainer: {
+    marginLeft: 15,
+    flex: 1,
+    flexShrink: 1,
+  },
+  titleText: {
+    flexWrap: "wrap",
   },
 });

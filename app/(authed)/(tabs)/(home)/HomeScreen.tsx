@@ -357,7 +357,7 @@ export default function HomeScreen() {
         {/* Main Content Section */}
         <HomeContent
           activeCharacter={activeCharacter}
-          goals={goals}
+          goals={userGoals}
           chestImage={UncommonChest}
           userData={userData}
         />

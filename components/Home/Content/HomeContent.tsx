@@ -72,7 +72,6 @@ export const HomeContent = ({
           key={index}
           title={goal.title}
           emoji={goal.emoji}
-          description={goal.description}
           onPress={() => console.log(`Goal ${index} pressed`)}
           onIconPress={() => console.log(`Goal ${index} icon pressed`)}
           newGoal={goal.isNew || false}
@@ -82,7 +81,6 @@ export const HomeContent = ({
       <GoalItem
         title="Test Test"
         emoji="📖"
-        description="Read today's devotional"
         onPress={() => console.log("Icon Button Pressed")}
         onIconPress={() => console.log("Icon Button Pressed")}
         newGoal={true}
