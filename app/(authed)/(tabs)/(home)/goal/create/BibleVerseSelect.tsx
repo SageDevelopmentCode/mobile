@@ -228,6 +228,18 @@ const getChapterCount = (book: string): number => {
   return 30;
 };
 
+// Helper function to get chapter colors
+const getChapterColor = (index: number): string => {
+  const colors = [
+    "#51B7AB", // Teal
+    "#3C8A81", // Darker teal
+    "#5A9EA7", // Blue-teal
+    "#4A8D78", // Green-teal
+    "#65B295", // Mint
+  ];
+  return colors[index];
+};
+
 // Helper function to get verses for a specific chapter
 const getVersesForChapter = (book: string, chapter: number): number => {
   const chapterStr = chapter.toString();
@@ -400,17 +412,23 @@ export default function BibleVerseSelectScreen() {
   };
 
   const handleSearch = () => {
+    console.log("🔍 Search function called with term:", searchTerm);
+
+    // Always start by showing the loading indicator
     setSearchLoading(true);
+
+    // Set the correct mode immediately - important!
     setSearchMode("book");
 
+    // For empty searches, show all books
     if (!searchTerm.trim()) {
-      // If empty search, show all books
+      console.log("Empty search - showing all books");
       setBookSearchResults(bibleBooks);
       setSearchLoading(false);
       return;
     }
 
-    // Check if it's a specific verse reference (Book Chapter:Verse)
+    // Try to match as book:chapter:verse format
     const verseRegex = /^([a-zA-Z0-9\s]+)\s+(\d+)(?::(\d+))?$/;
     const verseMatch = searchTerm.trim().match(verseRegex);
 
@@ -419,27 +437,31 @@ export default function BibleVerseSelectScreen() {
       const chapter = parseInt(verseMatch[2], 10);
       const verse = verseMatch[3] ? parseInt(verseMatch[3], 10) : null;
 
+      console.log("📖 Matched verse format:", bookName, chapter, verse);
       setSelectedBook(bookName);
       setSelectedChapter(chapter);
 
       if (verse) {
-        // Direct verse reference - fetch the verse
         fetchSpecificVerse(bookName, chapter, verse);
       } else {
-        // Chapter reference - show verses in that chapter
         showVersesForChapter(bookName, chapter);
       }
       return;
     }
 
-    // General book search
+    // Basic book search
     const normalizedSearch = searchTerm.trim().toLowerCase();
     const results = bibleBooks.filter((book) =>
       book.toLowerCase().includes(normalizedSearch)
     );
 
-    setBookSearchResults(results);
-    setSearchLoading(false);
+    console.log("📚 Book search results:", results.length, results);
+
+    // Use timeout to ensure state updates properly
+    setTimeout(() => {
+      setBookSearchResults(results);
+      setSearchLoading(false);
+    }, 100);
   };
 
   const handleBookSelect = (book: string) => {
@@ -566,150 +588,16 @@ export default function BibleVerseSelectScreen() {
   const renderSearchContent = () => {
     if (searchLoading) {
       return (
-        <View style={styles.centeredContent}>
+        <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#51B7AB" />
           <Text style={styles.loadingText}>Loading...</Text>
         </View>
       );
     }
 
-    switch (searchMode) {
-      case "search":
-        return (
-          <View style={styles.searchInputContainer}>
-            <Text style={styles.searchPrompt}>
-              Search for a Bible book or enter a specific reference (e.g., John
-              3:16)
-            </Text>
-          </View>
-        );
-
-      case "book":
-        return (
-          <>
-            <Text style={styles.selectionHeader}>Select a Book</Text>
-            <FlatList
-              data={bookSearchResults}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.resultItem}
-                  onPress={() => handleBookSelect(item)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.resultText}>{item}</Text>
-                  <Ionicons
-                    name="chevron-forward"
-                    size={20}
-                    color={colors.DarkPrimaryText}
-                  />
-                </TouchableOpacity>
-              )}
-              ListEmptyComponent={
-                <Text style={styles.noResults}>
-                  No books found matching your search
-                </Text>
-              }
-            />
-          </>
-        );
-
-      case "chapter":
-        return (
-          <View style={styles.resultContainer}>
-            <View style={styles.headerContainer}>
-              <Text style={styles.sectionTitle}>
-                Chapters in {selectedBook}
-              </Text>
-              <Text style={styles.helperText}>
-                Tap a chapter to view verses
-              </Text>
-            </View>
-            <View style={styles.gridContainer}>
-              {chapterList.map((chapter) => (
-                <TouchableOpacity
-                  key={chapter.toString()}
-                  style={styles.chapterItem}
-                  onPress={() => handleChapterSelect(chapter)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.chapterText}>{chapter}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        );
-
-      case "verse":
-        return (
-          <View style={styles.resultContainer}>
-            <View style={styles.verseHeaderContainer}>
-              <View style={styles.verseHeaderContent}>
-                <Text style={styles.verseSectionTitle}>
-                  {selectedBook} - Chapter {selectedChapter}
-                </Text>
-                <Text style={styles.verseCount}>{verseList.length} verses</Text>
-                <Text style={styles.helperText}>
-                  Select a verse to add to your goal
-                </Text>
-              </View>
-
-              <View style={styles.chapterNavigation}>
-                {selectedChapter !== null && selectedChapter > 1 && (
-                  <TouchableOpacity
-                    style={styles.chapterNavButton}
-                    onPress={() => {
-                      const prevChapter = selectedChapter - 1;
-                      setSelectedChapter(prevChapter);
-                      showVersesForChapter(selectedBook, prevChapter);
-                    }}
-                  >
-                    <Ionicons
-                      name="chevron-back"
-                      size={20}
-                      color={colors.PrimaryWhite}
-                    />
-                  </TouchableOpacity>
-                )}
-
-                {selectedChapter !== null &&
-                  selectedChapter < getChapterCount(selectedBook) && (
-                    <TouchableOpacity
-                      style={styles.chapterNavButton}
-                      onPress={() => {
-                        const nextChapter = selectedChapter + 1;
-                        setSelectedChapter(nextChapter);
-                        showVersesForChapter(selectedBook, nextChapter);
-                      }}
-                    >
-                      <Ionicons
-                        name="chevron-forward"
-                        size={20}
-                        color={colors.PrimaryWhite}
-                      />
-                    </TouchableOpacity>
-                  )}
-              </View>
-            </View>
-
-            <View style={styles.gridContainer}>
-              {verseList.map((verse) => (
-                <TouchableOpacity
-                  key={verse.toString()}
-                  style={styles.verseItem}
-                  onPress={() => handleVerseSelect(verse)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.verseItemText}>{verse}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        );
-
-      default:
-        return null;
-    }
+    // Note: We're now handling all search modes directly in the modal component
+    // This function is kept for compatibility but not used anymore
+    return null;
   };
 
   return (
@@ -830,68 +718,287 @@ export default function BibleVerseSelectScreen() {
                 { transform: [{ translateY: slideAnim }] },
               ]}
             >
-              <TouchableOpacity activeOpacity={1} onPress={() => {}}>
-                <View style={styles.sheetHeader}>
+              <View style={styles.modernContainer}>
+                {/* Header with back/close buttons */}
+                <View style={styles.modernHeader}>
                   <View style={styles.headerLeftSection}>
                     {searchMode !== "search" && (
                       <TouchableOpacity
                         onPress={handleBack}
-                        style={styles.backButton}
+                        style={styles.iconButton}
                       >
                         <MaterialIcons
                           name="arrow-back"
                           size={24}
-                          color={colors.DarkPrimaryText}
+                          color={colors.PrimaryWhite}
                         />
                       </TouchableOpacity>
                     )}
-                    <Title>
+                    <Text style={styles.headerTitle}>
                       {searchMode === "search"
-                        ? "Search Bible Verses"
+                        ? "Find Bible Verse"
                         : searchMode === "book"
                         ? "Select Book"
                         : searchMode === "chapter"
                         ? `${selectedBook}`
-                        : `${selectedBook} Chapter ${selectedChapter}`}
-                    </Title>
+                        : `${selectedBook} ${selectedChapter}`}
+                    </Text>
                   </View>
                   <TouchableOpacity
                     onPress={closeModal}
-                    style={styles.closeButton}
+                    style={styles.iconButton}
                   >
                     <Ionicons
                       name="close"
                       size={24}
-                      color={colors.DarkPrimaryText}
-                    />
-                  </TouchableOpacity>
-                </View>
-
-                <View style={styles.searchContainer}>
-                  <TextInput
-                    style={styles.searchInput}
-                    placeholder="Search by book or reference (e.g., John 3:16)"
-                    placeholderTextColor={colors.GrayText}
-                    value={searchTerm}
-                    onChangeText={setSearchTerm}
-                    onSubmitEditing={handleSearch}
-                  />
-                  <TouchableOpacity
-                    onPress={handleSearch}
-                    style={styles.searchButton}
-                  >
-                    <FontAwesome
-                      name="search"
-                      size={18}
                       color={colors.PrimaryWhite}
                     />
                   </TouchableOpacity>
                 </View>
 
-                <View style={styles.resultsContainer}>
-                  {renderSearchContent()}
+                {/* Modern search bar */}
+                <View style={styles.modernSearchContainer}>
+                  <View style={styles.modernSearchInputWrapper}>
+                    <FontAwesome
+                      name="search"
+                      size={18}
+                      color="#aaa"
+                      style={{ marginRight: 10 }}
+                    />
+                    <TextInput
+                      style={styles.modernSearchInput}
+                      placeholder="Search book or reference (e.g., John 3:16)"
+                      placeholderTextColor="#999"
+                      value={searchTerm}
+                      onChangeText={(text) => setSearchTerm(text)}
+                      onSubmitEditing={handleSearch}
+                    />
+                  </View>
+                  <TouchableOpacity
+                    onPress={handleSearch}
+                    style={styles.modernSearchButton}
+                  >
+                    <Text style={styles.searchButtonText}>Search</Text>
+                  </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
+
+                {/* Content area */}
+                <View style={styles.contentContainer}>
+                  {/* Book selection mode */}
+                  {searchMode === "book" && (
+                    <View style={styles.resultsWrapper}>
+                      {searchLoading ? (
+                        <View style={styles.loadingContainer}>
+                          <ActivityIndicator size="large" color="#51B7AB" />
+                          <Text style={styles.loadingText}>
+                            Finding books...
+                          </Text>
+                        </View>
+                      ) : bookSearchResults.length > 0 ? (
+                        <>
+                          <Text style={styles.resultCount}>
+                            {bookSearchResults.length}{" "}
+                            {bookSearchResults.length === 1 ? "Book" : "Books"}{" "}
+                            Found
+                          </Text>
+                          <ScrollView
+                            style={styles.bookScrollView}
+                            showsVerticalScrollIndicator={false}
+                          >
+                            {bookSearchResults.map((book, index) => (
+                              <TouchableOpacity
+                                key={index}
+                                style={styles.bookItem}
+                                onPress={() => handleBookSelect(book)}
+                              >
+                                <View style={styles.bookIconWrapper}>
+                                  <FontAwesome
+                                    name="book"
+                                    size={18}
+                                    color="#51B7AB"
+                                  />
+                                </View>
+                                <View style={styles.bookSpine}>
+                                  <Text style={styles.bookTitle}>{book}</Text>
+                                  <Text style={styles.bookCategory}>
+                                    {book === "Genesis" ||
+                                    book === "Exodus" ||
+                                    book === "Leviticus" ||
+                                    book === "Numbers" ||
+                                    book === "Deuteronomy"
+                                      ? "Torah"
+                                      : book === "Matthew" ||
+                                        book === "Mark" ||
+                                        book === "Luke" ||
+                                        book === "John"
+                                      ? "Gospel"
+                                      : "Scripture"}
+                                  </Text>
+                                </View>
+                                <View style={styles.bookIconContainer}>
+                                  <Ionicons
+                                    name="chevron-forward"
+                                    size={20}
+                                    color={colors.PrimaryWhite}
+                                  />
+                                </View>
+                              </TouchableOpacity>
+                            ))}
+                          </ScrollView>
+                        </>
+                      ) : (
+                        <View style={styles.emptyResultContainer}>
+                          <FontAwesome name="book" size={40} color="#ccc" />
+                          <Text style={styles.emptyResultText}>
+                            No books found matching "{searchTerm}"
+                          </Text>
+                          <Text style={styles.emptyResultHint}>
+                            Try another search term
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  )}
+
+                  {/* Chapter selection mode */}
+                  {searchMode === "chapter" && (
+                    <View style={styles.gridWrapper}>
+                      <Text style={styles.gridTitle}>
+                        Chapters in {selectedBook}
+                      </Text>
+                      <ScrollView style={styles.gridScrollView}>
+                        <View style={styles.chaptersGrid}>
+                          {chapterList.map((chapter) => (
+                            <TouchableOpacity
+                              key={chapter.toString()}
+                              style={[
+                                styles.chapterTile,
+                                {
+                                  backgroundColor: getChapterColor(chapter % 5),
+                                },
+                              ]}
+                              onPress={() => handleChapterSelect(chapter)}
+                            >
+                              <View style={styles.chapterPage}>
+                                <Text style={styles.chapterNumber}>
+                                  {chapter}
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      </ScrollView>
+                    </View>
+                  )}
+
+                  {/* Verse selection mode */}
+                  {searchMode === "verse" && (
+                    <View style={styles.gridWrapper}>
+                      <View style={styles.verseHeader}>
+                        <Text style={styles.gridTitle}>
+                          {selectedBook} - Chapter {selectedChapter}
+                        </Text>
+                        <Text style={styles.verseCount}>
+                          {verseList.length} verses
+                        </Text>
+
+                        <View style={styles.chapterNavigation}>
+                          {selectedChapter !== null && selectedChapter > 1 && (
+                            <TouchableOpacity
+                              style={styles.navButton}
+                              onPress={() => {
+                                if (selectedChapter !== null) {
+                                  const prevChapter = selectedChapter - 1;
+                                  setSelectedChapter(prevChapter);
+                                  showVersesForChapter(
+                                    selectedBook,
+                                    prevChapter
+                                  );
+                                }
+                              }}
+                            >
+                              <Ionicons
+                                name="chevron-back"
+                                size={18}
+                                color={colors.PrimaryWhite}
+                              />
+                              <Text style={styles.navText}>
+                                Chapter {selectedChapter && selectedChapter - 1}
+                              </Text>
+                            </TouchableOpacity>
+                          )}
+
+                          {selectedChapter !== null &&
+                            selectedChapter < getChapterCount(selectedBook) && (
+                              <TouchableOpacity
+                                style={styles.navButton}
+                                onPress={() => {
+                                  if (selectedChapter !== null) {
+                                    const nextChapter = selectedChapter + 1;
+                                    setSelectedChapter(nextChapter);
+                                    showVersesForChapter(
+                                      selectedBook,
+                                      nextChapter
+                                    );
+                                  }
+                                }}
+                              >
+                                <Text style={styles.navText}>
+                                  Chapter{" "}
+                                  {selectedChapter && selectedChapter + 1}
+                                </Text>
+                                <Ionicons
+                                  name="chevron-forward"
+                                  size={18}
+                                  color={colors.PrimaryWhite}
+                                />
+                              </TouchableOpacity>
+                            )}
+                        </View>
+                      </View>
+
+                      <ScrollView style={styles.gridScrollView}>
+                        <View style={styles.versesGrid}>
+                          {verseList.map((verse) => (
+                            <TouchableOpacity
+                              key={verse.toString()}
+                              style={[
+                                styles.verseTile,
+                                {
+                                  backgroundColor: getChapterColor(
+                                    (verse + 1) % 5
+                                  ),
+                                },
+                              ]}
+                              onPress={() => handleVerseSelect(verse)}
+                            >
+                              <View style={styles.verseScroll}>
+                                <Text style={styles.verseNumber}>{verse}</Text>
+                              </View>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      </ScrollView>
+                    </View>
+                  )}
+
+                  {/* Initial search mode */}
+                  {searchMode === "search" && (
+                    <View style={styles.initialSearchContainer}>
+                      <FontAwesome name="book" size={50} color="#51B7AB" />
+                      <Text style={styles.searchPromptTitle}>
+                        Search for a Bible Verse
+                      </Text>
+                      <Text style={styles.searchPromptText}>
+                        Enter a book name like "John", "Psalms", or "Genesis"
+                      </Text>
+                      <Text style={styles.searchPromptText}>
+                        Or use a specific reference like "John 3:16"
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              </View>
             </Animated.View>
           </TouchableOpacity>
         </Animated.View>
@@ -988,34 +1095,47 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   bottomSheet: {
-    backgroundColor: colors.PrimaryWhite,
+    backgroundColor: "#2A3040",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
     height: "80%",
   },
-  sheetHeader: {
+  modernContainer: {
+    flex: 1,
+  },
+  modernHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255,255,255,0.1)",
+    paddingBottom: 15,
   },
   headerLeftSection: {
     flexDirection: "row",
     alignItems: "center",
   },
-  backButton: {
-    marginRight: 10,
-  },
-  closeButton: {
+  iconButton: {
     padding: 5,
   },
-  searchContainer: {
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: colors.PrimaryWhite,
+  },
+  modernSearchContainer: {
     flexDirection: "row",
     marginBottom: 20,
     alignItems: "center",
   },
-  searchInput: {
+  modernSearchInputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  modernSearchInput: {
     flex: 1,
     backgroundColor: colors.PrimaryGrayBackground,
     borderRadius: 8,
@@ -1023,165 +1143,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     color: colors.DarkPrimaryText,
   },
-  searchButton: {
+  modernSearchButton: {
     backgroundColor: "#51B7AB",
     padding: 12,
     borderRadius: 8,
     marginLeft: 10,
   },
-  searchButtonAlt: {
-    backgroundColor: "#3C8A81",
-    padding: 12,
-    borderRadius: 8,
-    marginLeft: 10,
+  searchButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: colors.PrimaryWhite,
   },
-  resultsContainer: {
+  contentContainer: {
     flex: 1,
   },
-  searchInputContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
-    padding: 20,
-  },
-  searchPrompt: {
-    fontSize: 16,
-    color: colors.GrayText,
-    textAlign: "center",
-    marginTop: 20,
-    lineHeight: 24,
-  },
-  selectionHeader: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: colors.DarkPrimaryText,
-    marginBottom: 15,
-    marginHorizontal: 10,
-  },
-  resultItem: {
-    backgroundColor: colors.PrimaryGrayBackground,
-    borderRadius: 12,
-    padding: 16,
-    marginHorizontal: 10,
-    marginBottom: 8,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    elevation: 1,
-  },
-  resultText: {
-    fontSize: 16,
-    color: colors.DarkPrimaryText,
-    fontWeight: "500",
-  },
-  noResults: {
-    textAlign: "center",
-    color: colors.GrayText,
-    marginTop: 20,
-    fontStyle: "italic",
-  },
-  headerContainer: {
-    marginBottom: 15,
-    paddingHorizontal: 10,
-  },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: colors.DarkPrimaryText,
-    marginBottom: 5,
-  },
-  verseCount: {
-    fontSize: 14,
-    color: colors.PrimaryWhite,
-    marginBottom: 5,
-    fontWeight: "500",
-    opacity: 0.9,
-  },
-  helperText: {
-    fontSize: 14,
-    color: colors.GrayText,
-    marginBottom: 5,
-  },
-  gridContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "flex-start",
-    paddingHorizontal: 10,
-    paddingBottom: 20,
-  },
-  chapterItem: {
-    width: "22%",
-    aspectRatio: 1,
-    margin: "1.5%",
-    backgroundColor: "#51B7AB",
-    borderRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  chapterText: {
-    color: colors.PrimaryWhite,
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  verseHeaderContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 15,
-    paddingHorizontal: 10,
-    backgroundColor: "#3C8A81",
-    padding: 12,
-    borderRadius: 12,
-  },
-  verseHeaderContent: {
+  resultsWrapper: {
     flex: 1,
   },
-  verseSectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: colors.PrimaryWhite,
-    marginBottom: 5,
-  },
-  chapterNavigation: {
-    flexDirection: "row",
-  },
-  chapterNavButton: {
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    marginLeft: 8,
-  },
-  verseItem: {
-    width: "22%",
-    aspectRatio: 1,
-    margin: "1.5%",
-    backgroundColor: "#3C8A81",
-    borderRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  verseItemText: {
-    color: colors.PrimaryWhite,
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  centeredContent: {
+  loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -1191,7 +1170,219 @@ const styles = StyleSheet.create({
     color: colors.DarkPrimaryText,
     fontSize: 16,
   },
-  resultContainer: {
+  resultCount: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: colors.DarkPrimaryText,
+    marginBottom: 10,
+  },
+  bookScrollView: {
     flex: 1,
+    maxHeight: 400,
+  },
+  bookItem: {
+    backgroundColor: "#f0f0f0",
+    padding: 15,
+    marginVertical: 8,
+    marginHorizontal: 10,
+    borderRadius: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderLeftWidth: 8,
+    borderLeftColor: "#51B7AB",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  bookIconWrapper: {
+    width: 36,
+    height: 36,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(81, 183, 171, 0.15)",
+    borderRadius: 18,
+    marginRight: 12,
+  },
+  bookSpine: {
+    flex: 1,
+  },
+  bookTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+  },
+  bookCategory: {
+    fontSize: 12,
+    color: "#666",
+    marginTop: 2,
+  },
+  bookIconContainer: {
+    width: 24,
+    height: 24,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#51B7AB",
+    borderRadius: 12,
+  },
+  emptyResultContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyResultText: {
+    color: "#666",
+    fontSize: 16,
+    marginTop: 10,
+  },
+  emptyResultHint: {
+    color: "#999",
+    fontSize: 14,
+    textAlign: "center",
+  },
+  gridWrapper: {
+    flex: 1,
+  },
+  gridTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: colors.DarkPrimaryText,
+    marginBottom: 10,
+  },
+  gridScrollView: {
+    flex: 1,
+  },
+  chaptersGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+    paddingHorizontal: 10,
+    paddingBottom: 20,
+  },
+  chapterTile: {
+    width: "22%",
+    aspectRatio: 1,
+    margin: "1.5%",
+    backgroundColor: "#51B7AB",
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.2)",
+  },
+  chapterPage: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.1)",
+    borderTopWidth: 4,
+    borderTopColor: "rgba(255,255,255,0.3)",
+  },
+  chapterNumber: {
+    color: colors.PrimaryWhite,
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  verseHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 15,
+    paddingHorizontal: 10,
+    backgroundColor: "#3C8A81",
+    padding: 12,
+    borderRadius: 12,
+  },
+  verseCount: {
+    fontSize: 14,
+    color: colors.PrimaryWhite,
+    marginBottom: 5,
+    fontWeight: "500",
+    opacity: 0.9,
+  },
+  chapterNavigation: {
+    flexDirection: "row",
+  },
+  navButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    marginLeft: 8,
+  },
+  navText: {
+    color: colors.PrimaryWhite,
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  versesGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+    paddingHorizontal: 10,
+    paddingBottom: 20,
+  },
+  verseTile: {
+    width: "22%",
+    aspectRatio: 1,
+    margin: "1.5%",
+    backgroundColor: "#3C8A81",
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.2)",
+  },
+  verseScroll: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 5,
+    paddingBottom: 5,
+    backgroundColor: "rgba(255,255,255,0.1)",
+    borderTopWidth: 2,
+    borderBottomWidth: 2,
+    borderTopColor: "rgba(255,255,255,0.3)",
+    borderBottomColor: "rgba(255,255,255,0.3)",
+  },
+  verseNumber: {
+    color: colors.PrimaryWhite,
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  initialSearchContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  searchPromptTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: colors.DarkPrimaryText,
+    marginBottom: 10,
+  },
+  searchPromptText: {
+    fontSize: 16,
+    color: colors.GrayText,
+    textAlign: "center",
+    marginBottom: 10,
   },
 });
