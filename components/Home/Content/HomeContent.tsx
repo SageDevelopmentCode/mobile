@@ -12,6 +12,10 @@ import { getUserGoals } from "@/lib/supabase/db/user_goals";
 interface HomeContentProps {
   activeCharacter: string;
   goals: {
+    experience_reward: number | undefined;
+    category: string | undefined;
+    energy_count: number | undefined;
+    goal_repeat: string | undefined;
     id: string | undefined;
     emoji: string;
     title: string;
@@ -36,6 +40,8 @@ export const HomeContent = ({
   setGoalsLoading,
 }: HomeContentProps) => {
   const styles = getHomeContentStyles();
+
+  console.log("Goals in home content", goals);
   // Create animated values for each goal
   const fadeAnims = useRef(goals.map(() => new Animated.Value(0))).current;
 
@@ -164,6 +170,10 @@ export const HomeContent = ({
                 activeCharacter={activeCharacter}
                 related_verse={goal.related_verse}
                 onRefreshGoals={refreshGoals}
+                goal_repeat={goal.goal_repeat}
+                energy_count={goal.energy_count}
+                experience_reward={goal.experience_reward}
+                category={goal.category}
               />
             </Animated.View>
           ))}

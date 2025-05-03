@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons"; // Ensure you have this library installed
 import { Heading, StatText } from "../Text/TextComponents";
@@ -43,7 +44,7 @@ export const GoalItem = ({
   onIconPress,
   isCompleted = false,
   newGoal = false,
-  energyCount = 2, // Default to 2 if not provided
+  energyCount,
   activeCharacter,
   related_verse,
   goal_repeat,
@@ -199,7 +200,15 @@ export const GoalItem = ({
               color={colors.EnergyColor}
               style={energyStyles.energyIcon}
             />
-            <StatText color={colors.EnergyColor}>{energyCount}</StatText>
+            {energy_count !== undefined ? (
+              <StatText color={colors.EnergyColor}>{energy_count}</StatText>
+            ) : (
+              <ActivityIndicator
+                size="small"
+                color={colors.EnergyColor}
+                style={{ width: 14, height: 14 }}
+              />
+            )}
           </View>
           <SquareActionButton
             onPress={onIconPress ? onIconPress : () => {}}
