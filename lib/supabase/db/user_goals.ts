@@ -22,6 +22,7 @@ export async function getUserGoals(userId: string) {
     "GET",
     {
       "user_id.eq": userId,
+      "is_deleted.eq": false,
       order: "created_at.desc",
     }
   );
@@ -155,6 +156,31 @@ export async function completeUserGoal(id: string) {
 
   if (error) {
     console.error(`Error completing user goal with ID ${id}:`, error);
+    throw error;
+  }
+
+  // REST API may return an array, but we want a single object
+  if (Array.isArray(data) && data.length > 0) {
+    return data[0];
+  }
+
+  return data;
+}
+
+// Function to mark a user goal as deleted (soft delete)
+export async function softDeleteUserGoal(id: string) {
+  const { data, error } = await makeSupabaseRequest(
+    "rest/v1/user_goals",
+    "PATCH",
+    { "id.eq": id },
+    {
+      is_deleted: true,
+      deleted_at: new Date().toISOString(),
+    }
+  );
+
+  if (error) {
+    console.error(`Error soft-deleting user goal with ID ${id}:`, error);
     throw error;
   }
 
