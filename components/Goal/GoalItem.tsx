@@ -14,6 +14,7 @@ import { router } from "expo-router";
 import { getStyles } from "./GoalItem.styles";
 import { GoalItemBottomSheet } from "./GoalItemBottomSheet";
 import { SkippedGoalBottomSheet } from "./SkippedGoalBottomSheet";
+import { softDeleteUserGoal } from "@/lib/supabase/db/user_goals";
 
 type GoalItemProps = {
   title: string;
@@ -31,6 +32,7 @@ type GoalItemProps = {
   experience_reward?: number;
   category?: string;
   id?: string; // Adding an optional ID for the goal
+  onRefreshGoals?: () => Promise<void>; // Callback to refresh goals after actions
 };
 
 export const GoalItem = ({
@@ -49,6 +51,7 @@ export const GoalItem = ({
   experience_reward,
   category,
   id,
+  onRefreshGoals,
 }: GoalItemProps) => {
   const styles = getStyles(activeCharacter);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
@@ -98,9 +101,25 @@ export const GoalItem = ({
     // Add functionality to undo the skip
   };
 
-  const handleDoneSkip = () => {
-    console.log("Confirmed skipping goal");
-    // Add functionality to confirm the skip
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDoneSkip = async () => {
+    console.log("Confirmed skipping goal", id);
+    if (id) {
+      setIsDeleting(true);
+      try {
+        await softDeleteUserGoal(id);
+        console.log("Goal soft deleted successfully");
+        // Refresh goals list if callback exists
+        if (onRefreshGoals) {
+          await onRefreshGoals();
+        }
+      } catch (error) {
+        console.error("Error soft deleting goal:", error);
+      } finally {
+        setIsDeleting(false);
+      }
+    }
   };
 
   if (newGoal) {
@@ -219,6 +238,7 @@ export const GoalItem = ({
         onUndo={handleUndoSkip}
         onDone={handleDoneSkip}
         activeCharacter={activeCharacter}
+        isLoading={isDeleting}
       />
     </View>
   );

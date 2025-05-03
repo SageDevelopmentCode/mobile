@@ -59,7 +59,7 @@ export default function HomeScreen() {
   >(null);
 
   // State
-  const [userGoals, setUserGoals] = useState([]);
+  const [userGoals, setUserGoals] = useState<any[]>([]);
   const [goalsLoading, setGoalsLoading] = useState(true);
   const [characterMenuVisible, setCharacterMenuVisible] =
     React.useState<boolean>(false);
@@ -352,6 +352,8 @@ export default function HomeScreen() {
           chestImage={UncommonChest}
           userData={userData}
           isLoading={goalsLoading}
+          setGoals={setUserGoals}
+          setGoalsLoading={setGoalsLoading}
         />
       </ScrollView>
 

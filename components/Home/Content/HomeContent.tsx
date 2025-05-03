@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { View, ActivityIndicator, Animated } from "react-native";
 import HeadingBar from "@/components/Heading/HeadingBar";
 import ProgressBar from "@/components/ProgressBar/ProgressBar";
@@ -7,10 +7,12 @@ import { Chest } from "./Chest/Chest";
 import colors from "@/constants/colors";
 import { getHomeContentStyles } from "./HomeContent.styles";
 import { User } from "@/types/User";
+import { getUserGoals } from "@/lib/supabase/db/user_goals";
 
 interface HomeContentProps {
   activeCharacter: string;
   goals: {
+    id: string | undefined;
     emoji: string;
     title: string;
     description: string;
@@ -20,6 +22,8 @@ interface HomeContentProps {
   chestImage: any;
   userData: User | null;
   isLoading?: boolean;
+  setGoals?: React.Dispatch<React.SetStateAction<any[]>>;
+  setGoalsLoading?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const HomeContent = ({
@@ -28,10 +32,31 @@ export const HomeContent = ({
   chestImage,
   userData,
   isLoading = false,
+  setGoals,
+  setGoalsLoading,
 }: HomeContentProps) => {
   const styles = getHomeContentStyles();
   // Create animated values for each goal
   const fadeAnims = useRef(goals.map(() => new Animated.Value(0))).current;
+
+  // Function to refresh goals
+  const refreshGoals = useCallback(async () => {
+    if (!userData || !userData.id || !setGoals || !setGoalsLoading) {
+      console.log("Cannot refresh goals: missing required data or functions");
+      return;
+    }
+
+    try {
+      setGoalsLoading(true);
+      const freshGoals = await getUserGoals(userData.id);
+      setGoals(freshGoals);
+      console.log("Goals refreshed successfully");
+    } catch (error) {
+      console.error("Failed to refresh goals:", error);
+    } finally {
+      setGoalsLoading(false);
+    }
+  }, [userData, setGoals, setGoalsLoading]);
 
   // Update fadeAnims when goals change
   useEffect(() => {
@@ -130,6 +155,7 @@ export const HomeContent = ({
               }}
             >
               <GoalItem
+                id={goal.id}
                 title={goal.title}
                 emoji={goal.emoji}
                 onPress={() => console.log(`Goal ${index} pressed`)}
@@ -137,6 +163,7 @@ export const HomeContent = ({
                 newGoal={goal.isNew || false}
                 activeCharacter={activeCharacter}
                 related_verse={goal.related_verse}
+                onRefreshGoals={refreshGoals}
               />
             </Animated.View>
           ))}

@@ -7,6 +7,7 @@ import {
   Animated,
   Switch,
   Text,
+  ActivityIndicator,
 } from "react-native";
 import {
   Heading,
@@ -36,6 +37,7 @@ type SkippedGoalBottomSheetProps = {
   onUndo?: () => void;
   onDone?: () => void;
   activeCharacter: string;
+  isLoading?: boolean;
 };
 
 export const SkippedGoalBottomSheet = ({
@@ -46,6 +48,7 @@ export const SkippedGoalBottomSheet = ({
   onUndo,
   onDone,
   activeCharacter,
+  isLoading = false,
 }: SkippedGoalBottomSheetProps) => {
   const isDeborah = activeCharacter === "Deborah";
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -300,13 +303,21 @@ export const SkippedGoalBottomSheet = ({
                 <TouchableOpacity
                   style={[styles.doneButton, { backgroundColor: primaryColor }]}
                   onPress={handleDonePress}
+                  disabled={isLoading}
                 >
-                  <StatText
-                    style={styles.doneButtonText}
-                    color={colors.PrimaryWhite}
-                  >
-                    Done
-                  </StatText>
+                  {isLoading ? (
+                    <ActivityIndicator
+                      color={colors.PrimaryWhite}
+                      size="small"
+                    />
+                  ) : (
+                    <StatText
+                      style={styles.doneButtonText}
+                      color={colors.PrimaryWhite}
+                    >
+                      Done
+                    </StatText>
+                  )}
                 </TouchableOpacity>
               </View>
             </Animated.View>
