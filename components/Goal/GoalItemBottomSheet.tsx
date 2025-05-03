@@ -132,10 +132,19 @@ export const GoalItemBottomSheet = ({
     }
   };
 
-  // Gesture handler for bottom sheet swiping
+  // Modified gesture event to only allow downward movement
   const onGestureEvent = Animated.event(
     [{ nativeEvent: { translationY: panY } }],
-    { useNativeDriver: true }
+    {
+      useNativeDriver: true,
+      listener: (event: any) => {
+        // Prevent upward movement by resetting panY to 0 if translationY is negative
+        const { translationY } = event.nativeEvent;
+        if (translationY < 0) {
+          panY.setValue(0);
+        }
+      },
+    }
   );
 
   // Handle when the gesture ends

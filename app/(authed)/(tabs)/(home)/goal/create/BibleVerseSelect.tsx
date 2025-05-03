@@ -12,6 +12,8 @@ import {
   Modal,
   FlatList,
   Alert,
+  Animated,
+  Dimensions,
 } from "react-native";
 import colors from "@/constants/colors";
 import {
@@ -312,6 +314,13 @@ export default function BibleVerseSelectScreen() {
     verseCategories[0]
   );
 
+  // Animation values
+  const [modalVisible, setModalVisible] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(
+    new Animated.Value(Dimensions.get("window").height)
+  ).current;
+
   const handleCategoryPress = (category: string): void => {
     setActiveCategory(category);
   };
@@ -367,13 +376,27 @@ export default function BibleVerseSelectScreen() {
   };
 
   const openVerseSelector = () => {
-    setBottomSheetVisible(true);
+    setModalVisible(true);
     setSearchMode("search");
     setSelectedBook("");
     setSelectedChapter(null);
     setBookSearchResults([]);
     setChapterList([]);
     setVerseList([]);
+
+    // Start animations
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
   };
 
   const handleSearch = () => {
@@ -500,8 +523,8 @@ export default function BibleVerseSelectScreen() {
       setSelectedReference(data.reference);
       setSelectedVerseText(data.text.trim());
 
-      // Close the bottom sheet
-      setBottomSheetVisible(false);
+      // Close the bottom sheet with animation
+      closeModal();
     }
     setSearchLoading(false);
   };
@@ -519,6 +542,25 @@ export default function BibleVerseSelectScreen() {
       setSearchMode("search");
       setBookSearchResults([]);
     }
+  };
+
+  // Close modal with animation
+  const closeModal = () => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: Dimensions.get("window").height,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setModalVisible(false);
+      setBottomSheetVisible(false);
+    });
   };
 
   const renderSearchContent = () => {
@@ -769,75 +811,90 @@ export default function BibleVerseSelectScreen() {
         </ScrollView>
       </View>
 
-      {/* Bible Verse Search Bottom Sheet */}
+      {/* Custom Modal Implementation with Separate Animations */}
       <Modal
-        visible={bottomSheetVisible}
-        animationType="slide"
+        visible={modalVisible}
         transparent={true}
-        onRequestClose={() => setBottomSheetVisible(false)}
+        animationType="none"
+        onRequestClose={closeModal}
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.bottomSheet}>
-            <View style={styles.sheetHeader}>
-              <View style={styles.headerLeftSection}>
-                {searchMode !== "search" && (
+        <Animated.View style={[styles.modalContainer, { opacity: fadeAnim }]}>
+          <TouchableOpacity
+            style={styles.overlayTouchable}
+            activeOpacity={1}
+            onPress={closeModal}
+          >
+            <Animated.View
+              style={[
+                styles.bottomSheet,
+                { transform: [{ translateY: slideAnim }] },
+              ]}
+            >
+              <TouchableOpacity activeOpacity={1} onPress={() => {}}>
+                <View style={styles.sheetHeader}>
+                  <View style={styles.headerLeftSection}>
+                    {searchMode !== "search" && (
+                      <TouchableOpacity
+                        onPress={handleBack}
+                        style={styles.backButton}
+                      >
+                        <MaterialIcons
+                          name="arrow-back"
+                          size={24}
+                          color={colors.DarkPrimaryText}
+                        />
+                      </TouchableOpacity>
+                    )}
+                    <Title>
+                      {searchMode === "search"
+                        ? "Search Bible Verses"
+                        : searchMode === "book"
+                        ? "Select Book"
+                        : searchMode === "chapter"
+                        ? `${selectedBook}`
+                        : `${selectedBook} Chapter ${selectedChapter}`}
+                    </Title>
+                  </View>
                   <TouchableOpacity
-                    onPress={handleBack}
-                    style={styles.backButton}
+                    onPress={closeModal}
+                    style={styles.closeButton}
                   >
-                    <MaterialIcons
-                      name="arrow-back"
+                    <Ionicons
+                      name="close"
                       size={24}
                       color={colors.DarkPrimaryText}
                     />
                   </TouchableOpacity>
-                )}
-                <Title>
-                  {searchMode === "search"
-                    ? "Search Bible Verses"
-                    : searchMode === "book"
-                    ? "Select Book"
-                    : searchMode === "chapter"
-                    ? `${selectedBook}`
-                    : `${selectedBook} Chapter ${selectedChapter}`}
-                </Title>
-              </View>
-              <TouchableOpacity
-                onPress={() => setBottomSheetVisible(false)}
-                style={styles.closeButton}
-              >
-                <Ionicons
-                  name="close"
-                  size={24}
-                  color={colors.DarkPrimaryText}
-                />
-              </TouchableOpacity>
-            </View>
+                </View>
 
-            <View style={styles.searchContainer}>
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Search by book or reference (e.g., John 3:16)"
-                placeholderTextColor={colors.GrayText}
-                value={searchTerm}
-                onChangeText={setSearchTerm}
-                onSubmitEditing={handleSearch}
-              />
-              <TouchableOpacity
-                onPress={handleSearch}
-                style={styles.searchButton}
-              >
-                <FontAwesome
-                  name="search"
-                  size={18}
-                  color={colors.PrimaryWhite}
-                />
-              </TouchableOpacity>
-            </View>
+                <View style={styles.searchContainer}>
+                  <TextInput
+                    style={styles.searchInput}
+                    placeholder="Search by book or reference (e.g., John 3:16)"
+                    placeholderTextColor={colors.GrayText}
+                    value={searchTerm}
+                    onChangeText={setSearchTerm}
+                    onSubmitEditing={handleSearch}
+                  />
+                  <TouchableOpacity
+                    onPress={handleSearch}
+                    style={styles.searchButton}
+                  >
+                    <FontAwesome
+                      name="search"
+                      size={18}
+                      color={colors.PrimaryWhite}
+                    />
+                  </TouchableOpacity>
+                </View>
 
-            <View style={styles.resultsContainer}>{renderSearchContent()}</View>
-          </View>
-        </View>
+                <View style={styles.resultsContainer}>
+                  {renderSearchContent()}
+                </View>
+              </TouchableOpacity>
+            </Animated.View>
+          </TouchableOpacity>
+        </Animated.View>
       </Modal>
     </>
   );
@@ -921,11 +978,14 @@ const styles = StyleSheet.create({
     color: colors.PrimaryWhite,
     fontWeight: "bold",
   },
-  // Bottom sheet styles
   modalContainer: {
     flex: 1,
     justifyContent: "flex-end",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  overlayTouchable: {
+    flex: 1,
+    justifyContent: "flex-end",
   },
   bottomSheet: {
     backgroundColor: colors.PrimaryWhite,

@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { TouchableOpacity, View, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons"; // Ensure you have this library installed
 import { Heading, StatText } from "../Text/TextComponents";
 import colors from "@/constants/colors";
@@ -7,45 +13,52 @@ import SquareActionButton from "../Buttons/SquareActionButtons/SquareActionButto
 import { router } from "expo-router";
 import { getStyles } from "./GoalItem.styles";
 import { GoalItemBottomSheet } from "./GoalItemBottomSheet";
+import { SkippedGoalBottomSheet } from "./SkippedGoalBottomSheet";
 
 type GoalItemProps = {
+  title: string;
+  description?: string;
+  emoji: string;
+  onPress: () => void;
+  onIconPress?: () => void;
+  isCompleted?: boolean;
+  newGoal?: boolean;
+  energyCount?: number;
   activeCharacter: string;
-  newGoal: boolean;
-  emoji?: string;
-  title?: string;
   related_verse?: string;
   goal_repeat?: string;
   energy_count?: number;
   experience_reward?: number;
   category?: string;
-  onPress: () => void;
-  onIconPress: () => void;
   id?: string; // Adding an optional ID for the goal
-  energyCount?: number; // Adding energy count prop
 };
 
 export const GoalItem = ({
-  activeCharacter,
-  emoji,
   title,
+  description,
+  emoji,
+  onPress,
+  onIconPress,
+  isCompleted = false,
+  newGoal = false,
+  energyCount = 2, // Default to 2 if not provided
+  activeCharacter,
   related_verse,
   goal_repeat,
   energy_count,
   experience_reward,
   category,
-  onPress,
-  onIconPress,
-  newGoal,
   id,
-  energyCount = 2, // Default to 2 if not provided
 }: GoalItemProps) => {
   const styles = getStyles(activeCharacter);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+  const [skippedSheetVisible, setSkippedSheetVisible] = useState(false);
 
   // Default emoji if none provided
   const displayEmoji = emoji || "🎯";
 
   const handlePress = () => {
+    onPress();
     setBottomSheetVisible(true);
   };
 
@@ -59,19 +72,14 @@ export const GoalItem = ({
     setBottomSheetVisible(false);
   };
 
-  const handleSkip = () => {
-    console.log("Skip pressed");
-    // No need to handle close here as the bottom sheet will do it
-  };
+  const handleSkipGoal = () => {
+    // Close the main bottom sheet
+    setBottomSheetVisible(false);
 
-  const handleComplete = () => {
-    console.log("Complete pressed");
-    // No need to handle close here as the bottom sheet will do it
-  };
-
-  const handleSnooze = () => {
-    console.log("Snooze pressed");
-    // No need to handle close here as the bottom sheet will do it
+    // Small delay to ensure smooth transition between sheets
+    setTimeout(() => {
+      setSkippedSheetVisible(true);
+    }, 300);
   };
 
   const handleEdit = () => {
@@ -85,115 +93,133 @@ export const GoalItem = ({
     }
   };
 
+  const handleUndoSkip = () => {
+    console.log("Undo skipping goal");
+    // Add functionality to undo the skip
+  };
+
+  const handleDoneSkip = () => {
+    console.log("Confirmed skipping goal");
+    // Add functionality to confirm the skip
+  };
+
+  if (newGoal) {
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          router.push({
+            pathname: "/(authed)/(tabs)/(home)/goal/create/GoalCreate",
+          })
+        }
+        style={[
+          styles.goalContainer,
+          {
+            backgroundColor: "rgba(240, 240, 240, 0.15)",
+            shadowColor: "none",
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0,
+            elevation: 0,
+            paddingVertical: 10,
+          },
+        ]}
+      >
+        <View style={styles.goalLeftContainer}>
+          <View
+            style={[
+              styles.goalEmoji,
+              { backgroundColor: "rgba(217, 217, 217, 0.10)" },
+            ]}
+          >
+            <Heading>🎯</Heading>
+          </View>
+          <View style={{ marginLeft: 15 }}>
+            <Heading color={colors.PrimaryWhite}>Add a Goal</Heading>
+          </View>
+        </View>
+        <View style={styles.goalRightContainer}>
+          <TouchableOpacity
+            onPress={() =>
+              router.push({
+                pathname: "/(authed)/(tabs)/(home)/goal/create/GoalCreate",
+              })
+            }
+          >
+            <FontAwesome6 color={colors.PrimaryWhite} name="plus" size={20} />
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
   return (
     <View>
-      {!newGoal ? (
-        <>
-          <TouchableOpacity
-            onPress={handlePress}
-            onLongPress={handleLongPress}
-            delayLongPress={300}
-            style={styles.goalContainer}
-          >
-            <View style={styles.goalLeftContainer}>
-              <View style={styles.goalEmoji}>
-                <Heading>{displayEmoji}</Heading>
-              </View>
-              <View style={additionalStyles.textContainer}>
-                <Heading
-                  color={colors.PrimaryWhite}
-                  style={additionalStyles.titleText}
-                >
-                  {title}
-                </Heading>
-              </View>
-            </View>
-            <View style={styles.goalRightContainer}>
-              <View style={energyStyles.energyContainer}>
-                <FontAwesome6
-                  name="bolt"
-                  size={14}
-                  color={colors.EnergyColor}
-                  style={energyStyles.energyIcon}
-                />
-                <StatText color={colors.EnergyColor}>{energyCount}</StatText>
-              </View>
-              <SquareActionButton
-                onPress={onIconPress}
-                icon={
-                  <FontAwesome6
-                    color={colors.SolaraGreen}
-                    name="play"
-                    size={23}
-                  />
-                }
-              />
-            </View>
-          </TouchableOpacity>
-
-          <GoalItemBottomSheet
-            visible={bottomSheetVisible}
-            onClose={handleCloseBottomSheet}
-            emoji={displayEmoji}
-            title={title}
-            related_verse={related_verse}
-            goal_repeat={goal_repeat}
-            energy_count={energy_count}
-            experience_reward={experience_reward}
-            category={category}
-            energyCount={energyCount}
-            onSkip={handleSkip}
-            onComplete={handleComplete}
-            onSnooze={handleSnooze}
-            onEdit={handleEdit}
-            activeCharacter={activeCharacter}
+      <TouchableOpacity
+        onPress={handlePress}
+        onLongPress={handleLongPress}
+        delayLongPress={300}
+        style={styles.goalContainer}
+      >
+        <View style={styles.goalLeftContainer}>
+          <View style={styles.goalEmoji}>
+            <Heading>{displayEmoji}</Heading>
+          </View>
+          <View style={additionalStyles.textContainer}>
+            <Heading
+              color={colors.PrimaryWhite}
+              style={additionalStyles.titleText}
+            >
+              {title}
+            </Heading>
+          </View>
+        </View>
+        <View style={styles.goalRightContainer}>
+          <View style={energyStyles.energyContainer}>
+            <FontAwesome6
+              name="bolt"
+              size={14}
+              color={colors.EnergyColor}
+              style={energyStyles.energyIcon}
+            />
+            <StatText color={colors.EnergyColor}>{energyCount}</StatText>
+          </View>
+          <SquareActionButton
+            onPress={onIconPress ? onIconPress : () => {}}
+            icon={
+              <FontAwesome6 color={colors.SolaraGreen} name="play" size={23} />
+            }
           />
-        </>
-      ) : (
-        <TouchableOpacity
-          onPress={() =>
-            router.push({
-              pathname: "/(authed)/(tabs)/(home)/goal/create/GoalCreate",
-            })
-          }
-          style={[
-            styles.goalContainer,
-            {
-              backgroundColor: "rgba(240, 240, 240, 0.15)",
-              shadowColor: "none",
-              shadowOffset: { width: 0, height: 0 },
-              shadowOpacity: 0,
-              elevation: 0,
-              paddingVertical: 10,
-            },
-          ]}
-        >
-          <View style={styles.goalLeftContainer}>
-            <View
-              style={[
-                styles.goalEmoji,
-                { backgroundColor: "rgba(217, 217, 217, 0.10)" },
-              ]}
-            >
-              <Heading>🎯</Heading>
-            </View>
-            <View style={{ marginLeft: 15 }}>
-              <Heading color={colors.PrimaryWhite}>Add a Goal</Heading>
-            </View>
-          </View>
-          <View style={styles.goalRightContainer}>
-            <TouchableOpacity
-              onPress={() =>
-                router.push({
-                  pathname: "/(authed)/(tabs)/(home)/goal/create/GoalCreate",
-                })
-              }
-            >
-              <FontAwesome6 color={colors.PrimaryWhite} name="plus" size={20} />
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      )}
+        </View>
+      </TouchableOpacity>
+
+      <GoalItemBottomSheet
+        visible={bottomSheetVisible}
+        onClose={handleCloseBottomSheet}
+        emoji={displayEmoji}
+        title={title}
+        description={description}
+        related_verse={related_verse}
+        goal_repeat={goal_repeat}
+        energy_count={energy_count}
+        experience_reward={experience_reward}
+        category={category}
+        energyCount={energyCount}
+        onSkip={handleSkipGoal}
+        onComplete={() => console.log("Complete")}
+        onSnooze={() => console.log("Snooze")}
+        onEdit={handleEdit}
+        activeCharacter={activeCharacter}
+      />
+
+      {/* Skipped Goal Bottom Sheet */}
+      <SkippedGoalBottomSheet
+        visible={skippedSheetVisible}
+        onClose={() => setSkippedSheetVisible(false)}
+        emoji={displayEmoji}
+        title={title}
+        onUndo={handleUndoSkip}
+        onDone={handleDoneSkip}
+        activeCharacter={activeCharacter}
+      />
     </View>
   );
 };
