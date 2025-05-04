@@ -28,6 +28,7 @@ import {
   State,
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
+import { useRouter } from "expo-router";
 
 type SkippedGoalBottomSheetProps = {
   visible: boolean;
@@ -38,6 +39,7 @@ type SkippedGoalBottomSheetProps = {
   onDone?: () => void;
   activeCharacter: string;
   isLoading?: boolean;
+  goalId?: string;
 };
 
 export const SkippedGoalBottomSheet = ({
@@ -49,7 +51,9 @@ export const SkippedGoalBottomSheet = ({
   onDone,
   activeCharacter,
   isLoading = false,
+  goalId,
 }: SkippedGoalBottomSheetProps) => {
+  const router = useRouter();
   const isDeborah = activeCharacter === "Deborah";
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(300)).current;
@@ -125,6 +129,20 @@ export const SkippedGoalBottomSheet = ({
       onDone();
     }
     closeWithAnimation();
+  };
+
+  const navigateToGoalReflection = () => {
+    closeWithAnimation();
+    // Navigate to the GoalReflection screen with all the goal data
+    router.push({
+      pathname: "/goal/reflection",
+      params: {
+        goalId,
+        title,
+        emoji,
+        activeCharacter,
+      },
+    });
   };
 
   const toggleSnooze = () => {
@@ -257,8 +275,12 @@ export const SkippedGoalBottomSheet = ({
               {/* Divider */}
               <View style={styles.divider} />
 
-              {/* Goal Reflection section */}
-              <View style={styles.reflectionContainer}>
+              {/* Goal Reflection section - now clickable */}
+              <TouchableOpacity
+                style={styles.reflectionContainer}
+                onPress={navigateToGoalReflection}
+                activeOpacity={0.7}
+              >
                 <View style={styles.reflectionHeader}>
                   <View style={styles.journalIconContainer}>
                     <FontAwesome6
@@ -290,7 +312,7 @@ export const SkippedGoalBottomSheet = ({
                     <Text style={styles.energyText}>2+</Text>
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
 
               {/* Action buttons */}
               <View style={styles.buttonActions}>

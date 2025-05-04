@@ -5,6 +5,13 @@ export default function HomeLayout() {
     <Stack screenOptions={{ headerBackTitle: "Home" }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="goal/create/[id]" />
+      <Stack.Screen
+        name="goal/reflection"
+        options={{
+          headerShown: false,
+          presentation: "modal",
+        }}
+      />
     </Stack>
   );
 }
