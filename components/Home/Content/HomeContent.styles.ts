@@ -17,5 +17,11 @@ export const getHomeContentStyles = () => {
       alignItems: "center",
       marginBottom: 20,
     },
+    sectionDivider: {
+      width: "100%",
+      height: 1,
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
+      marginVertical: 20,
+    },
   });
 };

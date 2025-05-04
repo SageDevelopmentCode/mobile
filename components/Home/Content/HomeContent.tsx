@@ -22,6 +22,7 @@ interface HomeContentProps {
     description: string;
     isNew?: boolean;
     related_verse?: string;
+    goal_time_set?: string;
   }[];
   chestImage: any;
   userData: User | null;
@@ -43,7 +44,32 @@ export const HomeContent = ({
 
   console.log("Goals in home content", goals);
   // Create animated values for each goal
-  const fadeAnims = useRef(goals.map(() => new Animated.Value(0))).current;
+  const fadeAnims = useRef(
+    new Array(goals.length).fill(0).map(() => new Animated.Value(0))
+  ).current;
+
+  // Separate goals into today's and past goals
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+
+  const todayEnd = new Date();
+  todayEnd.setHours(23, 59, 59, 999);
+
+  const todaysGoals = goals.filter((goal) => {
+    if (!goal.goal_time_set) return true; // Default to today if no timestamp
+    const goalDate = new Date(goal.goal_time_set);
+    return goalDate >= todayStart && goalDate <= todayEnd;
+  });
+
+  const pastGoals = goals.filter((goal) => {
+    if (!goal.goal_time_set) return false;
+    const goalDate = new Date(goal.goal_time_set);
+    return goalDate < todayStart;
+  });
+
+  console.log(
+    `Split goals: Today=${todaysGoals.length}, Past=${pastGoals.length}`
+  );
 
   // Function to refresh goals
   const refreshGoals = useCallback(async () => {
@@ -64,14 +90,17 @@ export const HomeContent = ({
     }
   }, [userData, setGoals, setGoalsLoading]);
 
-  // Update fadeAnims when goals change
+  // Update fadeAnims when goals length changes
   useEffect(() => {
-    // Reset the fadeAnims if goals length changes
+    // Ensure we have the right number of animation values
     if (fadeAnims.length !== goals.length) {
       fadeAnims.length = 0;
       goals.forEach(() => fadeAnims.push(new Animated.Value(0)));
     }
+  }, [goals]);
 
+  // Update fadeAnims when goals change
+  useEffect(() => {
     // Only animate if not loading
     if (!isLoading && goals.length > 0) {
       // Create an array of animations
@@ -127,10 +156,6 @@ export const HomeContent = ({
         activeCharacter={activeCharacter}
       />
 
-      <HeadingBar
-        headingText={`${isLoading ? "..." : goals.length} Goals for today`}
-      />
-
       {isLoading ? (
         <View style={{ padding: 20, alignItems: "center" }}>
           <ActivityIndicator
@@ -144,9 +169,12 @@ export const HomeContent = ({
         </View>
       ) : (
         <>
-          {goals.map((goal, index) => (
+          {/* Today's Goals Section */}
+          <HeadingBar headingText={`${todaysGoals.length} Goals for Today`} />
+
+          {todaysGoals.map((goal, index) => (
             <Animated.View
-              key={index}
+              key={`today-${index}`}
               style={{
                 opacity: fadeAnims[index] || 1,
                 transform: [
@@ -177,6 +205,8 @@ export const HomeContent = ({
               />
             </Animated.View>
           ))}
+
+          {/* Add Goal Item - Only shown in Today's section */}
           <GoalItem
             title="Add a Goal"
             emoji="🎯"
@@ -185,6 +215,52 @@ export const HomeContent = ({
             newGoal={true}
             activeCharacter={activeCharacter}
           />
+
+          {/* Past Goals Section - Only shown if there are past goals */}
+          {pastGoals.length > 0 && (
+            <>
+              <View style={styles.sectionDivider} />
+
+              <HeadingBar headingText={`${pastGoals.length} Missed Goals`} />
+
+              {pastGoals.map((goal, index) => (
+                <Animated.View
+                  key={`past-${index}`}
+                  style={{
+                    opacity: fadeAnims[todaysGoals.length + index] || 1,
+                    transform: [
+                      {
+                        translateY:
+                          fadeAnims[todaysGoals.length + index]?.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [20, 0],
+                          }) || 0,
+                      },
+                    ],
+                  }}
+                >
+                  <GoalItem
+                    id={goal.id}
+                    title={goal.title}
+                    emoji={goal.emoji}
+                    onPress={() => console.log(`Past Goal ${index} pressed`)}
+                    onIconPress={() =>
+                      console.log(`Past Goal ${index} icon pressed`)
+                    }
+                    newGoal={goal.isNew || false}
+                    activeCharacter={activeCharacter}
+                    related_verse={goal.related_verse}
+                    onRefreshGoals={refreshGoals}
+                    goal_repeat={goal.goal_repeat}
+                    energy_count={goal.energy_count}
+                    experience_reward={goal.experience_reward}
+                    category={goal.category}
+                    isMissed={true}
+                  />
+                </Animated.View>
+              ))}
+            </>
+          )}
         </>
       )}
     </View>

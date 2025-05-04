@@ -34,6 +34,7 @@ type GoalItemProps = {
   category?: string;
   id?: string; // Adding an optional ID for the goal
   onRefreshGoals?: () => Promise<void>; // Callback to refresh goals after actions
+  isMissed?: boolean; // Flag to indicate if this is a missed/past goal
 };
 
 export const GoalItem = ({
@@ -53,6 +54,7 @@ export const GoalItem = ({
   category,
   id,
   onRefreshGoals,
+  isMissed = false,
 }: GoalItemProps) => {
   const styles = getStyles(activeCharacter);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
@@ -124,6 +126,22 @@ export const GoalItem = ({
   };
 
   if (newGoal) {
+    // Get a more encouraging color based on character
+    const encouragingBorderColor =
+      activeCharacter === "Deborah"
+        ? "rgba(178, 138, 255, 0.6)" // Purple for Deborah
+        : "rgba(81, 183, 171, 0.6)"; // Green for others
+
+    const encouragingBgColor =
+      activeCharacter === "Deborah"
+        ? "rgba(178, 138, 255, 0.08)" // Light purple bg
+        : "rgba(81, 183, 171, 0.08)"; // Light green bg
+
+    const accentColor =
+      activeCharacter === "Deborah"
+        ? "rgba(178, 138, 255, 0.9)" // Bright purple
+        : "rgba(81, 183, 171, 0.9)"; // Bright green
+
     return (
       <TouchableOpacity
         onPress={() =>
@@ -134,7 +152,10 @@ export const GoalItem = ({
         style={[
           styles.goalContainer,
           {
-            backgroundColor: "rgba(240, 240, 240, 0.15)",
+            backgroundColor: encouragingBgColor,
+            borderWidth: 2,
+            borderColor: encouragingBorderColor,
+            borderStyle: "dashed",
             shadowColor: "none",
             shadowOffset: { width: 0, height: 0 },
             shadowOpacity: 0,
@@ -147,13 +168,18 @@ export const GoalItem = ({
           <View
             style={[
               styles.goalEmoji,
-              { backgroundColor: "rgba(217, 217, 217, 0.10)" },
+              {
+                backgroundColor: "rgba(255, 255, 255, 0.15)",
+              },
             ]}
           >
             <Heading>🎯</Heading>
           </View>
           <View style={{ marginLeft: 15 }}>
             <Heading color={colors.PrimaryWhite}>Add a Goal</Heading>
+            <StatText color={accentColor} style={{ marginTop: 2 }}>
+              Create something new
+            </StatText>
           </View>
         </View>
         <View style={styles.goalRightContainer}>
@@ -163,8 +189,16 @@ export const GoalItem = ({
                 pathname: "/(authed)/(tabs)/(home)/goal/create/GoalCreate",
               })
             }
+            style={{
+              backgroundColor: accentColor,
+              width: 36,
+              height: 36,
+              borderRadius: 18,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            <FontAwesome6 color={colors.PrimaryWhite} name="plus" size={20} />
+            <FontAwesome6 color={colors.PrimaryWhite} name="plus" size={18} />
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -177,35 +211,86 @@ export const GoalItem = ({
         onPress={handlePress}
         onLongPress={handleLongPress}
         delayLongPress={300}
-        style={styles.goalContainer}
+        style={[
+          styles.goalContainer,
+          isMissed && {
+            backgroundColor: "rgba(255, 100, 100, 0.15)", // Reddish tint for missed goals
+            borderLeftWidth: 2,
+            borderLeftColor: "rgba(255, 100, 100, 0.5)", // Red border on the left
+            shadowOpacity: 1, // Remove shadow for missed goals
+            elevation: 4,
+          },
+        ]}
       >
         <View style={styles.goalLeftContainer}>
-          <View style={styles.goalEmoji}>
+          <View
+            style={[
+              styles.goalEmoji,
+              isMissed && {
+                backgroundColor: "rgba(255, 100, 100, 0.2)", // Reddish background for emoji
+                shadowOpacity: 0, // Remove shadow
+              },
+            ]}
+          >
             <Heading>{displayEmoji}</Heading>
           </View>
           <View style={additionalStyles.textContainer}>
             <Heading
               color={colors.PrimaryWhite}
-              style={additionalStyles.titleText}
+              style={[
+                additionalStyles.titleText,
+                isMissed && {
+                  color: "rgba(255, 255, 255, 0.7)", // Slightly dimmed text for missed goals
+                  textShadowColor: "transparent", // Remove text shadow
+                  textShadowOffset: { width: 0, height: 0 },
+                  textShadowRadius: 0,
+                },
+              ]}
             >
               {title}
             </Heading>
+            {isMissed && (
+              <StatText
+                color="rgba(255, 100, 100, 0.9)"
+                style={additionalStyles.missedLabel}
+              >
+                Missed
+              </StatText>
+            )}
           </View>
         </View>
         <View style={styles.goalRightContainer}>
-          <View style={energyStyles.energyContainer}>
+          <View
+            style={[
+              energyStyles.energyContainer,
+              isMissed && {
+                backgroundColor: "rgba(255, 100, 100, 0.15)", // Reddish energy container
+                shadowOpacity: 0,
+                elevation: 0,
+              },
+            ]}
+          >
             <FontAwesome6
               name="bolt"
               size={14}
-              color={colors.EnergyColor}
+              color={isMissed ? "rgba(255, 100, 100, 0.9)" : colors.EnergyColor}
               style={energyStyles.energyIcon}
             />
             {energy_count !== undefined ? (
-              <StatText color={colors.EnergyColor}>{energy_count}</StatText>
+              <StatText
+                color={
+                  isMissed ? "rgba(255, 100, 100, 0.9)" : colors.EnergyColor
+                }
+                style={isMissed ? { textShadowRadius: 0 } : {}}
+              >
+                {energy_count}
+              </StatText>
             ) : (
               <ActivityIndicator
                 size="small"
-                color={colors.EnergyColor}
+                color={
+                  isMissed ? "rgba(255, 100, 100, 0.9)" : colors.EnergyColor
+                }
                 style={{ width: 14, height: 14 }}
               />
             )}
@@ -213,8 +298,21 @@ export const GoalItem = ({
           <SquareActionButton
             onPress={onIconPress ? onIconPress : () => {}}
             icon={
-              <FontAwesome6 color={colors.SolaraGreen} name="play" size={23} />
+              isMissed ? (
+                <FontAwesome6
+                  color="rgba(255, 100, 100, 0.9)"
+                  name="xmark"
+                  size={20}
+                />
+              ) : (
+                <FontAwesome6
+                  color={colors.SolaraGreen}
+                  name="play"
+                  size={23}
+                />
+              )
             }
+            style={isMissed ? { shadowOpacity: 0, elevation: 0 } : {}}
           />
         </View>
       </TouchableOpacity>
@@ -278,5 +376,9 @@ const additionalStyles = StyleSheet.create({
   },
   titleText: {
     flexWrap: "wrap",
+  },
+  missedLabel: {
+    fontSize: 12,
+    marginTop: 4,
   },
 });
