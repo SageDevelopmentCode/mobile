@@ -35,6 +35,7 @@ type GoalItemProps = {
   id?: string; // Adding an optional ID for the goal
   onRefreshGoals?: () => Promise<void>; // Callback to refresh goals after actions
   isMissed?: boolean; // Flag to indicate if this is a missed/past goal
+  goal_time_set?: string; // The timestamp when the goal was set
 };
 
 export const GoalItem = ({
@@ -55,10 +56,49 @@ export const GoalItem = ({
   id,
   onRefreshGoals,
   isMissed = false,
+  goal_time_set,
 }: GoalItemProps) => {
   const styles = getStyles(activeCharacter);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [skippedSheetVisible, setSkippedSheetVisible] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Calculate how long the goal has been missed
+  const getMissedTimeText = () => {
+    if (!goal_time_set || !isMissed) return "Missed";
+
+    const goalDate = new Date(goal_time_set);
+    const todayDate = new Date();
+
+    // Calculate time difference in milliseconds
+    const diffTime = Math.abs(todayDate.getTime() - goalDate.getTime());
+
+    // Calculate days difference
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+      // If less than a day, show "Missed today"
+      return "Missed yesterday";
+    } else if (diffDays === 1) {
+      // If exactly one day, show "Missed yesterday"
+      return "Missed yesterday";
+    } else if (diffDays < 7) {
+      // If less than a week, show days
+      return `Missed ${diffDays} days ago`;
+    } else if (diffDays < 30) {
+      // If less than a month, show weeks
+      const weeks = Math.floor(diffDays / 7);
+      return `Missed ${weeks} ${weeks === 1 ? "week" : "weeks"} ago`;
+    } else if (diffDays < 365) {
+      // If less than a year, show months
+      const months = Math.floor(diffDays / 30);
+      return `Missed ${months} ${months === 1 ? "month" : "months"} ago`;
+    } else {
+      // If more than a year, show years
+      const years = Math.floor(diffDays / 365);
+      return `Missed ${years} ${years === 1 ? "year" : "years"} ago`;
+    }
+  };
 
   // Default emoji if none provided
   const displayEmoji = emoji || "🎯";
@@ -103,8 +143,6 @@ export const GoalItem = ({
     console.log("Undo skipping goal");
     // Add functionality to undo the skip
   };
-
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDoneSkip = async () => {
     console.log("Confirmed skipping goal", id);
@@ -217,8 +255,8 @@ export const GoalItem = ({
             backgroundColor: "rgba(255, 100, 100, 0.08)", // Very subtle red background
             borderLeftWidth: 2,
             borderLeftColor: "rgba(255, 100, 100, 0.6)", // Red border on the left only
-            shadowOpacity: 1,
-            elevation: 4,
+            shadowOpacity: 0,
+            elevation: 0,
           },
         ]}
       >
@@ -253,7 +291,7 @@ export const GoalItem = ({
                 color="rgba(255, 100, 100, 0.9)"
                 style={additionalStyles.missedLabel}
               >
-                Missed
+                {getMissedTimeText()}
               </StatText>
             )}
           </View>

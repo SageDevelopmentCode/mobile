@@ -256,6 +256,7 @@ export const HomeContent = ({
                     experience_reward={goal.experience_reward}
                     category={goal.category}
                     isMissed={true}
+                    goal_time_set={goal.goal_time_set}
                   />
                 </Animated.View>
               ))}
