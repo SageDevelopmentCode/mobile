@@ -293,9 +293,9 @@ export const GoalItem = ({
               isMissed ? (
                 <FontAwesome6
                   color="rgba(255, 100, 100, 0.9)"
-                  name="xmark"
-                  size={20}
-                /> // Keep this element red
+                  name="rotate"
+                  size={18}
+                />
               ) : (
                 <FontAwesome6
                   color={colors.SolaraGreen}
