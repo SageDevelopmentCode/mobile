@@ -15,7 +15,10 @@ import { router } from "expo-router";
 import { getStyles } from "./GoalItem.styles";
 import { GoalItemBottomSheet } from "./GoalItemBottomSheet";
 import { SkippedGoalBottomSheet } from "./SkippedGoalBottomSheet";
-import { softDeleteUserGoal } from "@/lib/supabase/db/user_goals";
+import {
+  softDeleteUserGoal,
+  resetGoalToToday,
+} from "@/lib/supabase/db/user_goals";
 
 type GoalItemProps = {
   title: string;
@@ -62,6 +65,7 @@ export const GoalItem = ({
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [skippedSheetVisible, setSkippedSheetVisible] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
   // Calculate how long the goal has been missed
   const getMissedTimeText = () => {
@@ -160,6 +164,26 @@ export const GoalItem = ({
       } finally {
         setIsDeleting(false);
       }
+    }
+  };
+
+  // Handle resetting a missed goal to today
+  const handleResetGoal = async () => {
+    if (!id) return;
+
+    setIsResetting(true);
+    try {
+      await resetGoalToToday(id);
+      console.log("Goal reset to today successfully");
+
+      // Refresh goals list if callback exists
+      if (onRefreshGoals) {
+        await onRefreshGoals();
+      }
+    } catch (error) {
+      console.error("Error resetting goal to today:", error);
+    } finally {
+      setIsResetting(false);
     }
   };
 
@@ -326,14 +350,20 @@ export const GoalItem = ({
             )}
           </View>
           <SquareActionButton
-            onPress={onIconPress ? onIconPress : () => {}}
+            onPress={
+              isMissed ? handleResetGoal : onIconPress ? onIconPress : () => {}
+            }
             icon={
               isMissed ? (
-                <FontAwesome6
-                  color="rgba(255, 100, 100, 0.9)"
-                  name="rotate"
-                  size={18}
-                />
+                isResetting ? (
+                  <ActivityIndicator size="small" color={colors.PrimaryWhite} />
+                ) : (
+                  <FontAwesome6
+                    color="rgba(255, 100, 100, 0.9)"
+                    name="rotate"
+                    size={18}
+                  />
+                )
               ) : (
                 <FontAwesome6
                   color={colors.SolaraGreen}

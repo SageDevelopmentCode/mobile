@@ -191,3 +191,30 @@ export async function softDeleteUserGoal(id: string) {
 
   return data;
 }
+
+// Function to reset a missed goal to today
+export async function resetGoalToToday(id: string) {
+  const now = new Date().toISOString();
+
+  const { data, error } = await makeSupabaseRequest(
+    "rest/v1/user_goals",
+    "PATCH",
+    { "id.eq": id },
+    {
+      goal_time_set: now,
+      updated_at: now,
+    }
+  );
+
+  if (error) {
+    console.error(`Error resetting goal with ID ${id} to today:`, error);
+    throw error;
+  }
+
+  // REST API may return an array, but we want a single object
+  if (Array.isArray(data) && data.length > 0) {
+    return data[0];
+  }
+
+  return data;
+}
