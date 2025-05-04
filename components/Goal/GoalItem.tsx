@@ -214,10 +214,10 @@ export const GoalItem = ({
         style={[
           styles.goalContainer,
           isMissed && {
-            backgroundColor: "rgba(255, 100, 100, 0.15)", // Reddish tint for missed goals
+            backgroundColor: "rgba(255, 100, 100, 0.08)", // Very subtle red background
             borderLeftWidth: 2,
-            borderLeftColor: "rgba(255, 100, 100, 0.5)", // Red border on the left
-            shadowOpacity: 1, // Remove shadow for missed goals
+            borderLeftColor: "rgba(255, 100, 100, 0.6)", // Red border on the left only
+            shadowOpacity: 1,
             elevation: 4,
           },
         ]}
@@ -227,8 +227,7 @@ export const GoalItem = ({
             style={[
               styles.goalEmoji,
               isMissed && {
-                backgroundColor: "rgba(255, 100, 100, 0.2)", // Reddish background for emoji
-                shadowOpacity: 0, // Remove shadow
+                backgroundColor: styles.goalEmoji.backgroundColor, // Keep original background
               },
             ]}
           >
@@ -240,8 +239,8 @@ export const GoalItem = ({
               style={[
                 additionalStyles.titleText,
                 isMissed && {
-                  color: "rgba(255, 255, 255, 0.7)", // Slightly dimmed text for missed goals
-                  textShadowColor: "transparent", // Remove text shadow
+                  color: "rgba(255, 255, 255, 0.8)", // Only slightly dimmed
+                  textShadowColor: "transparent",
                   textShadowOffset: { width: 0, height: 0 },
                   textShadowRadius: 0,
                 },
@@ -264,33 +263,26 @@ export const GoalItem = ({
             style={[
               energyStyles.energyContainer,
               isMissed && {
-                backgroundColor: "rgba(255, 100, 100, 0.15)", // Reddish energy container
-                shadowOpacity: 0,
-                elevation: 0,
+                backgroundColor: "rgba(255, 255, 255, 0.1)", // Regular background, not red
               },
             ]}
           >
             <FontAwesome6
               name="bolt"
               size={14}
-              color={isMissed ? "rgba(255, 100, 100, 0.9)" : colors.EnergyColor}
+              color={isMissed ? colors.EnergyColor : colors.EnergyColor} // Keep original color
               style={energyStyles.energyIcon}
             />
             {energy_count !== undefined ? (
-              <StatText
-                color={
-                  isMissed ? "rgba(255, 100, 100, 0.9)" : colors.EnergyColor
-                }
-                style={isMissed ? { textShadowRadius: 0 } : {}}
-              >
+              <StatText color={colors.EnergyColor}>
+                {" "}
+                {/* Keep original color */}
                 {energy_count}
               </StatText>
             ) : (
               <ActivityIndicator
                 size="small"
-                color={
-                  isMissed ? "rgba(255, 100, 100, 0.9)" : colors.EnergyColor
-                }
+                color={colors.EnergyColor} // Keep original color
                 style={{ width: 14, height: 14 }}
               />
             )}
@@ -303,7 +295,7 @@ export const GoalItem = ({
                   color="rgba(255, 100, 100, 0.9)"
                   name="xmark"
                   size={20}
-                />
+                /> // Keep this element red
               ) : (
                 <FontAwesome6
                   color={colors.SolaraGreen}
@@ -312,7 +304,6 @@ export const GoalItem = ({
                 />
               )
             }
-            style={isMissed ? { shadowOpacity: 0, elevation: 0 } : {}}
           />
         </View>
       </TouchableOpacity>
