@@ -135,12 +135,13 @@ export const SkippedGoalBottomSheet = ({
     closeWithAnimation();
     // Navigate to the GoalReflection screen with all the goal data
     router.push({
-      pathname: "/goal/reflection",
+      pathname: "/(authed)/(tabs)/(home)/goal/reflection",
       params: {
         goalId,
         title,
         emoji,
         activeCharacter,
+        reflectionType: "skipped",
       },
     });
   };

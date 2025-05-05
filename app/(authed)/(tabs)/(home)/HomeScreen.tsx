@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, ScrollView, Animated, ActivityIndicator } from "react-native";
-import { useNavigation } from "expo-router";
+import { useNavigation, useLocalSearchParams } from "expo-router";
 import { useCharacterContext } from "@/lib/context/CharacterContext";
 import { getUserGoals } from "@/lib/supabase/db/user_goals";
 
@@ -34,6 +34,8 @@ const USER_ID_KEY = "userId";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+  const params = useLocalSearchParams();
+  const refreshParam = params.refresh;
   const slideAnim = useRef(new Animated.Value(800)).current;
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -101,7 +103,7 @@ export default function HomeScreen() {
     },
   ];
 
-  // Fetch user goals when component mounts
+  // Fetch user goals when component mounts or refresh param changes
   useEffect(() => {
     const fetchUserGoals = async () => {
       if (!userData || !userData.id) {
@@ -123,7 +125,7 @@ export default function HomeScreen() {
     };
 
     fetchUserGoals();
-  }, [userData]);
+  }, [userData, refreshParam]);
 
   const styles = getStyles(activeCharacter);
 

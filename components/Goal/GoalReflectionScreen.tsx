@@ -8,26 +8,53 @@ import {
   KeyboardAvoidingView,
   Platform,
   Text,
+  ActivityIndicator,
 } from "react-native";
 import { Heading, Paragraph, StatText } from "../Text/TextComponents";
 import colors from "@/constants/colors";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import { softDeleteUserGoal } from "@/lib/supabase/db/user_goals";
+import { createUserReflection } from "@/lib/supabase/db/user_reflections";
+import { useCharacterContext } from "../../lib/context/CharacterContext";
 
-type RouteParams = {
+type ReflectionType = "skipped" | "completed";
+
+// Define our component props type
+interface ReflectionScreenProps {
+  onRefreshGoals?: () => Promise<void>;
+}
+
+// Define our route params type
+type ReflectionParams = {
   goalId?: string;
   title?: string;
   emoji?: string;
-  activeCharacter: string;
+  activeCharacter?: string;
+  reflectionType?: ReflectionType;
 };
 
-export const GoalReflectionScreen = () => {
+export const GoalReflectionScreen = ({
+  onRefreshGoals,
+}: ReflectionScreenProps) => {
   const router = useRouter();
-  const params = useLocalSearchParams<RouteParams>();
-  const { goalId, title, emoji, activeCharacter } = params;
+  const params = useLocalSearchParams<ReflectionParams>();
+  const {
+    goalId,
+    title,
+    emoji,
+    activeCharacter = "Gabriel", // Default to Gabriel if not provided
+    reflectionType = "skipped",
+  } = params;
 
+  console.log("Goal ID from goal reflection screen", goalId);
+
+  const { userData } = useCharacterContext();
+
+  console.log("User data from goal reflection screen", userData);
   const [reflectionText, setReflectionText] = useState("");
   const [energyCount, setEnergyCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isDeborah = activeCharacter === "Deborah";
   const primaryColor = isDeborah
@@ -39,12 +66,19 @@ export const GoalReflectionScreen = () => {
 
   // Calculate energy based on text length
   useEffect(() => {
-    // Simple energy calculation based on character count
-    // 1 energy point per 20 characters with a minimum of 2
-    const calculatedEnergy = Math.max(
-      2,
-      Math.floor(reflectionText.length / 20)
-    );
+    // Start at 0 energy and increase based on text length, capped at 3
+    // Give 1 energy at 30 chars, 2 at 80 chars, 3 at 150+ chars
+    let calculatedEnergy = 0;
+    const length = reflectionText.length;
+
+    if (length >= 30 && length < 80) {
+      calculatedEnergy = 1;
+    } else if (length >= 80 && length < 150) {
+      calculatedEnergy = 2;
+    } else if (length >= 150) {
+      calculatedEnergy = 3;
+    }
+
     setEnergyCount(calculatedEnergy);
   }, [reflectionText]);
 
@@ -52,9 +86,59 @@ export const GoalReflectionScreen = () => {
     router.back();
   };
 
-  const handleDone = () => {
-    // No functionality for now, just go back
-    router.back();
+  const handleDone = async () => {
+    if (!goalId || !userData?.id) {
+      console.error("Missing goalId or userId");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      if (reflectionType === "skipped") {
+        // 1. Soft delete the user goal
+        await softDeleteUserGoal(goalId);
+
+        // 2. Create user reflection
+        await createUserReflection({
+          user_id: userData.id,
+          goal_id: goalId,
+          energy_count: energyCount,
+          user_answer: reflectionText,
+          goal_status: reflectionType,
+        });
+
+        // 3. Refresh goals list if callback exists
+        if (onRefreshGoals) {
+          await onRefreshGoals();
+          return;
+        }
+      }
+
+      // Only navigate back if we didn't refresh goals
+      router.back();
+    } catch (error) {
+      console.error("Error processing reflection:", error);
+      setIsLoading(false);
+    }
+  };
+
+  // Get the appropriate reflection prompt based on type
+  const getReflectionPrompt = () => {
+    if (reflectionType === "completed") {
+      return "How did completing this goal make you feel?";
+    } else {
+      return "What made you skip this goal?";
+    }
+  };
+
+  // Get the appropriate header title based on type
+  const getHeaderTitle = () => {
+    if (reflectionType === "completed") {
+      return "Goal Completed";
+    } else {
+      return "Goal Reflection";
+    }
   };
 
   return (
@@ -70,7 +154,7 @@ export const GoalReflectionScreen = () => {
           </TouchableOpacity>
           <View style={styles.titleContainer}>
             <Heading color={colors.PrimaryWhite} style={styles.headerTitle}>
-              Goal Reflection
+              {getHeaderTitle()}
             </Heading>
           </View>
           <View style={styles.placeholderView} />
@@ -87,7 +171,7 @@ export const GoalReflectionScreen = () => {
         {/* Reflection prompt */}
         <View style={styles.promptContainer}>
           <StatText color="#AAAAAA" style={styles.promptText}>
-            What made you skip this goal?
+            {getReflectionPrompt()}
           </StatText>
         </View>
 
@@ -109,7 +193,7 @@ export const GoalReflectionScreen = () => {
         <View style={styles.energyCounterContainer}>
           <View style={styles.energyBadge}>
             <FontAwesome6 name="bolt" size={14} color={colors.EnergyColor} />
-            <Text style={styles.energyText}>+{energyCount}</Text>
+            <Text style={styles.energyText}>{energyCount}</Text>
           </View>
           <StatText color="#AAAAAA" style={styles.energyExplanation}>
             Earn energy for your reflection
@@ -127,10 +211,18 @@ export const GoalReflectionScreen = () => {
           <TouchableOpacity
             style={[styles.doneButton, { backgroundColor: primaryColor }]}
             onPress={handleDone}
+            disabled={isLoading}
           >
-            <StatText style={styles.doneButtonText} color={colors.PrimaryWhite}>
-              Done
-            </StatText>
+            {isLoading ? (
+              <ActivityIndicator color={colors.PrimaryWhite} size="small" />
+            ) : (
+              <StatText
+                style={styles.doneButtonText}
+                color={colors.PrimaryWhite}
+              >
+                Done
+              </StatText>
+            )}
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

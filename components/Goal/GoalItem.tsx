@@ -405,6 +405,7 @@ export const GoalItem = ({
         onDone={handleDoneSkip}
         activeCharacter={activeCharacter}
         isLoading={isDeleting}
+        goalId={id}
       />
     </View>
   );
