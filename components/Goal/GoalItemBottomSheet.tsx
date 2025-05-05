@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import { Heading, StatText, ButtonText } from "../Text/TextComponents";
 import colors from "@/constants/colors";
@@ -32,12 +33,14 @@ type GoalItemBottomSheetProps = {
   onComplete: () => void;
   onSnooze: () => void;
   onEdit?: () => void;
+  onReset?: () => void;
   activeCharacter: string;
   related_verse?: string;
   goal_repeat?: string;
   energy_count?: number;
   experience_reward?: number;
   category?: string;
+  isMissed?: boolean;
 };
 
 export const GoalItemBottomSheet = ({
@@ -51,12 +54,14 @@ export const GoalItemBottomSheet = ({
   onComplete,
   onSnooze,
   onEdit,
+  onReset,
   activeCharacter,
   related_verse,
   goal_repeat,
   energy_count,
   experience_reward,
   category,
+  isMissed = false,
 }: GoalItemBottomSheetProps) => {
   const isDeborah = activeCharacter === "Deborah";
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -251,53 +256,78 @@ export const GoalItemBottomSheet = ({
               </View>
 
               {/* Action buttons */}
-              <View style={styles.buttonContainer}>
-                {/* Skip button */}
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => handleActionPress(onSkip)}
-                >
-                  <View style={styles.iconContainer}>
-                    <FontAwesome6
-                      name="forward-fast"
-                      size={24}
-                      color="#D95858"
-                    />
-                  </View>
-                  <ButtonText color={colors.PrimaryWhite}>Skip</ButtonText>
-                </TouchableOpacity>
-
-                {/* Complete button */}
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => handleActionPress(onComplete)}
-                >
-                  <View
-                    style={[
-                      styles.iconContainer,
-                      { backgroundColor: "rgba(103, 205, 149, 0.15)" },
-                    ]}
+              {isMissed ? (
+                // Show only Reset button for missed goals
+                <View style={styles.resetButtonContainer}>
+                  <TouchableOpacity
+                    style={styles.resetButton}
+                    onPress={() => handleActionPress(onReset!)}
                   >
-                    <FontAwesome6 name="play" size={24} color="#67CD95" />
-                  </View>
-                  <ButtonText color={colors.PrimaryWhite}>Complete</ButtonText>
-                </TouchableOpacity>
+                    <View
+                      style={[
+                        styles.resetIconContainer,
+                        { backgroundColor: "rgba(255, 100, 100, 0.15)" },
+                      ]}
+                    >
+                      <FontAwesome6 name="rotate" size={24} color="#FF6464" />
+                    </View>
+                    <ButtonText color={colors.PrimaryWhite}>
+                      Reset Goal
+                    </ButtonText>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                // Show regular action buttons for normal goals
+                <View style={styles.buttonContainer}>
+                  {/* Skip button */}
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => handleActionPress(onSkip)}
+                  >
+                    <View style={styles.iconContainer}>
+                      <FontAwesome6
+                        name="forward-fast"
+                        size={24}
+                        color="#D95858"
+                      />
+                    </View>
+                    <ButtonText color={colors.PrimaryWhite}>Skip</ButtonText>
+                  </TouchableOpacity>
 
-                {/* Snooze button */}
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => handleActionPress(onSnooze)}
-                >
-                  <View style={styles.iconContainer}>
-                    <Ionicons
-                      name="calendar-outline"
-                      size={24}
-                      color="#5878D9"
-                    />
-                  </View>
-                  <ButtonText color={colors.PrimaryWhite}>Snooze</ButtonText>
-                </TouchableOpacity>
-              </View>
+                  {/* Complete button */}
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => handleActionPress(onComplete)}
+                  >
+                    <View
+                      style={[
+                        styles.iconContainer,
+                        { backgroundColor: "rgba(103, 205, 149, 0.15)" },
+                      ]}
+                    >
+                      <FontAwesome6 name="play" size={24} color="#67CD95" />
+                    </View>
+                    <ButtonText color={colors.PrimaryWhite}>
+                      Complete
+                    </ButtonText>
+                  </TouchableOpacity>
+
+                  {/* Snooze button */}
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => handleActionPress(onSnooze)}
+                  >
+                    <View style={styles.iconContainer}>
+                      <Ionicons
+                        name="calendar-outline"
+                        size={24}
+                        color="#5878D9"
+                      />
+                    </View>
+                    <ButtonText color={colors.PrimaryWhite}>Snooze</ButtonText>
+                  </TouchableOpacity>
+                </View>
+              )}
 
               {/* Edit button */}
               <TouchableOpacity
@@ -444,5 +474,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: "italic",
     textAlign: "center",
+  },
+  // New styles for reset button
+  resetButtonContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  resetButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "50%",
+  },
+  resetIconContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    backgroundColor: "rgba(255, 100, 100, 0.15)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
   },
 });

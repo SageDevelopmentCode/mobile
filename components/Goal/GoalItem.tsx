@@ -393,6 +393,8 @@ export const GoalItem = ({
         onSnooze={() => console.log("Snooze")}
         onEdit={handleEdit}
         activeCharacter={activeCharacter}
+        isMissed={isMissed}
+        onReset={handleResetGoal}
       />
 
       {/* Skipped Goal Bottom Sheet */}
