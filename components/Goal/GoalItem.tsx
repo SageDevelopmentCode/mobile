@@ -41,6 +41,47 @@ type GoalItemProps = {
   goal_time_set?: string; // The timestamp when the goal was set
 };
 
+// Add a utility function to get category colors
+const getCategoryColor = (
+  category: string | undefined,
+  activeCharacter: string
+): string => {
+  if (!category)
+    return activeCharacter === "Deborah"
+      ? colors.PrimaryPurpleBackground
+      : colors.SolaraGreen;
+
+  // Convert category to lowercase for case-insensitive matching
+  const categoryLower = category.toLowerCase();
+
+  // Standard categories
+  switch (categoryLower) {
+    case "workplace":
+      return "#5D9CEC"; // Blue
+    case "scripture":
+      return "#AC92EB"; // Purple
+    case "classroom":
+      return "#4FC1E9"; // Light Blue
+    case "kindness":
+      return "#FC6E51"; // Orange
+    case "community":
+      return "#A0D468"; // Light Green
+    case "lifestyle":
+      return "#FFCE54"; // Yellow
+    case "learn":
+      return "#ED5565"; // Red
+    default:
+      // If it doesn't match any standard category, treat it as custom
+      if (categoryLower.startsWith("custom")) {
+        return "#EC87C0"; // Pink for custom
+      }
+      // For any other non-standard category
+      return activeCharacter === "Deborah"
+        ? colors.PrimaryPurpleBackground
+        : colors.SolaraGreen;
+  }
+};
+
 export const GoalItem = ({
   title,
   description,
@@ -310,6 +351,19 @@ export const GoalItem = ({
             >
               {title}
             </Heading>
+
+            {/* Category Label */}
+            {category && (
+              <View style={additionalStyles.categoryContainer}>
+                <StatText
+                  style={additionalStyles.categoryText}
+                  color={getCategoryColor(category, activeCharacter)}
+                >
+                  {category}
+                </StatText>
+              </View>
+            )}
+
             {isMissed && (
               <StatText
                 color="rgba(255, 100, 100, 0.9)"
@@ -442,5 +496,17 @@ const additionalStyles = StyleSheet.create({
   missedLabel: {
     fontSize: 12,
     marginTop: 4,
+  },
+  categoryContainer: {
+    marginTop: 4,
+    borderRadius: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    alignSelf: "flex-start",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+  },
+  categoryText: {
+    fontSize: 10,
+    fontWeight: "600",
   },
 });
