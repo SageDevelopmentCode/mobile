@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Animated,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import { Heading, StatText, ButtonText } from "../Text/TextComponents";
 import colors from "@/constants/colors";
@@ -22,6 +23,16 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 
+// Define available colors for goals
+const goalColors = [
+  "#FFB682", // Peach/Orange (from image)
+  "#C180FF", // Purple (from image)
+  "#78CBFF", // Light Blue (from image)
+  "#7EFFB0", // Mint Green (from image)
+  "#FF8F8F", // Coral/Pink (from image)
+  "#F8F37D", // Yellow (from image)
+];
+
 type GoalItemBottomSheetProps = {
   visible: boolean;
   onClose: () => void;
@@ -34,6 +45,8 @@ type GoalItemBottomSheetProps = {
   onSnooze: () => void;
   onEdit?: () => void;
   onReset?: () => void;
+  onColorChange?: (color: string) => void; // Add handler for color change
+  customColor?: string; // Add prop for current custom color
   activeCharacter: string;
   related_verse?: string;
   goal_repeat?: string;
@@ -55,6 +68,8 @@ export const GoalItemBottomSheet = ({
   onSnooze,
   onEdit,
   onReset,
+  onColorChange,
+  customColor,
   activeCharacter,
   related_verse,
   goal_repeat,
@@ -68,6 +83,7 @@ export const GoalItemBottomSheet = ({
   const slideAnim = useRef(new Animated.Value(300)).current;
   const [modalVisible, setModalVisible] = useState(visible);
   const panY = useRef(new Animated.Value(0)).current;
+  const [colorPickerVisible, setColorPickerVisible] = useState(false);
 
   // Function to reset the pan position when the modal is shown
   const resetPanPosition = () => {
@@ -134,6 +150,13 @@ export const GoalItemBottomSheet = ({
     if (onEdit) {
       onEdit();
       closeWithAnimation();
+    }
+  };
+
+  const handleColorPress = (color: string) => {
+    if (onColorChange) {
+      onColorChange(color);
+      setColorPickerVisible(false);
     }
   };
 
@@ -254,6 +277,57 @@ export const GoalItemBottomSheet = ({
                 />
                 <StatText color={colors.EnergyColor}>{energyCount}</StatText>
               </View>
+
+              {/* Color Picker */}
+              {!isMissed && (
+                <View style={styles.colorPickerContainer}>
+                  <TouchableOpacity
+                    style={styles.colorPickerButton}
+                    onPress={() => setColorPickerVisible(!colorPickerVisible)}
+                  >
+                    <View style={styles.colorButtonContainer}>
+                      <FontAwesome6 name="palette" size={16} color="#FFFFFF" />
+                      <ButtonText
+                        color={colors.PrimaryWhite}
+                        style={{ marginLeft: 8 }}
+                      >
+                        Customize Background
+                      </ButtonText>
+                    </View>
+                  </TouchableOpacity>
+
+                  {colorPickerVisible && (
+                    <ScrollView
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      contentContainerStyle={
+                        styles.colorSwatchesContentContainer
+                      }
+                      style={styles.colorSwatchesContainer}
+                    >
+                      {goalColors.map((color, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          style={[
+                            styles.colorSwatch,
+                            { backgroundColor: color },
+                            customColor === color && styles.selectedColorSwatch,
+                          ]}
+                          onPress={() => handleColorPress(color)}
+                        >
+                          {customColor === color && (
+                            <FontAwesome6
+                              name="check"
+                              size={16}
+                              color="#FFFFFF"
+                            />
+                          )}
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>
+                  )}
+                </View>
+              )}
 
               {/* Action buttons */}
               {isMissed ? (
@@ -408,11 +482,50 @@ const styles = StyleSheet.create({
   energyContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 32,
+    marginBottom: 16,
     backgroundColor: "rgba(255, 204, 0, 0.15)",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
+  },
+  colorPickerContainer: {
+    width: "100%",
+    marginBottom: 16,
+    alignItems: "center",
+  },
+  colorPickerButton: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+  },
+  colorButtonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+  },
+  colorSwatchesContainer: {
+    marginTop: 12,
+    paddingHorizontal: 4,
+    maxWidth: "100%",
+  },
+  colorSwatchesContentContainer: {
+    paddingVertical: 4,
+    alignItems: "center",
+  },
+  colorSwatch: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    marginHorizontal: 8,
+    borderWidth: 2,
+    borderColor: "rgba(255, 255, 255, 0.3)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  selectedColorSwatch: {
+    borderColor: "#FFFFFF",
+    borderWidth: 2,
   },
   buttonContainer: {
     flexDirection: "row",

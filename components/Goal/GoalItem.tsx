@@ -107,6 +107,7 @@ export const GoalItem = ({
   const [skippedSheetVisible, setSkippedSheetVisible] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [customColor, setCustomColor] = useState<string | undefined>(undefined);
 
   // Calculate how long the goal has been missed
   const getMissedTimeText = () => {
@@ -228,6 +229,19 @@ export const GoalItem = ({
     }
   };
 
+  // Handle color change
+  const handleColorChange = (color: string) => {
+    // If selecting one of the default colors, set to undefined to use default theming
+    if (
+      color === colors.DarkPurpleButton ||
+      color === colors.GabrielGoalBackground
+    ) {
+      setCustomColor(undefined);
+    } else {
+      setCustomColor(color);
+    }
+  };
+
   if (newGoal) {
     // Get a more encouraging color based on character
     const encouragingBorderColor =
@@ -308,6 +322,40 @@ export const GoalItem = ({
     );
   }
 
+  // Get goal background color
+  const getGoalBackgroundColor = () => {
+    if (isMissed) {
+      return "rgba(255, 100, 100, 0.08)"; // Missed goal always has red background
+    }
+    if (customColor) {
+      // Return with opacity for a better look
+      return `${customColor}80`; // 50% opacity (80 in hex)
+    }
+    const isDeborah = activeCharacter === "Deborah";
+    return isDeborah ? colors.DarkPurpleButton : colors.GabrielGoalBackground;
+  };
+
+  // Get the emoji background color
+  const getEmojiBackgroundColor = () => {
+    const isDeborah = activeCharacter === "Deborah";
+    // Always use the original emoji background color, regardless of custom goal background
+    return isDeborah
+      ? "rgba(255, 255, 255, 0.2)" // Lighter background for Deborah's theme
+      : "rgba(255, 255, 255, 0.25)"; // Light background for other themes
+  };
+
+  // Get goal shadow color
+  const getGoalShadowColor = () => {
+    if (isMissed) {
+      return "transparent"; // No shadow for missed goals
+    }
+    // Always use the original shadow colors, even with custom background
+    const isDeborah = activeCharacter === "Deborah";
+    return isDeborah
+      ? colors.DarkPurpleButtonDropShadow
+      : colors.GabrielGoalDropShadow;
+  };
+
   return (
     <View>
       <TouchableOpacity
@@ -316,12 +364,13 @@ export const GoalItem = ({
         delayLongPress={300}
         style={[
           styles.goalContainer,
-          isMissed && {
-            backgroundColor: "rgba(255, 100, 100, 0.08)", // Very subtle red background
-            borderLeftWidth: 2,
-            borderLeftColor: "rgba(255, 100, 100, 0.6)", // Red border on the left only
-            shadowOpacity: 0,
-            elevation: 0,
+          {
+            backgroundColor: getGoalBackgroundColor(),
+            shadowColor: getGoalShadowColor(),
+            borderLeftWidth: isMissed ? 2 : 0,
+            borderLeftColor: isMissed ? "rgba(255, 100, 100, 0.6)" : undefined,
+            shadowOpacity: isMissed ? 0 : 1,
+            elevation: isMissed ? 0 : 4,
           },
         ]}
       >
@@ -329,8 +378,8 @@ export const GoalItem = ({
           <View
             style={[
               styles.goalEmoji,
-              isMissed && {
-                backgroundColor: styles.goalEmoji.backgroundColor, // Keep original background
+              {
+                backgroundColor: getEmojiBackgroundColor(), // Use custom function for emoji background
               },
             ]}
           >
@@ -352,7 +401,7 @@ export const GoalItem = ({
               {title}
             </Heading>
 
-            {/* Category Label */}
+            {/* Category Label - keep original styling */}
             {category && (
               <View style={additionalStyles.categoryContainer}>
                 <StatText
@@ -386,19 +435,19 @@ export const GoalItem = ({
             <FontAwesome6
               name="bolt"
               size={14}
-              color={isMissed ? colors.EnergyColor : colors.EnergyColor} // Keep original color
+              color={colors.EnergyColor} // Always use the original energy color
               style={energyStyles.energyIcon}
             />
             {energy_count !== undefined ? (
               <StatText color={colors.EnergyColor}>
                 {" "}
-                {/* Keep original color */}
+                {/* Always use the original energy color */}
                 {energy_count}
               </StatText>
             ) : (
               <ActivityIndicator
                 size="small"
-                color={colors.EnergyColor} // Keep original color
+                color={colors.EnergyColor} // Always use the original energy color
                 style={{ width: 14, height: 14 }}
               />
             )}
@@ -446,6 +495,8 @@ export const GoalItem = ({
         onComplete={() => console.log("Complete")}
         onSnooze={() => console.log("Snooze")}
         onEdit={handleEdit}
+        onColorChange={handleColorChange}
+        customColor={customColor}
         activeCharacter={activeCharacter}
         isMissed={isMissed}
         onReset={handleResetGoal}
