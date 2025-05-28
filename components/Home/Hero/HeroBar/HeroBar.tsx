@@ -1,39 +1,34 @@
-import SquareActionButton from "@/components/Buttons/SquareActionButtons/SquareActionButtons";
 import { Title } from "@/components/Text/TextComponents";
 import colors from "@/constants/colors";
-import { Octicons } from "@/utils/icons";
 import React from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { styles } from "./HeroBar.styles";
 
 type HeroBarProps = {
-  onSwitchPress?: () => void;
   characterName: string;
+  level: number;
+  currentXP: number;
+  maxXP: number;
 };
 
-export const HeroBar = ({ onSwitchPress, characterName }: HeroBarProps) => {
-  // Default handler if none provided
-  const handleSwitchPress =
-    onSwitchPress || (() => console.log("Switch pressed but disabled"));
+export const HeroBar = ({
+  characterName,
+  level,
+  currentXP,
+  maxXP,
+}: HeroBarProps) => {
+  const progressPercentage = (currentXP / maxXP) * 100;
 
   return (
     <View style={styles.heroBar}>
       <Title color={colors.PrimaryWhite}>{characterName}</Title>
-      <View style={styles.actions}>
-        <SquareActionButton
-          onPress={() => console.log("Icon Button Pressed")}
-          title="✅"
-        />
-        <SquareActionButton
-          onPress={() => console.log("Icon Button Pressed")}
-          title="🌱"
-        />
-        <SquareActionButton
-          onPress={handleSwitchPress}
-          icon={<Octicons name="arrow-switch" size={20} />}
-          disabled={!onSwitchPress}
-          style={{ opacity: onSwitchPress ? 1 : 0.5 }}
-        />
+      <View style={styles.levelSection}>
+        <Text style={styles.levelText}>Lv. {level}</Text>
+        <View style={styles.progressBarContainer}>
+          <View
+            style={[styles.progressBar, { width: `${progressPercentage}%` }]}
+          />
+        </View>
       </View>
     </View>
   );

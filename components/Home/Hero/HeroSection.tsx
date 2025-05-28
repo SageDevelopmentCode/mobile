@@ -140,7 +140,9 @@ export const HeroSection = ({
         <View style={styles.heroContent}>
           <HeroBar
             characterName={characterName}
-            onSwitchPress={!isTransitioning ? onSwitchPress : undefined}
+            level={1}
+            currentXP={100}
+            maxXP={1000}
           />
 
           <TouchableOpacity
