@@ -328,8 +328,8 @@ export const GoalItem = ({
       return "rgba(255, 100, 100, 0.08)"; // Missed goal always has red background
     }
     if (customColor) {
-      // Return with opacity for a better look
-      return `${customColor}80`; // 50% opacity (80 in hex)
+      // Return with lower opacity for a translucent look
+      return `${customColor}20`; // 12.5% opacity (20 in hex)
     }
     const isDeborah = activeCharacter === "Deborah";
     return isDeborah ? colors.DarkPurpleButton : colors.GabrielGoalBackground;
@@ -367,11 +367,21 @@ export const GoalItem = ({
           {
             backgroundColor: getGoalBackgroundColor(),
             shadowColor: getGoalShadowColor(),
-            borderLeftWidth: isMissed ? 2 : 0,
-            borderLeftColor: isMissed ? "rgba(255, 100, 100, 0.6)" : undefined,
             shadowOpacity: isMissed ? 0 : 1,
             elevation: isMissed ? 0 : 4,
           },
+          // Separate condition for missed goals
+          isMissed && {
+            borderLeftWidth: 2,
+            borderLeftColor: "rgba(255, 100, 100, 0.6)",
+          },
+          // Add border when custom color is selected
+          customColor &&
+            !isMissed && {
+              borderWidth: 1.5,
+              borderColor: customColor,
+              shadowOpacity: 0.4, // Reduce shadow for custom colors
+            },
         ]}
       >
         <View style={styles.goalLeftContainer}>
