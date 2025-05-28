@@ -18,6 +18,7 @@ import { SkippedGoalBottomSheet } from "./SkippedGoalBottomSheet";
 import {
   softDeleteUserGoal,
   resetGoalToToday,
+  updateUserGoal,
 } from "@/lib/supabase/db/user_goals";
 
 type GoalItemProps = {
@@ -39,6 +40,7 @@ type GoalItemProps = {
   onRefreshGoals?: () => Promise<void>; // Callback to refresh goals after actions
   isMissed?: boolean; // Flag to indicate if this is a missed/past goal
   goal_time_set?: string; // The timestamp when the goal was set
+  goal_color?: string; // The custom color from the database
 };
 
 // Add a utility function to get category colors
@@ -101,13 +103,16 @@ export const GoalItem = ({
   onRefreshGoals,
   isMissed = false,
   goal_time_set,
+  goal_color,
 }: GoalItemProps) => {
   const styles = getStyles(activeCharacter);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [skippedSheetVisible, setSkippedSheetVisible] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
-  const [customColor, setCustomColor] = useState<string | undefined>(undefined);
+  const [customColor, setCustomColor] = useState<string | undefined>(
+    goal_color
+  );
 
   // Calculate how long the goal has been missed
   const getMissedTimeText = () => {
@@ -230,15 +235,24 @@ export const GoalItem = ({
   };
 
   // Handle color change
-  const handleColorChange = (color: string) => {
-    // If selecting one of the default colors, set to undefined to use default theming
-    if (
-      color === colors.DarkPurpleButton ||
-      color === colors.GabrielGoalBackground
-    ) {
-      setCustomColor(undefined);
-    } else {
+  const handleColorChange = async (color: string) => {
+    if (!id) return;
+
+    try {
+      // Update the goal color in the database
+      await updateUserGoal(id, { goal_color: color });
+
+      // Update local state
       setCustomColor(color);
+
+      // Refresh goals to get updated data
+      if (onRefreshGoals) {
+        await onRefreshGoals();
+      }
+
+      console.log("Goal color updated successfully");
+    } catch (error) {
+      console.error("Error updating goal color:", error);
     }
   };
 
@@ -328,8 +342,12 @@ export const GoalItem = ({
       return "rgba(255, 100, 100, 0.08)"; // Missed goal always has red background
     }
     if (customColor) {
-      // Return with lower opacity for a translucent look
-      return `${customColor}20`; // 12.5% opacity (20 in hex)
+      // Convert hex color to rgba with low opacity for translucent look
+      const hex = customColor.replace("#", "");
+      const r = parseInt(hex.substr(0, 2), 16);
+      const g = parseInt(hex.substr(2, 2), 16);
+      const b = parseInt(hex.substr(4, 2), 16);
+      return `rgba(${r}, ${g}, ${b}, 0.12)`; // 12% opacity for translucent background
     }
     const isDeborah = activeCharacter === "Deborah";
     return isDeborah ? colors.DarkPurpleButton : colors.GabrielGoalBackground;
@@ -510,6 +528,7 @@ export const GoalItem = ({
         activeCharacter={activeCharacter}
         isMissed={isMissed}
         onReset={handleResetGoal}
+        goalId={id}
       />
 
       {/* Skipped Goal Bottom Sheet */}

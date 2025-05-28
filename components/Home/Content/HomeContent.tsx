@@ -23,6 +23,7 @@ interface HomeContentProps {
     isNew?: boolean;
     related_verse?: string;
     goal_time_set?: string;
+    goal_color?: string;
   }[];
   chestImage: any;
   userData: User | null;
@@ -202,6 +203,7 @@ export const HomeContent = ({
                 energy_count={goal.energy_count}
                 experience_reward={goal.experience_reward}
                 category={goal.category}
+                goal_color={goal.goal_color}
               />
             </Animated.View>
           ))}
@@ -255,6 +257,7 @@ export const HomeContent = ({
                     energy_count={goal.energy_count}
                     experience_reward={goal.experience_reward}
                     category={goal.category}
+                    goal_color={goal.goal_color}
                     isMissed={true}
                     goal_time_set={goal.goal_time_set}
                   />

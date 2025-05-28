@@ -56,6 +56,7 @@ type GoalItemBottomSheetProps = {
   experience_reward?: number;
   category?: string;
   isMissed?: boolean;
+  goalId?: string; // Add goal ID for database updates
 };
 
 export const GoalItemBottomSheet = ({
@@ -79,6 +80,7 @@ export const GoalItemBottomSheet = ({
   experience_reward,
   category,
   isMissed = false,
+  goalId,
 }: GoalItemBottomSheetProps) => {
   const isDeborah = activeCharacter === "Deborah";
   const fadeAnim = useRef(new Animated.Value(0)).current;

@@ -13,6 +13,7 @@ export interface UserGoal {
   goal_time_set?: string;
   related_verse?: string;
   category: string;
+  goal_color: string;
 }
 
 // Function to get all user goals for a specific user using REST API
