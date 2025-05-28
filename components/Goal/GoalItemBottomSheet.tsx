@@ -25,12 +25,14 @@ import {
 
 // Define available colors for goals
 const goalColors = [
-  "#FFB682", // Peach/Orange (from image)
-  "#C180FF", // Purple (from image)
-  "#78CBFF", // Light Blue (from image)
-  "#7EFFB0", // Mint Green (from image)
-  "#FF8F8F", // Coral/Pink (from image)
-  "#F8F37D", // Yellow (from image)
+  "#FF6B35", // Orange-Red
+  "#A855F7", // Purple
+  "#3B82F6", // Blue
+  "#10B981", // Green
+  "#FFD60A", // Bright Yellow
+  "#14B8A6", // Teal
+  "#EC4899", // Pink
+  "#8B4513", // Brown
 ];
 
 type GoalItemBottomSheetProps = {
@@ -247,18 +249,45 @@ export const GoalItemBottomSheet = ({
                 {title}
               </Heading>
 
-              {/* Related Verse */}
+              {/* Related Verse and Energy count on same row */}
               {related_verse && (
-                <View style={styles.verseContainer}>
-                  <FontAwesome
-                    name="book"
+                <View style={styles.verseAndEnergyContainer}>
+                  <View style={styles.verseContainer}>
+                    <FontAwesome
+                      name="book"
+                      size={16}
+                      color="#AAAAAA"
+                      style={styles.verseIcon}
+                    />
+                    <StatText color="#AAAAAA" style={styles.verse}>
+                      {related_verse}
+                    </StatText>
+                  </View>
+
+                  <View style={styles.energyContainer}>
+                    <FontAwesome6
+                      name="bolt"
+                      size={16}
+                      color={colors.EnergyColor}
+                      style={{ marginRight: 4 }}
+                    />
+                    <StatText color={colors.EnergyColor}>
+                      {energyCount}
+                    </StatText>
+                  </View>
+                </View>
+              )}
+
+              {/* Energy count only (when no verse) */}
+              {!related_verse && (
+                <View style={styles.energyContainer}>
+                  <FontAwesome6
+                    name="bolt"
                     size={16}
-                    color="#AAAAAA"
-                    style={styles.verseIcon}
+                    color={colors.EnergyColor}
+                    style={{ marginRight: 4 }}
                   />
-                  <StatText color="#AAAAAA" style={styles.verse}>
-                    {related_verse}
-                  </StatText>
+                  <StatText color={colors.EnergyColor}>{energyCount}</StatText>
                 </View>
               )}
 
@@ -266,68 +295,6 @@ export const GoalItemBottomSheet = ({
               <StatText color="#AAAAAA" style={styles.description}>
                 {description}
               </StatText>
-
-              {/* Energy count */}
-              <View style={styles.energyContainer}>
-                <FontAwesome6
-                  name="bolt"
-                  size={16}
-                  color={colors.EnergyColor}
-                  style={{ marginRight: 4 }}
-                />
-                <StatText color={colors.EnergyColor}>{energyCount}</StatText>
-              </View>
-
-              {/* Color Picker */}
-              {!isMissed && (
-                <View style={styles.colorPickerContainer}>
-                  <TouchableOpacity
-                    style={styles.colorPickerButton}
-                    onPress={() => setColorPickerVisible(!colorPickerVisible)}
-                  >
-                    <View style={styles.colorButtonContainer}>
-                      <FontAwesome6 name="palette" size={16} color="#FFFFFF" />
-                      <ButtonText
-                        color={colors.PrimaryWhite}
-                        style={{ marginLeft: 8 }}
-                      >
-                        Customize Background
-                      </ButtonText>
-                    </View>
-                  </TouchableOpacity>
-
-                  {colorPickerVisible && (
-                    <ScrollView
-                      horizontal
-                      showsHorizontalScrollIndicator={false}
-                      contentContainerStyle={
-                        styles.colorSwatchesContentContainer
-                      }
-                      style={styles.colorSwatchesContainer}
-                    >
-                      {goalColors.map((color, index) => (
-                        <TouchableOpacity
-                          key={index}
-                          style={[
-                            styles.colorSwatch,
-                            { backgroundColor: color },
-                            customColor === color && styles.selectedColorSwatch,
-                          ]}
-                          onPress={() => handleColorPress(color)}
-                        >
-                          {customColor === color && (
-                            <FontAwesome6
-                              name="check"
-                              size={16}
-                              color="#FFFFFF"
-                            />
-                          )}
-                        </TouchableOpacity>
-                      ))}
-                    </ScrollView>
-                  )}
-                </View>
-              )}
 
               {/* Action buttons */}
               {isMissed ? (
@@ -415,13 +382,47 @@ export const GoalItemBottomSheet = ({
                 />
               </TouchableOpacity>
 
-              {/* Close button */}
-              <TouchableOpacity
-                style={styles.closeButton}
-                onPress={closeWithAnimation}
-              >
-                <Ionicons name="close" size={24} color={colors.PrimaryWhite} />
-              </TouchableOpacity>
+              {/* Palette button - top right */}
+              {!isMissed && (
+                <TouchableOpacity
+                  style={styles.paletteButtonTopRight}
+                  onPress={() => setColorPickerVisible(!colorPickerVisible)}
+                >
+                  <FontAwesome6
+                    name="palette"
+                    size={20}
+                    color={colors.PrimaryWhite}
+                  />
+                </TouchableOpacity>
+              )}
+
+              {/* Color Picker Dropdown - positioned near palette icon */}
+              {colorPickerVisible && !isMissed && (
+                <View style={styles.colorDropdown}>
+                  <View style={styles.colorDropdownContent}>
+                    {goalColors.map((color, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        style={[
+                          styles.colorSwatchDropdown,
+                          { backgroundColor: color },
+                          customColor === color &&
+                            styles.selectedColorSwatchDropdown,
+                        ]}
+                        onPress={() => handleColorPress(color)}
+                      >
+                        {customColor === color && (
+                          <FontAwesome6
+                            name="check"
+                            size={12}
+                            color="#FFFFFF"
+                          />
+                        )}
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+              )}
             </Animated.View>
           </PanGestureHandler>
         </GestureHandlerRootView>
@@ -479,54 +480,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
-  energyContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-    backgroundColor: "rgba(255, 204, 0, 0.15)",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
-  },
-  colorPickerContainer: {
-    width: "100%",
-    marginBottom: 16,
-    alignItems: "center",
-  },
-  colorPickerButton: {
-    padding: 8,
-    borderRadius: 8,
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-  },
-  colorButtonContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 10,
-  },
-  colorSwatchesContainer: {
-    marginTop: 12,
-    paddingHorizontal: 4,
-    maxWidth: "100%",
-  },
-  colorSwatchesContentContainer: {
-    paddingVertical: 4,
-    alignItems: "center",
-  },
-  colorSwatch: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    marginHorizontal: 8,
-    borderWidth: 2,
-    borderColor: "rgba(255, 255, 255, 0.3)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  selectedColorSwatch: {
-    borderColor: "#FFFFFF",
-    borderWidth: 2,
-  },
+
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -569,16 +523,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  verseAndEnergyContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+    width: "100%",
+    gap: 16,
+  },
   verseContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 16,
     backgroundColor: "rgba(255, 255, 255, 0.08)",
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 8,
     alignSelf: "center",
-    maxWidth: "90%",
+    maxWidth: "70%",
   },
   verseIcon: {
     marginRight: 8,
@@ -587,6 +548,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: "italic",
     textAlign: "center",
+  },
+  energyContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 204, 0, 0.15)",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
   },
   // New styles for reset button
   resetButtonContainer: {
@@ -607,5 +576,51 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 8,
+  },
+  paletteButtonTopRight: {
+    position: "absolute",
+    top: 20,
+    right: 20,
+    width: 40,
+    height: 40,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  colorDropdown: {
+    position: "absolute",
+    top: 70,
+    right: 20,
+    width: 200,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    borderRadius: 12,
+    padding: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  colorDropdownContent: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
+  colorSwatchDropdown: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    marginBottom: 8,
+    marginHorizontal: 4,
+    borderWidth: 2,
+    borderColor: "rgba(255, 255, 255, 0.3)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  selectedColorSwatchDropdown: {
+    borderColor: "#FFFFFF",
+    borderWidth: 2,
   },
 });
