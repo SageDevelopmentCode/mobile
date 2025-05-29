@@ -245,11 +245,8 @@ export const GoalItem = ({
       // Update local state
       setCustomColor(color);
 
-      // Refresh goals to get updated data
-      if (onRefreshGoals) {
-        await onRefreshGoals();
-      }
-
+      // Remove the refresh call - local state update is sufficient
+      // The next natural refresh will sync the data from the database
       console.log("Goal color updated successfully");
     } catch (error) {
       console.error("Error updating goal color:", error);

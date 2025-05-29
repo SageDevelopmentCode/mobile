@@ -161,6 +161,8 @@ export const GoalItemBottomSheet = ({
     if (onColorChange) {
       onColorChange(color);
       setColorPickerVisible(false);
+      // Close the bottom sheet after color change for better UX
+      closeWithAnimation();
     }
   };
 
