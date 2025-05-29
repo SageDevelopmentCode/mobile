@@ -114,7 +114,6 @@ export function CharacterProvider({ children }: CharacterProviderProps) {
           try {
             const user = await getUserById(currentUserId);
             if (user) {
-              console.log("Context: User data fetched:", user);
               setUserData(user);
             } else {
               console.log("Context: No user data found for ID:", currentUserId);
@@ -126,7 +125,6 @@ export function CharacterProvider({ children }: CharacterProviderProps) {
           // Fetch user characters if we have a userId
           try {
             const characters = await getUserCharacters(currentUserId);
-            console.log("Context: User Characters:", characters);
 
             // Store the user characters in context
             setUserCharacters(characters || []);

@@ -115,7 +115,6 @@ export default function HomeScreen() {
       setGoalsLoading(true);
       try {
         const goals = await getUserGoals(userData.id);
-        console.log("User goals:", goals);
         setUserGoals(goals);
       } catch (error) {
         console.error("Failed to fetch user goals:", error);
@@ -299,6 +298,33 @@ export default function HomeScreen() {
     return null;
   }, [activeCharacterData, localCharacterImage]);
 
+  // Prepare the headshot image source
+  const headshotImageSource = React.useMemo(() => {
+    // Check if we have a valid headshot image URL from the database
+    console.log("Active character data:", activeCharacterData);
+    if (
+      activeCharacterData?.character?.headshot_image_url &&
+      activeCharacterData.character.headshot_image_url.trim() !== ""
+    ) {
+      // Make sure the URL has a proper protocol
+      console.log(
+        "Headshot image URL:",
+        activeCharacterData.character.headshot_image_url
+      );
+      let imageUrl = activeCharacterData.character.headshot_image_url;
+      if (!imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")) {
+        imageUrl = "https://" + imageUrl.replace(/^\/\//, "");
+      }
+
+      console.log("Using headshot image URL:", imageUrl);
+      return { uri: imageUrl };
+    }
+
+    // Return null if no headshot available
+    console.log("No headshot image available");
+    return null;
+  }, [activeCharacterData]);
+
   // Display loading state
   if (isLoading) {
     return (
@@ -326,6 +352,7 @@ export default function HomeScreen() {
         userGems={formatNumber(1000)}
         userShards={formatNumber(1240)}
         userStars={formatNumber(1400)}
+        characterImageSource={headshotImageSource}
       />
 
       <ScrollView

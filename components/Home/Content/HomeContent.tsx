@@ -43,7 +43,6 @@ export const HomeContent = ({
 }: HomeContentProps) => {
   const styles = getHomeContentStyles();
 
-  console.log("Goals in home content", goals);
   // Create animated values for each goal
   const fadeAnims = useRef(
     new Array(goals.length).fill(0).map(() => new Animated.Value(0))
