@@ -7,7 +7,6 @@ import { router } from "expo-router";
 import { StatText } from "@/components/Text/TextComponents";
 import XPGem from "../../../app/(authed)/(tabs)/(home)/assets/XPGem.png";
 import ShardGem from "../../../app/(authed)/(tabs)/(home)/assets/ShardGem.png";
-import Star from "../../../app/(authed)/(tabs)/(home)/assets/Star.png";
 import Goal from "../../../app/(authed)/(tabs)/(home)/assets/Goal.png";
 
 type StatsHeaderProps = {
@@ -59,13 +58,16 @@ export const StatsHeader = ({
           <Image source={Goal} style={styles.goalImage} resizeMode="contain" />
         </TouchableOpacity>
         {characterImageSource && (
-          <View style={styles.characterAvatarContainer}>
+          <TouchableOpacity
+            onPress={() => console.log("Character avatar pressed")}
+            style={styles.characterAvatarContainer}
+          >
             <Image
               source={characterImageSource}
               style={styles.characterAvatar}
               resizeMode="cover"
             />
-          </View>
+          </TouchableOpacity>
         )}
       </View>
     </View>

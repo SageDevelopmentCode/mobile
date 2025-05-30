@@ -53,8 +53,8 @@ export const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "rgba(255, 255, 255, 0.8)",
+    borderWidth: 3,
+    borderColor: colors.SolaraGreen,
     overflow: "hidden",
     backgroundColor: "rgba(255, 255, 255, 0.1)",
   },
@@ -62,6 +62,8 @@ export const styles = StyleSheet.create({
     width: 40,
     height: 40,
     position: "absolute",
-    top: -10, // Offset to show the top/head portion of the character
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });

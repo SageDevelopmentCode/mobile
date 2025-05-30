@@ -413,6 +413,8 @@ export const GoalItem = ({
           <View style={additionalStyles.textContainer}>
             <Heading
               color={colors.PrimaryWhite}
+              numberOfLines={2}
+              ellipsizeMode="tail"
               style={[
                 additionalStyles.titleText,
                 isMissed && {

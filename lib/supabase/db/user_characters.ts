@@ -32,7 +32,7 @@ export async function getUserCharacters(userId: string) {
     {
       "user_id.eq": userId,
       order: "level.desc",
-      select: "*,character:character_id(name,image_url)",
+      select: "*,character:character_id(name,image_url,headshot_image_url)",
     }
   );
 
