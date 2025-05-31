@@ -17,6 +17,7 @@ export interface UserCharacter {
   speed: number;
   character_moves: any; // Using 'any' for JSONB
   hit_points: number;
+  user_character_mood: any;
 }
 
 // Interface for joined data when we include character data
@@ -62,6 +63,36 @@ export async function getUserCharactersWithDetails(userId: string) {
   }
 
   return data as UserCharacterWithDetails[];
+}
+
+// Function to get the user's active character for the current week using REST API
+export async function getUserActiveCharacterForWeek(userId: string) {
+  const { data, error } = await makeSupabaseRequest(
+    "rest/v1/user_characters",
+    "GET",
+    {
+      "user_id.eq": userId,
+      "is_active_week.eq": true,
+      select:
+        "*,character:character_id(*),user_character_mood!user_character_id(current_mood_id,character_moods!current_mood_id(*))",
+    }
+  );
+
+  if (error) {
+    console.error(
+      "Error fetching user's active character for the week:",
+      error
+    );
+    throw error;
+  }
+
+  // REST API returns an array, but we want a single object
+  if (Array.isArray(data) && data.length > 0) {
+    return data[0] as UserCharacterWithDetails;
+  }
+
+  // Return null if no active character found for the week
+  return null;
 }
 
 // Function to get a single user character by ID using REST API

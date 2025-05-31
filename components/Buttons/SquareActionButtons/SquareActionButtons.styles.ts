@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   squareButton: {
     width: 40,
     height: 40,
-    borderRadius: 5,
+    borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
   },

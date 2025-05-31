@@ -18,6 +18,7 @@ const colors = {
   DarkPurpleButton: "#2C2E4B",
   DarkPurpleButtonDropShadow: "#001123",
   PrimaryBlue: "#68AFFF",
+  PrimaryBlueDropShadow: "#4A92C0",
   EmojiGrayBackground: "#F0F0F0",
   PrimaryGreenBackground: "#51B778",
   PrimaryGreenDropShadow: "#3C8F5C",
@@ -43,6 +44,8 @@ const colors = {
   BattleTimer: "#F86F5A",
   BattleCharacterSwitch: "#656565",
   BattleCharacterSwitchDropShadow: "#404040",
+  CheckInGreen: "#4AA78B",
+  CheckInGreenDropShadow: "#2C6554",
 } as const;
 
 export type Colors = typeof colors; // Extract the type for the colors object

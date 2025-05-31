@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons"; // Ensure you have this library installed
-import { Heading, StatText } from "../Text/TextComponents";
+import { Heading, StatText, SubHeading } from "../Text/TextComponents";
 import colors from "@/constants/colors";
 import SquareActionButton from "../Buttons/SquareActionButtons/SquareActionButtons";
 import { router } from "expo-router";
@@ -411,7 +411,7 @@ export const GoalItem = ({
             <Heading>{displayEmoji}</Heading>
           </View>
           <View style={additionalStyles.textContainer}>
-            <Heading
+            <SubHeading
               color={colors.PrimaryWhite}
               numberOfLines={2}
               ellipsizeMode="tail"
@@ -426,7 +426,7 @@ export const GoalItem = ({
               ]}
             >
               {title}
-            </Heading>
+            </SubHeading>
 
             {/* Category Label - keep original styling */}
             {category && (

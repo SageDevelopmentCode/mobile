@@ -7,7 +7,10 @@ import React, {
 } from "react";
 import * as SecureStore from "expo-secure-store";
 import { supabase } from "@/lib/supabase/supabase";
-import { getUserCharacters } from "@/lib/supabase/db/user_characters";
+import {
+  getUserCharacters,
+  getUserActiveCharacterForWeek,
+} from "@/lib/supabase/db/user_characters";
 import { getUserById } from "@/lib/supabase/db/user";
 import { User } from "@/types/User";
 
@@ -122,32 +125,57 @@ export function CharacterProvider({ children }: CharacterProviderProps) {
             console.error("Context: Error fetching user data:", error);
           }
 
-          // Fetch user characters if we have a userId
+          // Fetch user's active character for the week if we have a userId
           try {
-            const characters = await getUserCharacters(currentUserId);
+            const activeCharacter = await getUserActiveCharacterForWeek(
+              currentUserId
+            );
 
-            // Store the user characters in context
-            setUserCharacters(characters || []);
+            console.log("Context: Active character:", activeCharacter);
+            console.log(
+              "Context: Active character mood:",
+              activeCharacter?.user_character_mood
+            );
 
-            // If there's at least one character, set the active character to the first one's name
-            if (
-              characters &&
-              characters.length > 0 &&
-              characters[0].character?.name
-            ) {
-              // Set the active character to the first character's name
-              const firstCharacter = characters[0];
+            if (activeCharacter && activeCharacter.character?.name) {
               console.log(
                 "Context: Setting active character to:",
-                firstCharacter.character.name
+                activeCharacter.character.name
               );
-              setActiveCharacter(firstCharacter.character.name);
+              setActiveCharacter(activeCharacter.character.name);
+              setActiveCharacterData(activeCharacter);
+            } else {
+              console.log("Context: No active character found for this week");
+              // Fallback: fetch all characters and use the first one
+              try {
+                const characters = await getUserCharacters(currentUserId);
+                setUserCharacters(characters || []);
 
-              // Also set the active character data
-              setActiveCharacterData(firstCharacter);
+                if (
+                  characters &&
+                  characters.length > 0 &&
+                  characters[0].character?.name
+                ) {
+                  const firstCharacter = characters[0];
+                  console.log(
+                    "Context: Fallback - Setting active character to:",
+                    firstCharacter.character.name
+                  );
+                  setActiveCharacter(firstCharacter.character.name);
+                  setActiveCharacterData(firstCharacter);
+                }
+              } catch (fallbackError) {
+                console.error(
+                  "Context: Error fetching fallback characters:",
+                  fallbackError
+                );
+              }
             }
           } catch (error) {
-            console.error("Context: Error fetching user characters:", error);
+            console.error(
+              "Context: Error fetching active character for week:",
+              error
+            );
           }
         }
       } catch (error) {

@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, ScrollView, Animated, ActivityIndicator } from "react-native";
+import {
+  View,
+  ScrollView,
+  Animated,
+  ActivityIndicator,
+  RefreshControl,
+} from "react-native";
 import { useNavigation, useLocalSearchParams } from "expo-router";
 import { useCharacterContext } from "@/lib/context/CharacterContext";
 import { getUserGoals } from "@/lib/supabase/db/user_goals";
@@ -50,6 +56,7 @@ export default function HomeScreen() {
     setActiveCharacter,
     isLoading,
     userData,
+    refreshUserData,
   } = useCharacterContext();
 
   console.log("User data from context:", userData);
@@ -63,6 +70,7 @@ export default function HomeScreen() {
   // State
   const [userGoals, setUserGoals] = useState<any[]>([]);
   const [goalsLoading, setGoalsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [characterMenuVisible, setCharacterMenuVisible] =
     React.useState<boolean>(false);
   const [characterSwitchMenuVisible, setCharacterSwitchMenuVisible] =
@@ -325,6 +333,23 @@ export default function HomeScreen() {
     return null;
   }, [activeCharacterData]);
 
+  // Pull-to-refresh handler
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await refreshUserData();
+      // Also refetch goals since user data changed
+      if (userData && userData.id) {
+        const goals = await getUserGoals(userData.id);
+        setUserGoals(goals);
+      }
+    } catch (error) {
+      console.error("Failed to refresh data:", error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   // Display loading state
   if (isLoading) {
     return (
@@ -355,9 +380,52 @@ export default function HomeScreen() {
         characterImageSource={headshotImageSource}
       />
 
+      {/* Refresh overlay indicator */}
+      {refreshing && (
+        <View
+          style={{
+            position: "absolute",
+            top: 140,
+            left: 0,
+            right: 0,
+            zIndex: 20,
+            alignItems: "center",
+            paddingVertical: 10,
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "rgba(0, 0, 0, 0.8)",
+              borderRadius: 20,
+              paddingHorizontal: 20,
+              paddingVertical: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <ActivityIndicator size="small" color={colors.SolaraGreen} />
+            <Heading color={colors.PrimaryWhite} style={{ fontSize: 14 }}>
+              Refreshing data...
+            </Heading>
+          </View>
+        </View>
+      )}
+
       <ScrollView
         scrollEnabled={true}
         contentContainerStyle={styles.scrollViewContainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.SolaraGreen}
+            titleColor={colors.PrimaryWhite}
+            title={refreshing ? "Refreshing..." : "Pull to refresh"}
+            colors={[colors.SolaraGreen, colors.PrimaryPurpleBackground]}
+            progressBackgroundColor="rgba(255, 255, 255, 0.1)"
+          />
+        }
       >
         {/* Hero Section with Character */}
         <HeroSection
@@ -380,7 +448,7 @@ export default function HomeScreen() {
           goals={userGoals}
           chestImage={UncommonChest}
           userData={userData}
-          isLoading={goalsLoading}
+          isLoading={goalsLoading || refreshing}
           setGoals={setUserGoals}
           setGoalsLoading={setGoalsLoading}
         />

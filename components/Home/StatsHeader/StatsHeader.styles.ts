@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
     gap: 10,
   },
   statBox: {
-    backgroundColor: "rgba(255, 255, 255, 0.25)",
+    backgroundColor: "#70CACA",
     borderRadius: 10,
     paddingHorizontal: 7,
     paddingVertical: 5,

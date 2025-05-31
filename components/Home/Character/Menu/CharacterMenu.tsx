@@ -20,6 +20,7 @@ import { CharacterTypeDialog } from "@/components/Home/Character/Details/Type/Di
 import { getCharacterMenuStyles } from "./CharacterMenu.styles";
 import { UserCharacterProps } from "@/types/UserCharacter";
 import Emoji from "react-native-emoji";
+import { ActionButton } from "@/components/Battle/BattleScreen/Questions/ActionButton/ActionButton";
 
 interface CharacterMenuProps {
   activeCharacter: string;
@@ -142,9 +143,6 @@ export const CharacterMenu = ({
                 </View>
               </View>
             </TouchableOpacity>
-            <Emoji name="heart" style={{ fontSize: 20 }} />
-            <Emoji name="thumbsup" style={{ fontSize: 25 }} />
-            <Emoji name="smile" style={{ fontSize: 30 }} />
             <ProgressBar
               height={15}
               progress={40}
@@ -154,6 +152,22 @@ export const CharacterMenu = ({
               leftText="Level 19"
               rightText="Level 20"
               activeCharacter={activeCharacter}
+            />
+            <ActionButton
+              title={`Check in with ${activeCharacterData.nickname}`}
+              onPress={() => console.log("Action")}
+              backgroundColor={colors.CheckInGreen}
+              buttonDropShadow={colors.CheckInGreenDropShadow}
+              textAlign="left"
+              emoji="👋"
+            />
+            <ActionButton
+              title={`Help ${activeCharacterData.nickname} out`}
+              onPress={() => console.log("Action")}
+              backgroundColor={colors.PrimaryBlue}
+              buttonDropShadow={colors.PrimaryBlueDropShadow}
+              textAlign="left"
+              emoji="🙌"
             />
             <ScrollView
               horizontal

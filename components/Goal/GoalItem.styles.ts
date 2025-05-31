@@ -9,7 +9,7 @@ export const getStyles = (activeCharacter: string) => {
       width: "100%",
       paddingHorizontal: 20,
       paddingVertical: 14,
-      borderRadius: 10,
+      borderRadius: 25,
       backgroundColor: isDeborah
         ? colors.DarkPurpleButton
         : colors.GabrielGoalBackground,
