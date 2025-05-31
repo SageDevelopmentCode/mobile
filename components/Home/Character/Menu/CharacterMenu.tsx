@@ -16,6 +16,7 @@ import { CharacterStats } from "@/components/Home/Character/Details/CharacterSta
 import { CharacterAbilities } from "@/components/Home/Character/Details/CharacterAbilities/CharacterAbilities";
 import { CharacterRarities } from "@/components/Home/Character/Details/CharacterRarities/CharacterRarities";
 import { CharacterCards } from "@/components/Home/Character/Details/CharacterCards/CharacterCards";
+import { CharacterMood } from "@/components/Home/Character/Details/CharacterMood/CharacterMood";
 import { CharacterTypeDialog } from "@/components/Home/Character/Details/Type/Dialogue/Dialogue";
 import { getCharacterMenuStyles } from "./CharacterMenu.styles";
 import { UserCharacterProps } from "@/types/UserCharacter";
@@ -51,8 +52,6 @@ export const CharacterMenu = ({
 }: CharacterMenuProps) => {
   const styles = getCharacterMenuStyles(activeCharacter);
 
-  console.log("Character Image in CharacterMenu", characterImage);
-
   let CharacterDetailsComponent: JSX.Element | null;
 
   switch (activeMenuCharacterTab) {
@@ -73,6 +72,11 @@ export const CharacterMenu = ({
         <CharacterAbilities
           characterMoves={activeCharacterData.character_moves}
         />
+      );
+      break;
+    case "Mood":
+      CharacterDetailsComponent = (
+        <CharacterMood moodData={activeCharacterData.user_character_mood} />
       );
       break;
     case "Rarities":
@@ -189,7 +193,7 @@ export const CharacterMenu = ({
                       {
                         color:
                           activeMenuCharacterTab === tab
-                            ? colors.DarkPrimaryText
+                            ? colors.PrimaryWhite
                             : colors.PrimaryWhite,
                       },
                     ]}

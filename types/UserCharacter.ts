@@ -28,6 +28,15 @@ export interface UserCharacterProps {
   xp_points: number;
   created_at: string;
   obtained_at: string;
+  user_character_mood?: {
+    character_moods?: {
+      emoji?: string;
+      mood_name?: string;
+      mood_description?: string;
+      scripture_reference?: string;
+      mood_message?: string;
+    };
+  }[];
 }
 
 export interface UserCharacterStats {

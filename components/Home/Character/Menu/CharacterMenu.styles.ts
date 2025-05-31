@@ -94,6 +94,7 @@ export const getCharacterMenuStyles = (activeCharacter: string) => {
       paddingHorizontal: 20,
       marginHorizontal: 5,
       borderRadius: 10,
+      backgroundColor: "#353547",
     },
     activeTab: {
       backgroundColor: isDeborah

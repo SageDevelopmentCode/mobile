@@ -346,8 +346,8 @@ export const GoalItem = ({
       const b = parseInt(hex.substr(4, 2), 16);
       return `rgba(${r}, ${g}, ${b}, 0.12)`; // 12% opacity for translucent background
     }
-    const isDeborah = activeCharacter === "Deborah";
-    return isDeborah ? colors.DarkPurpleButton : colors.GabrielGoalBackground;
+    // Use neutral color scheme instead of character-specific colors
+    return "rgba(75, 85, 99, 0.15)"; // Neutral dark gray with 15% opacity
   };
 
   // Get the emoji background color
@@ -361,7 +361,7 @@ export const GoalItem = ({
 
   // Get goal shadow color
   const getGoalShadowColor = () => {
-    if (isMissed) {
+    if (isMissed || customColor) {
       return "transparent"; // No shadow for missed goals
     }
     // Always use the original shadow colors, even with custom background

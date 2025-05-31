@@ -10,12 +10,8 @@ export const getStyles = (activeCharacter: string) => {
       paddingHorizontal: 20,
       paddingVertical: 14,
       borderRadius: 25,
-      backgroundColor: isDeborah
-        ? colors.DarkPurpleButton
-        : colors.GabrielGoalBackground,
-      shadowColor: isDeborah
-        ? colors.DarkPurpleButtonDropShadow
-        : colors.GabrielGoalDropShadow,
+      backgroundColor: "rgba(75, 85, 99, 0.15)", // Neutral dark gray instead of character-specific colors
+      shadowColor: "rgba(75, 85, 99, 0.3)", // Neutral shadow color
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 1,
       shadowRadius: 0,

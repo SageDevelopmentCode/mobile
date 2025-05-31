@@ -77,10 +77,11 @@ export default function HomeScreen() {
     React.useState<boolean>(false);
   const [typeDialogVisible, setTypeDialogVisible] = React.useState(false);
   const [activeMenuCharacterTab, setActiveMenuCharacterTab] =
-    React.useState<string>("Stats");
+    React.useState<string>("Mood");
 
   // Tabs for character menu
   const menuCharacterTabs: string[] = [
+    "Mood",
     "Stats",
     "Abilities",
     "Rarities",
