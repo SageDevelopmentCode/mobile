@@ -19,6 +19,7 @@ import { CharacterCards } from "@/components/Home/Character/Details/CharacterCar
 import { CharacterTypeDialog } from "@/components/Home/Character/Details/Type/Dialogue/Dialogue";
 import { getCharacterMenuStyles } from "./CharacterMenu.styles";
 import { UserCharacterProps } from "@/types/UserCharacter";
+import Emoji from "react-native-emoji";
 
 interface CharacterMenuProps {
   activeCharacter: string;
@@ -141,6 +142,9 @@ export const CharacterMenu = ({
                 </View>
               </View>
             </TouchableOpacity>
+            <Emoji name="heart" style={{ fontSize: 20 }} />
+            <Emoji name="thumbsup" style={{ fontSize: 25 }} />
+            <Emoji name="smile" style={{ fontSize: 30 }} />
             <ProgressBar
               height={15}
               progress={40}

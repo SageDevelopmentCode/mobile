@@ -5,8 +5,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
-  ActivityIndicator,
-  ScrollView,
 } from "react-native";
 import { Heading, StatText, ButtonText } from "../Text/TextComponents";
 import colors from "@/constants/colors";
@@ -47,6 +45,7 @@ type GoalItemBottomSheetProps = {
   onSnooze: () => void;
   onEdit?: () => void;
   onReset?: () => void;
+  onDelete?: () => void;
   onColorChange?: (color: string) => void; // Add handler for color change
   customColor?: string; // Add prop for current custom color
   activeCharacter: string;
@@ -71,6 +70,7 @@ export const GoalItemBottomSheet = ({
   onSnooze,
   onEdit,
   onReset,
+  onDelete,
   onColorChange,
   customColor,
   activeCharacter,
@@ -302,15 +302,15 @@ export const GoalItemBottomSheet = ({
 
               {/* Action buttons */}
               {isMissed ? (
-                // Show only Reset button for missed goals
-                <View style={styles.resetButtonContainer}>
+                // Show Reset and Delete buttons for missed goals
+                <View style={styles.buttonContainer}>
                   <TouchableOpacity
-                    style={styles.resetButton}
+                    style={styles.button}
                     onPress={() => handleActionPress(onReset!)}
                   >
                     <View
                       style={[
-                        styles.resetIconContainer,
+                        styles.iconContainer,
                         { backgroundColor: "rgba(255, 100, 100, 0.15)" },
                       ]}
                     >
@@ -318,6 +318,23 @@ export const GoalItemBottomSheet = ({
                     </View>
                     <ButtonText color={colors.PrimaryWhite}>
                       Reset Goal
+                    </ButtonText>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => handleActionPress(onDelete!)}
+                  >
+                    <View
+                      style={[
+                        styles.iconContainer,
+                        { backgroundColor: "rgba(255, 100, 100, 0.15)" },
+                      ]}
+                    >
+                      <FontAwesome6 name="trash" size={24} color="#FF6464" />
+                    </View>
+                    <ButtonText color={colors.PrimaryWhite}>
+                      Delete Goal
                     </ButtonText>
                   </TouchableOpacity>
                 </View>
@@ -375,16 +392,18 @@ export const GoalItemBottomSheet = ({
               )}
 
               {/* Edit button */}
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={handleEditPress}
-              >
-                <FontAwesome
-                  name="pencil"
-                  size={20}
-                  color={colors.PrimaryWhite}
-                />
-              </TouchableOpacity>
+              {!isMissed && (
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={handleEditPress}
+                >
+                  <FontAwesome
+                    name="pencil"
+                    size={20}
+                    color={colors.PrimaryWhite}
+                  />
+                </TouchableOpacity>
+              )}
 
               {/* Palette button - top right */}
               {!isMissed && (
@@ -560,26 +579,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
-  },
-  // New styles for reset button
-  resetButtonContainer: {
-    width: "100%",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  resetButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: "50%",
-  },
-  resetIconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
-    backgroundColor: "rgba(255, 100, 100, 0.15)",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 8,
   },
   paletteButtonTopRight: {
     position: "absolute",

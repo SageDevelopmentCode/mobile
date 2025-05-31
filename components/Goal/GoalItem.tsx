@@ -527,6 +527,7 @@ export const GoalItem = ({
         activeCharacter={activeCharacter}
         isMissed={isMissed}
         onReset={handleResetGoal}
+        onDelete={handleDoneSkip}
         goalId={id}
       />
 

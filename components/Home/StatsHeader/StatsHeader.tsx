@@ -8,6 +8,8 @@ import { StatText } from "@/components/Text/TextComponents";
 import XPGem from "../../../app/(authed)/(tabs)/(home)/assets/XPGem.png";
 import ShardGem from "../../../app/(authed)/(tabs)/(home)/assets/ShardGem.png";
 import Goal from "../../../app/(authed)/(tabs)/(home)/assets/Goal.png";
+import Denarii from "../../../app/(authed)/(tabs)/(home)/assets/Denarii.png";
+import Manna from "../../../app/(authed)/(tabs)/(home)/assets/Manna.png";
 
 type StatsHeaderProps = {
   userGems: string;
@@ -31,7 +33,7 @@ export const StatsHeader = ({
         <View style={styles.statsContainer}>
           <View style={styles.statBox}>
             <Image
-              source={XPGem}
+              source={Manna}
               style={styles.statImage}
               resizeMode="contain"
             />
@@ -39,7 +41,7 @@ export const StatsHeader = ({
           </View>
           <View style={styles.statBox}>
             <Image
-              source={ShardGem}
+              source={Denarii}
               style={styles.statImage}
               resizeMode="contain"
             />
