@@ -12,6 +12,12 @@ export default function HomeLayout() {
           presentation: "modal",
         }}
       />
+      <Stack.Screen
+        name="checkIn/QuestionOneScreen/QuestionOneScreen"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

@@ -9,8 +9,10 @@ import {
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Title, Paragraph } from "@/components/Text/TextComponents";
 import { Twemoji } from "@/components/UI/Twemoji/Twemoji";
+import { FontAwesome6, Ionicons } from "@/utils/icons";
 import colors from "@/constants/colors";
 import { getQuestionOneScreenStyles } from "./QuestionOneScreen.styles";
+import { ActionButton } from "@/components/Buttons/ActionButtons/ActionButton";
 
 // Emoji options with their hex codes
 const emojiOptions = [
@@ -49,7 +51,7 @@ export default function QuestionOneScreen() {
     }
   };
 
-  const handleClose = () => {
+  const handleBack = () => {
     router.back();
   };
 
@@ -61,6 +63,17 @@ export default function QuestionOneScreen() {
       />
 
       <View style={styles.content}>
+        {/* Back Button */}
+        <View style={styles.backButtonContainer}>
+          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+            <Ionicons
+              name="chevron-back"
+              size={32}
+              color={colors.PrimaryWhite}
+            />
+          </TouchableOpacity>
+        </View>
+
         {/* Header with greeting */}
         <View style={styles.header}>
           <Title color={colors.PrimaryWhite} style={styles.greeting}>
@@ -82,29 +95,28 @@ export default function QuestionOneScreen() {
               ]}
               onPress={() => handleEmojiPress(emoji.hex)}
             >
-              <Twemoji hex={emoji.hex} size={40} style={styles.emojiImage} />
+              <Twemoji hex={emoji.hex} size={35} style={styles.emojiImage} />
               <Text style={styles.emojiLabel}>{emoji.label}</Text>
             </TouchableOpacity>
           ))}
         </View>
 
-        {/* Action Buttons */}
-        <View style={styles.actionContainer}>
-          <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
-            <Text style={styles.closeButtonText}>✕</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.nextButton,
-              !selectedEmoji && styles.nextButtonDisabled,
-            ]}
-            onPress={handleNext}
-            disabled={!selectedEmoji}
-          >
-            <Text style={styles.nextButtonText}>Next</Text>
-          </TouchableOpacity>
-        </View>
+        {/* Next Button */}
+        <ActionButton
+          onPress={handleNext}
+          disabled={!selectedEmoji}
+          title="Next"
+          backgroundColor="#F3F4F6"
+          buttonDropShadow="#D9D9D9"
+          titleColor={colors.DarkPrimaryText}
+          icon={
+            <FontAwesome6
+              name="arrow-right"
+              size={20}
+              color={colors.DarkPrimaryText}
+            />
+          }
+        />
       </View>
     </SafeAreaView>
   );

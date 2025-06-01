@@ -20,7 +20,7 @@ import {
   Heading,
   SubHeading,
 } from "@/components/Text/TextComponents";
-import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
+import ActionButton from "@/components/Buttons/ActionButtons/ActionButton";
 import { FontAwesome6 } from "@/utils/icons";
 import { RewardCard } from "@/components/Battle/BattleHome/RewardCard/RewardCard";
 import { HeroBar } from "@/components/Battle/BattleHome/Hero/HeroBar/HeroBar";

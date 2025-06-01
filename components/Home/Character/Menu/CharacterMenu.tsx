@@ -21,7 +21,7 @@ import { CharacterTypeDialog } from "@/components/Home/Character/Details/Type/Di
 import { getCharacterMenuStyles } from "./CharacterMenu.styles";
 import { UserCharacterProps } from "@/types/UserCharacter";
 import Emoji from "react-native-emoji";
-import { ActionButton } from "@/components/Battle/BattleScreen/Questions/ActionButton/ActionButton";
+import { ActionButton } from "@/components/Buttons/ActionButtons/ActionButton";
 import { useRouter } from "expo-router";
 
 // Create CharacterAbout component inline
@@ -62,6 +62,9 @@ export const CharacterMenu = ({
   const styles = getCharacterMenuStyles(activeCharacter);
   const router = useRouter();
 
+  console.log("Active character data:", activeCharacterData);
+  console.log("Active character:", activeCharacter);
+
   const handleCheckIn = () => {
     router.push({
       pathname:
@@ -98,7 +101,7 @@ export const CharacterMenu = ({
       CharacterDetailsComponent = (
         <CharacterMood
           moodData={activeCharacterData.user_character_mood}
-          characterName={activeCharacterData?.nickname || activeCharacter}
+          characterName={activeCharacter}
         />
       );
       break;

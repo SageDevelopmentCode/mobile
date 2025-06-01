@@ -13,7 +13,7 @@ import { FontAwesome6, MaterialIcons } from "@/utils/icons";
 import { styles } from "./GoalCreate.styles";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { Paragraph, Title } from "@/components/Text/TextComponents";
-import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
+import ActionButton from "@/components/Buttons/ActionButtons/ActionButton";
 import {
   ClassroomSuggestions,
   CommunitySuggestions,

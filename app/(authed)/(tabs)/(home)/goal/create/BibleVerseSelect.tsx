@@ -30,7 +30,7 @@ import {
   StatText,
   ButtonText,
 } from "@/components/Text/TextComponents";
-import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
+import { ActionButton } from "@/components/Buttons/ActionButtons/ActionButton";
 import { SuggestionItem } from "@/components/Suggestion";
 import { categorizedVerses, verseCategories } from "@/constants/bibleVerses";
 import { BIBLE_API_URL } from "@/utils/constants";
@@ -636,7 +636,6 @@ export default function BibleVerseSelectScreen() {
         </TouchableOpacity>
 
         <ActionButton
-          type="PrimaryGray"
           title={isLoading ? "Loading..." : "Continue"}
           onPress={handleContinue}
           disabled={isLoading || !selectedReference}
@@ -651,6 +650,8 @@ export default function BibleVerseSelectScreen() {
               />
             )
           }
+          backgroundColor={colors.PrimaryWhite}
+          buttonDropShadow={colors.PrimaryWhite}
         />
 
         <View style={styles.suggestionSection}>

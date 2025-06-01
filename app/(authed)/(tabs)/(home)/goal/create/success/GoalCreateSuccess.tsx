@@ -16,7 +16,7 @@ import colors from "@/constants/colors";
 import { styles } from "./GoalCreateSuccess.styles";
 
 // Components
-import ActionButton from "@/components/Buttons/ActionButtons/ActionButtons";
+import ActionButton from "@/components/Buttons/ActionButtons/ActionButton";
 import {
   Heading,
   Paragraph,
