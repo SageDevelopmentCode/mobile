@@ -74,7 +74,7 @@ export async function getUserActiveCharacterForWeek(userId: string) {
       "user_id.eq": userId,
       "is_active_week.eq": true,
       select:
-        "*,character:character_id(*),user_character_mood!user_character_id(current_mood_id,character_moods!current_mood_id(*))",
+        "*,character:character_id(*),user_character_mood!user_character_id(last_mood_change,current_mood_id,character_moods!current_mood_id(*))",
     }
   );
 

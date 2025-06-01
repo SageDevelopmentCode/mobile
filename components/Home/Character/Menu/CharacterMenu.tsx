@@ -22,6 +22,15 @@ import { getCharacterMenuStyles } from "./CharacterMenu.styles";
 import { UserCharacterProps } from "@/types/UserCharacter";
 import Emoji from "react-native-emoji";
 import { ActionButton } from "@/components/Battle/BattleScreen/Questions/ActionButton/ActionButton";
+import { useRouter } from "expo-router";
+
+// Create CharacterAbout component inline
+const CharacterAbout = () => (
+  <View>
+    <HeadingBar headingText="Appears in" />
+    <HeadingBar headingText="Description" />
+  </View>
+);
 
 interface CharacterMenuProps {
   activeCharacter: string;
@@ -51,6 +60,17 @@ export const CharacterMenu = ({
   activeCharacterData,
 }: CharacterMenuProps) => {
   const styles = getCharacterMenuStyles(activeCharacter);
+  const router = useRouter();
+
+  const handleCheckIn = () => {
+    router.push({
+      pathname:
+        "/(authed)/(tabs)/(home)/checkIn/QuestionOneScreen/QuestionOneScreen",
+      params: {
+        characterName: activeCharacterData?.nickname || activeCharacter,
+      },
+    });
+  };
 
   let CharacterDetailsComponent: JSX.Element | null;
 
@@ -84,6 +104,9 @@ export const CharacterMenu = ({
       break;
     case "Cards":
       CharacterDetailsComponent = <CharacterCards />;
+      break;
+    case "About":
+      CharacterDetailsComponent = <CharacterAbout />;
       break;
     default:
       CharacterDetailsComponent = null;
@@ -159,7 +182,7 @@ export const CharacterMenu = ({
             />
             <ActionButton
               title={`Check in with ${activeCharacterData.nickname}`}
-              onPress={() => console.log("Action")}
+              onPress={handleCheckIn}
               backgroundColor={colors.CheckInGreen}
               buttonDropShadow={colors.CheckInGreenDropShadow}
               textAlign="left"
@@ -204,8 +227,6 @@ export const CharacterMenu = ({
               ))}
             </ScrollView>
             {CharacterDetailsComponent}
-            <HeadingBar headingText="Appears in" />
-            <HeadingBar headingText="Description" />
           </View>
         </View>
         {typeDialogVisible && (

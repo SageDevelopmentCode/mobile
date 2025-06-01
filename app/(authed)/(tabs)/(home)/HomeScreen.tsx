@@ -82,10 +82,11 @@ export default function HomeScreen() {
   // Tabs for character menu
   const menuCharacterTabs: string[] = [
     "Mood",
+    "About",
     "Stats",
     "Abilities",
     "Rarities",
-    "Your Cards",
+    "Cards",
   ];
 
   // Character data

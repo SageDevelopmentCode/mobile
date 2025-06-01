@@ -86,6 +86,7 @@ export const getCharacterMenuStyles = (activeCharacter: string) => {
       height: 32,
     },
     tabContainer: {
+      marginTop: 10,
       paddingVertical: 10,
       alignItems: "center",
     },

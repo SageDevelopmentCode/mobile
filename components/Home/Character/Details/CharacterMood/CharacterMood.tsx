@@ -16,6 +16,7 @@ import {
   Heading,
 } from "@/components/Text/TextComponents";
 import { Ionicons } from "@expo/vector-icons";
+import HeadingBar from "@/components/Heading/HeadingBar";
 
 interface CharacterMoodProps {
   moodData?: {
@@ -26,10 +27,13 @@ interface CharacterMoodProps {
       scripture_reference?: string;
       mood_message?: string;
     };
+    current_mood_id?: string;
+    last_mood_change?: string;
   }[];
 }
 
 export const CharacterMood = ({ moodData }: CharacterMoodProps) => {
+  console.log("moodData", moodData);
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -124,11 +128,24 @@ export const CharacterMood = ({ moodData }: CharacterMoodProps) => {
 
   // Extract mood information
   const currentMood = moodData?.[0]?.character_moods;
+  const lastMoodChange = moodData?.[0]?.last_mood_change;
 
   const getCurrentTime = () => {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
+    if (!lastMoodChange) {
+      // Fallback to current time if no timestamp available
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const ampm = hours >= 12 ? "PM" : "AM";
+      const displayHours = hours % 12 || 12;
+      const displayMinutes = minutes.toString().padStart(2, "0");
+      return `${displayHours}:${displayMinutes} ${ampm}`;
+    }
+
+    // Parse the timestamptz and format it
+    const moodTime = new Date(lastMoodChange);
+    const hours = moodTime.getHours();
+    const minutes = moodTime.getMinutes();
     const ampm = hours >= 12 ? "PM" : "AM";
     const displayHours = hours % 12 || 12;
     const displayMinutes = minutes.toString().padStart(2, "0");
@@ -220,6 +237,49 @@ export const CharacterMood = ({ moodData }: CharacterMoodProps) => {
           )}
         </View>
       )}
+
+      {/* Suggested Actions Section */}
+      <View style={styles.suggestedActionsContainer}>
+        <HeadingBar headingText={`Suggested Actions`} />
+
+        <View style={styles.actionsGrid}>
+          <TouchableOpacity style={[styles.actionCard, styles.createGoalCard]}>
+            <View style={[styles.actionIconContainer, styles.createGoalIcon]}>
+              <Text style={styles.actionEmoji}>🎯</Text>
+            </View>
+            <Paragraph color={colors.PrimaryWhite} style={styles.actionText}>
+              Create a Goal
+            </Paragraph>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.actionCard, styles.gratitudeCard]}>
+            <View style={[styles.actionIconContainer, styles.gratitudeIcon]}>
+              <Text style={styles.actionEmoji}>🙏</Text>
+            </View>
+            <Paragraph color={colors.PrimaryWhite} style={styles.actionText}>
+              Share Gratitude
+            </Paragraph>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.actionCard, styles.scriptureCard]}>
+            <View style={[styles.actionIconContainer, styles.scriptureIcon]}>
+              <Text style={styles.actionEmoji}>📖</Text>
+            </View>
+            <Paragraph color={colors.PrimaryWhite} style={styles.actionText}>
+              Study Scripture
+            </Paragraph>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.actionCard, styles.meditateCard]}>
+            <View style={[styles.actionIconContainer, styles.meditateIcon]}>
+              <Text style={styles.actionEmoji}>🧘</Text>
+            </View>
+            <Paragraph color={colors.PrimaryWhite} style={styles.actionText}>
+              Meditate
+            </Paragraph>
+          </TouchableOpacity>
+        </View>
+      </View>
 
       {/* Bottom Sheet Modal for Mood Description */}
       <Modal
@@ -431,5 +491,81 @@ const styles = StyleSheet.create({
   noMoodText: {
     fontSize: 14,
     textAlign: "center",
+  },
+
+  // Suggested Actions Styles
+  suggestedActionsContainer: {
+    marginTop: 20,
+    marginHorizontal: 10,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    marginLeft: 10,
+  },
+  actionsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    marginTop: 10,
+  },
+  actionCard: {
+    width: "48%",
+    backgroundColor: colors.DarkPurpleButton,
+    borderRadius: 12,
+    padding: 16,
+    alignItems: "center",
+    marginBottom: 12,
+    shadowColor: colors.DarkPurpleButtonDropShadow,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  actionIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "#2A2A2A",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 12,
+  },
+  actionText: {
+    fontSize: 14,
+    fontWeight: "600",
+    textAlign: "center",
+    color: colors.PrimaryWhite,
+  },
+  createGoalCard: {
+    backgroundColor: colors.SolaraGreenDropShadow,
+  },
+  createGoalIcon: {
+    backgroundColor: "#2A2A2A",
+  },
+  gratitudeCard: {
+    backgroundColor: colors.CheckInGreenDropShadow,
+  },
+  gratitudeIcon: {
+    backgroundColor: "#2A2A2A",
+  },
+  scriptureCard: {
+    backgroundColor: colors.PrimaryBlueDropShadow,
+  },
+  scriptureIcon: {
+    backgroundColor: "#2A2A2A",
+  },
+  meditateCard: {
+    backgroundColor: colors.PrimaryPurpleDropShadow,
+  },
+  meditateIcon: {
+    backgroundColor: "#2A2A2A",
+  },
+  actionEmoji: {
+    fontSize: 24,
   },
 });

@@ -303,7 +303,7 @@ export const GoalItemBottomSheet = ({
               {/* Action buttons */}
               {isMissed ? (
                 // Show Reset and Delete buttons for missed goals
-                <View style={styles.buttonContainer}>
+                <View style={styles.missedButtonContainer}>
                   <TouchableOpacity
                     style={styles.button}
                     onPress={() => handleActionPress(onReset!)}
@@ -311,10 +311,10 @@ export const GoalItemBottomSheet = ({
                     <View
                       style={[
                         styles.iconContainer,
-                        { backgroundColor: "rgba(255, 100, 100, 0.15)" },
+                        { backgroundColor: "rgba(88, 120, 217, 0.15)" },
                       ]}
                     >
-                      <FontAwesome6 name="rotate" size={24} color="#FF6464" />
+                      <FontAwesome6 name="rotate" size={24} color="#5878D9" />
                     </View>
                     <ButtonText color={colors.PrimaryWhite}>
                       Reset Goal
@@ -625,5 +625,13 @@ const styles = StyleSheet.create({
   selectedColorSwatchDropdown: {
     borderColor: "#FFFFFF",
     borderWidth: 2,
+  },
+  missedButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    marginBottom: 10,
+    gap: 10,
   },
 });

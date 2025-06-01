@@ -488,11 +488,7 @@ export const GoalItem = ({
                 isResetting ? (
                   <ActivityIndicator size="small" color={colors.PrimaryWhite} />
                 ) : (
-                  <FontAwesome6
-                    color="rgba(255, 100, 100, 0.9)"
-                    name="rotate"
-                    size={18}
-                  />
+                  <FontAwesome6 color="#5878d9" name="rotate" size={18} />
                 )
               ) : (
                 <FontAwesome6
