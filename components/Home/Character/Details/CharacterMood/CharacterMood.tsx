@@ -30,9 +30,13 @@ interface CharacterMoodProps {
     current_mood_id?: string;
     last_mood_change?: string;
   }[];
+  characterName?: string;
 }
 
-export const CharacterMood = ({ moodData }: CharacterMoodProps) => {
+export const CharacterMood = ({
+  moodData,
+  characterName,
+}: CharacterMoodProps) => {
   console.log("moodData", moodData);
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -215,6 +219,9 @@ export const CharacterMood = ({ moodData }: CharacterMoodProps) => {
       {/* Mood Message Card */}
       {currentMood.mood_message && (
         <View style={styles.messageCard}>
+          <SubHeading color={colors.GrayText} style={styles.messageTitle}>
+            {characterName || "Character"} says:
+          </SubHeading>
           <Paragraph style={styles.messageText}>
             {currentMood.mood_message}
           </Paragraph>
@@ -408,9 +415,17 @@ const styles = StyleSheet.create({
   // Message Card Styles
   messageCard: {
     backgroundColor: colors.DarkPurpleButton,
-    borderRadius: 16,
+    borderTopLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    borderTopRightRadius: 4,
+    borderBottomLeftRadius: 4,
     padding: 20,
     marginHorizontal: 10,
+  },
+  messageTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
   messageText: {
     fontSize: 16,

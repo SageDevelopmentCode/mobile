@@ -96,7 +96,10 @@ export const CharacterMenu = ({
       break;
     case "Mood":
       CharacterDetailsComponent = (
-        <CharacterMood moodData={activeCharacterData.user_character_mood} />
+        <CharacterMood
+          moodData={activeCharacterData.user_character_mood}
+          characterName={activeCharacterData?.nickname || activeCharacter}
+        />
       );
       break;
     case "Rarities":
