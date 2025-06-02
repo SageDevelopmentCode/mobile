@@ -9,6 +9,13 @@ const emojiAssets: { [key: string]: any } = {
   "1f634": require("@/assets/images/emojis/1f634.png"), // 😴 sleeping
   "1f623": require("@/assets/images/emojis/1f623.png"), // 😣 persevering
   "1f971": require("@/assets/images/emojis/1f971.png"), // 🥱 yawning
+  "1f44b": require("@/assets/images/emojis/1f44b.png"), // 👋 waving
+  "1f64f": require("@/assets/images/emojis/1f932.png"), // 🙏 surrendered
+  "1f50d": require("@/assets/images/emojis/1f50d.png"), // 🔍 seeking
+  "1f932": require("@/assets/images/emojis/1f932.png"), // 🙌 grateful
+  "1f636": require("@/assets/images/emojis/1f636.png"), // 😶 distant (face without mouth)
+  "1f6ab": require("@/assets/images/emojis/1f6ab.png"), // 🚫 rebellious
+  "1f494": require("@/assets/images/emojis/1f494.png"), // 💔 broken heart
 };
 
 interface TwemojiProps {

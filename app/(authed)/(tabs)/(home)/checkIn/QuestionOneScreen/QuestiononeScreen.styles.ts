@@ -17,31 +17,39 @@ export const getQuestionOneScreenStyles = () => {
       width: "100%",
       alignItems: "flex-start",
       marginBottom: 30,
+      marginLeft: -8,
     },
     backButton: {
-      padding: 8,
+      padding: 0,
+    },
+    centeredContent: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "flex-start",
+      width: "100%",
     },
     header: {
       alignItems: "flex-start",
       marginBottom: 60,
       width: "100%",
     },
+    greetingContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
     greeting: {
       fontSize: 24,
       fontWeight: "bold",
-      marginBottom: 8,
+      marginBottom: 0,
       textAlign: "left",
     },
-    question: {
-      fontSize: 18,
-      textAlign: "left",
-      lineHeight: 24,
+    waveEmoji: {
+      marginLeft: 8,
     },
     emojiGrid: {
       flexDirection: "row",
       flexWrap: "wrap",
       justifyContent: "space-between",
-      marginBottom: 60,
     },
     emojiOption: {
       width: "31%",
@@ -62,8 +70,11 @@ export const getQuestionOneScreenStyles = () => {
       padding: 16,
     },
     emojiOptionSelected: {
-      backgroundColor: "#2A6B56",
-      shadowColor: "#1F4A3D",
+      backgroundColor: "#1F4A3D",
+      shadowColor: "#143529",
+    },
+    questionContainer: {
+      marginBottom: 30,
     },
     emojiImage: {
       marginBottom: 12,

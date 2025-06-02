@@ -18,6 +18,12 @@ export default function HomeLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="checkIn/QuestionTwoScreen/QuestionTwoScreen"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }
