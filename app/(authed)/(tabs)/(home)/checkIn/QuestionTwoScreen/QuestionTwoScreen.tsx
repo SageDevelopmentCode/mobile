@@ -65,9 +65,16 @@ export default function QuestionTwoScreen() {
 
   const handleNext = () => {
     if (selectedEmoji) {
-      // Navigate to next screen or complete check-in
-      // For now, let's go back to home or show completion
-      router.push("/(authed)/(tabs)/(home)");
+      // Navigate to QuestionThreeScreen
+      router.push({
+        pathname:
+          "/(authed)/(tabs)/(home)/checkIn/QuestionThreeScreen/QuestionThreeScreen",
+        params: {
+          selectedMood: selectedMood,
+          selectedHeart: selectedEmoji,
+          characterName: characterName,
+        },
+      });
     }
   };
 

@@ -32,7 +32,7 @@ import JudgeWisdomBg from "../../../../../components/Home/Character/Details/Char
 import toggleMenu from "@/utils/animations/toggleMenu";
 import Overlay from "@/components/Overlay/Overlay";
 import { CategoryCard } from "@/components/Battle/BattleScreen/Questions/Categories/CategoryCard/CategoryCard";
-import { ActionButton } from "@/components/Battle/BattleScreen/Questions/ActionButton/ActionButton";
+import { ActionButton } from "@/components/Buttons/ActionButtons/ActionButton";
 import { AttackEffect } from "@/components/Battle/BattleScreen/Animations/AttackEffect";
 import { DamageIndicator } from "@/components/Battle/BattleScreen/Animations/DamageIndicator";
 import { VictoryModal } from "@/components/Battle/BattleScreen/VictoryModal/VictoryModal";

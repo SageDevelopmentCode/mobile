@@ -24,6 +24,12 @@ export default function HomeLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="checkIn/QuestionThreeScreen/QuestionThreeScreen"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }
