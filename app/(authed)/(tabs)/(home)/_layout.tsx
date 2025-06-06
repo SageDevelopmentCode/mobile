@@ -30,6 +30,12 @@ export default function HomeLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="checkIn/CheckInCompleteScreen/CheckInCompleteScreen"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

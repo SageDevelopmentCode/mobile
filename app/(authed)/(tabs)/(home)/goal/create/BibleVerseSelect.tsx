@@ -637,6 +637,7 @@ export default function BibleVerseSelectScreen() {
 
         <ActionButton
           title={isLoading ? "Loading..." : "Continue"}
+          titleColor={colors.DarkPrimaryText}
           onPress={handleContinue}
           disabled={isLoading || !selectedReference}
           icon={
@@ -651,7 +652,7 @@ export default function BibleVerseSelectScreen() {
             )
           }
           backgroundColor={colors.PrimaryWhite}
-          buttonDropShadow={colors.PrimaryWhite}
+          buttonDropShadow={colors.PrimaryWhiteDropShadow}
         />
 
         <View style={styles.suggestionSection}>

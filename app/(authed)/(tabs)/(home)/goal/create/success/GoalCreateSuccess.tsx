@@ -16,7 +16,7 @@ import colors from "@/constants/colors";
 import { styles } from "./GoalCreateSuccess.styles";
 
 // Components
-import ActionButton from "@/components/Buttons/ActionButtons/ActionButton";
+import { ActionButton } from "@/components/Buttons/ActionButtons/ActionButton";
 import {
   Heading,
   Paragraph,
@@ -106,6 +106,7 @@ export default function CreateGoalSuccessScreen() {
         related_verse: verse,
         category: category,
         emoji: emoji,
+        goal_color: "",
       });
 
       // Navigate to home screen after successful creation
@@ -155,7 +156,9 @@ export default function CreateGoalSuccessScreen() {
           </TouchableOpacity>
 
           <ActionButton
-            type="PrimaryGray"
+            backgroundColor={colors.PrimaryWhite}
+            buttonDropShadow={colors.PrimaryWhiteDropShadow}
+            titleColor={colors.DarkPrimaryText}
             title={isLoading ? "Saving..." : "Done"}
             onPress={handleCreateGoal}
             disabled={isLoading}

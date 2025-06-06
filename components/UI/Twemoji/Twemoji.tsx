@@ -22,6 +22,7 @@ const emojiAssets: { [key: string]: any } = {
   "23f2": require("@/assets/images/emojis/23f2.png"), // ⏲️ patient (timer)
   "1f644": require("@/assets/images/emojis/1f644.png"), // 🙄 selfish (eye roll)
   "1f32b": require("@/assets/images/emojis/1f32b.png"), // ◻️ isolated (white square)
+  "1f973": require("@/assets/images/emojis/1f973.png"), // 🥳 celebrating (party face)
 };
 
 interface TwemojiProps {

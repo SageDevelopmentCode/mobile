@@ -13,7 +13,7 @@ import { FontAwesome6, MaterialIcons } from "@/utils/icons";
 import { styles } from "./GoalCreate.styles";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import { Paragraph, Title } from "@/components/Text/TextComponents";
-import ActionButton from "@/components/Buttons/ActionButtons/ActionButton";
+import { ActionButton } from "@/components/Buttons/ActionButtons/ActionButton";
 import {
   ClassroomSuggestions,
   CommunitySuggestions,
@@ -163,7 +163,9 @@ export default function CreateGoalScreen() {
           />
         </View>
         <ActionButton
-          type="PrimaryGray"
+          backgroundColor={colors.PrimaryWhite}
+          buttonDropShadow="0px 4px 4px 0px rgba(0, 0, 0, 0.25)"
+          titleColor={colors.DarkPrimaryText}
           title="Create Goal"
           onPress={() =>
             router.push({

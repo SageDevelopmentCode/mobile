@@ -46,6 +46,7 @@ const colors = {
   BattleCharacterSwitchDropShadow: "#404040",
   CheckInGreen: "#4AA78B",
   CheckInGreenDropShadow: "#2C6554",
+  PrimaryWhiteDropShadow: "#CDCDCD",
 } as const;
 
 export type Colors = typeof colors; // Extract the type for the colors object

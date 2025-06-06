@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 20,
+    marginVertical: 20,
   },
   emojiSelector: {
     width: 50,
