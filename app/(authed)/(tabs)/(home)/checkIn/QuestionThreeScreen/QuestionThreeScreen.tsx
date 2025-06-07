@@ -66,11 +66,17 @@ export default function QuestionThreeScreen() {
 
   const handleNext = () => {
     if (selectedEmoji) {
-      // Complete check-in and navigate to complete screen
-      // You can add API call here to save all three selections
-      router.push(
-        "/(authed)/(tabs)/(home)/checkIn/CheckInCompleteScreen/CheckInCompleteScreen"
-      );
+      // Complete check-in and navigate to complete screen with all answers
+      router.push({
+        pathname:
+          "/(authed)/(tabs)/(home)/checkIn/CheckInCompleteScreen/CheckInCompleteScreen",
+        params: {
+          selectedMood: selectedMood,
+          selectedHeart: selectedHeart,
+          selectedLove: selectedEmoji,
+          characterName: characterName,
+        },
+      });
     }
   };
 

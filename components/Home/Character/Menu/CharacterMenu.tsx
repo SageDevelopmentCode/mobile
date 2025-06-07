@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   ImageBackground,
@@ -23,6 +23,11 @@ import { UserCharacterProps } from "@/types/UserCharacter";
 import Emoji from "react-native-emoji";
 import { ActionButton } from "@/components/Buttons/ActionButtons/ActionButton";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/context/AuthContext";
+import {
+  getLatestUserCheckIn,
+  UserCheckIn,
+} from "@/lib/supabase/db/user_check_in";
 
 // Create CharacterAbout component inline
 const CharacterAbout = () => (
@@ -61,9 +66,66 @@ export const CharacterMenu = ({
 }: CharacterMenuProps) => {
   const styles = getCharacterMenuStyles(activeCharacter);
   const router = useRouter();
+  const { session } = useAuth();
+  const [latestCheckIn, setLatestCheckIn] = useState<UserCheckIn | null>(null);
+  const [isLoadingCheckIn, setIsLoadingCheckIn] = useState<boolean>(true);
 
   console.log("Active character data:", activeCharacterData);
   console.log("Active character:", activeCharacter);
+
+  // Helper function to format check-in date contextually for subtitle
+  const formatLastCheckInSubtitle = (checkInDate: string): string => {
+    const now = new Date();
+    const checkIn = new Date(checkInDate);
+    const diffInMs = now.getTime() - checkIn.getTime();
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInHours < 1) {
+      const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+      if (diffInMinutes < 1) return "just now";
+      return `${diffInMinutes}m ago`;
+    }
+
+    if (diffInHours < 24) {
+      return `${diffInHours}h ago`;
+    }
+
+    if (diffInDays === 1) {
+      return "yesterday";
+    }
+
+    if (diffInDays < 7) {
+      return `${diffInDays}d ago`;
+    }
+
+    // For older dates, show the date
+    const options: Intl.DateTimeFormatOptions = {
+      month: "short",
+      day: "numeric",
+    };
+    return checkIn.toLocaleDateString("en-US", options);
+  };
+
+  // Fetch latest check-in when component mounts or user changes
+  useEffect(() => {
+    const fetchLatestCheckIn = async () => {
+      if (session?.user?.id) {
+        setIsLoadingCheckIn(true);
+        try {
+          const checkIn = await getLatestUserCheckIn(session.user.id);
+          setLatestCheckIn(checkIn);
+        } catch (error) {
+          console.error("Error fetching latest check-in:", error);
+          setLatestCheckIn(null);
+        } finally {
+          setIsLoadingCheckIn(false);
+        }
+      }
+    };
+
+    fetchLatestCheckIn();
+  }, [session?.user?.id]);
 
   const handleCheckIn = () => {
     router.push({
@@ -188,7 +250,15 @@ export const CharacterMenu = ({
             />
             <ActionButton
               title={`Check in with ${activeCharacterData.nickname}`}
+              subtitle={
+                isLoadingCheckIn
+                  ? "..."
+                  : latestCheckIn && latestCheckIn.created_at
+                  ? formatLastCheckInSubtitle(latestCheckIn.created_at)
+                  : undefined
+              }
               onPress={handleCheckIn}
+              disabled={isLoadingCheckIn}
               backgroundColor={colors.CheckInGreen}
               buttonDropShadow={colors.CheckInGreenDropShadow}
               textAlign="left"

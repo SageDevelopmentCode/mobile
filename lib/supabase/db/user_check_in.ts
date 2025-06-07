@@ -128,3 +128,44 @@ export async function updateUserCheckIn(
 
   return data;
 }
+
+// Function to get the count of user check-ins for today's date using REST API
+export async function getUserCheckInCountForToday(
+  userId: string
+): Promise<number> {
+  // Get today's date in YYYY-MM-DD format
+  const today = new Date();
+  const todayStart = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate()
+  );
+  const todayEnd = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() + 1
+  );
+
+  // Format dates for Supabase query (ISO string format)
+  const startDate = todayStart.toISOString();
+  const endDate = todayEnd.toISOString();
+
+  const { data, error } = await makeSupabaseRequest(
+    "rest/v1/user_check_in",
+    "GET",
+    {
+      "user_id.eq": userId,
+      "created_at.gte": startDate,
+      "created_at.lt": endDate,
+      select: "id", // Only select ID to minimize data transfer
+    }
+  );
+
+  if (error) {
+    console.error("Error fetching user check-ins for today:", error);
+    throw error;
+  }
+
+  // Return the count of check-ins
+  return Array.isArray(data) ? data.length : 0;
+}

@@ -352,8 +352,9 @@ export default function HomeScreen() {
     }
   };
 
-  // Display loading state
-  if (isLoading) {
+  // Since we preload data during splash screen, we should rarely hit this loading state
+  // Only show loading if we have no user data at all (fallback safety)
+  if (isLoading && !userData && !activeCharacterData) {
     return (
       <View
         style={[

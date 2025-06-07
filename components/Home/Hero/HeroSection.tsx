@@ -75,22 +75,36 @@ export const HeroSection = ({
 
   // When character image changes, reset loading state
   useEffect(() => {
-    setImageLoading(true);
-    setImageError(false);
+    // Only show loading for remote images, not local ones
+    const isRemoteImage =
+      characterImage &&
+      typeof characterImage === "object" &&
+      "uri" in characterImage;
 
-    // Start loading animation
-    Animated.parallel([
-      Animated.timing(loadingFadeAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(loadingScaleAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    if (isRemoteImage) {
+      setImageLoading(true);
+      setImageError(false);
+
+      // Start loading animation only for remote images
+      Animated.parallel([
+        Animated.timing(loadingFadeAnim, {
+          toValue: 1,
+          duration: 200, // Reduced duration for faster transition
+          useNativeDriver: true,
+        }),
+        Animated.timing(loadingScaleAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      // For local images, no loading needed
+      setImageLoading(false);
+      setImageError(false);
+      loadingFadeAnim.setValue(0);
+      loadingScaleAnim.setValue(0.8);
+    }
 
     return () => {
       // Reset animation values when component updates
@@ -101,16 +115,16 @@ export const HeroSection = ({
 
   // Handle image load completion
   const handleImageLoaded = () => {
-    // Fade out the loading indicator
+    // Fade out the loading indicator quickly
     Animated.parallel([
       Animated.timing(loadingFadeAnim, {
         toValue: 0,
-        duration: 300,
+        duration: 150, // Much faster fade out
         useNativeDriver: true,
       }),
       Animated.timing(loadingScaleAnim, {
         toValue: 0.8,
-        duration: 300,
+        duration: 150,
         useNativeDriver: true,
       }),
     ]).start(() => {

@@ -1,4 +1,4 @@
-import { Heading } from "@/components/Text/TextComponents";
+import { Heading, Paragraph } from "@/components/Text/TextComponents";
 import colors from "@/constants/colors";
 import { TouchableOpacity, View, Text, ViewStyle } from "react-native";
 import React from "react";
@@ -15,6 +15,8 @@ type ActionButtonProps = {
   icon?: React.ReactElement;
   titleColor?: string;
   fullWidth?: boolean;
+  subtitle?: string;
+  subtitleColor?: string;
 };
 
 export const ActionButton = ({
@@ -28,6 +30,8 @@ export const ActionButton = ({
   icon,
   titleColor,
   fullWidth = true,
+  subtitle,
+  subtitleColor,
 }: ActionButtonProps) => {
   const getJustifyContent = (): ViewStyle["justifyContent"] => {
     switch (textAlign) {
@@ -76,7 +80,32 @@ export const ActionButton = ({
       disabled={disabled}
     >
       {emoji && <Text style={{ fontSize: 20, marginRight: 14 }}>{emoji}</Text>}
-      <Heading color={getTitleColor()}>{title}</Heading>
+
+      {subtitle ? (
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Heading color={getTitleColor()}>{title}</Heading>
+          <Paragraph
+            style={{
+              fontSize: 12,
+              color: subtitleColor || getTitleColor(),
+              opacity: 1,
+              marginLeft: 8,
+            }}
+          >
+            {subtitle}
+          </Paragraph>
+        </View>
+      ) : (
+        <Heading color={getTitleColor()}>{title}</Heading>
+      )}
+
       {icon && <View style={{ marginLeft: 8 }}>{icon}</View>}
     </TouchableOpacity>
   );
