@@ -8,6 +8,8 @@ import {
   Text,
   Animated,
   Dimensions,
+  ImageBackground,
+  Image,
 } from "react-native";
 import {
   CharacterProvider,
@@ -19,13 +21,32 @@ function SplashScreenContent({ onFinish }: { onFinish: () => void }) {
   const [fadeAnim] = useState(new Animated.Value(0));
   const [scaleAnim] = useState(new Animated.Value(0.8));
   const [backgroundScaleAnim] = useState(new Animated.Value(1));
-  const [loadingOpacity] = useState(new Animated.Value(0));
+  const [character1Opacity] = useState(new Animated.Value(0));
+  const [character2Opacity] = useState(new Animated.Value(0));
+  const [character3Opacity] = useState(new Animated.Value(0));
+  const [character4Opacity] = useState(new Animated.Value(0));
   const { isLoading } = useCharacterContext();
   const [minDisplayTime, setMinDisplayTime] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const { width, height } = Dimensions.get("window");
 
+  // Character images
+  const characterImages = [
+    require("@/assets/images/characters/Deborah.png"),
+    require("@/assets/images/characters/Gabriel.png"),
+    require("@/assets/images/characters/Ruth.png"),
+    require("@/assets/images/characters/Samson.png"),
+  ];
+
+  const characterOpacities = [
+    character1Opacity,
+    character2Opacity,
+    character3Opacity,
+    character4Opacity,
+  ];
+
   useEffect(() => {
-    // Fade in and scale up animation
+    // Fade in main content
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -39,123 +60,155 @@ function SplashScreenContent({ onFinish }: { onFinish: () => void }) {
       }),
     ]).start();
 
-    // Show loading indicator after 1 second
-    setTimeout(() => {
-      Animated.timing(loadingOpacity, {
-        toValue: 1,
-        duration: 400,
-        useNativeDriver: true,
-      }).start();
-    }, 1000);
+    // Progressive character loading simulation
+    const progressInterval = setInterval(() => {
+      setLoadingProgress((prev) => {
+        const newProgress = prev + 25;
+        if (newProgress <= 100) {
+          // Show character based on progress
+          const characterIndex = Math.floor(newProgress / 25) - 1;
+          if (characterIndex >= 0 && characterIndex < 4) {
+            Animated.timing(characterOpacities[characterIndex], {
+              toValue: 1,
+              duration: 500,
+              useNativeDriver: true,
+            }).start();
+          }
+          return newProgress;
+        } else {
+          clearInterval(progressInterval);
+          return 100;
+        }
+      });
+    }, 600); // Character appears every 600ms
 
-    // Minimum display time of 2.5 seconds
+    // Minimum display time
     const timer = setTimeout(() => {
       setMinDisplayTime(true);
-    }, 2500);
+    }, 3000); // Slightly longer to show all characters
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearInterval(progressInterval);
+      clearTimeout(timer);
+    };
   }, []);
 
   useEffect(() => {
-    // Only finish when both conditions are met:
-    // 1. Minimum display time has passed
-    // 2. Data loading is complete
-    if (minDisplayTime && !isLoading) {
+    // Only finish when both conditions are met
+    if (minDisplayTime && !isLoading && loadingProgress >= 100) {
       // Start smooth zoom-in transition effect
       Animated.parallel([
-        // Fade out the content smoothly
         Animated.timing(fadeAnim, {
           toValue: 0,
-          duration: 600, // Slightly faster for cleaner feel
+          duration: 600,
           useNativeDriver: true,
         }),
-        // Subtle scale up for elegant zoom effect
         Animated.timing(scaleAnim, {
-          toValue: 1.8, // More subtle 1.8x scale for cleaner look
+          toValue: 1.8,
           duration: 600,
           useNativeDriver: true,
         }),
-        // Gentle background scale for smooth depth effect
         Animated.timing(backgroundScaleAnim, {
-          toValue: 1.3, // Very subtle background scale
+          toValue: 1.3,
           duration: 600,
-          useNativeDriver: true,
-        }),
-        // Fade out loading indicator
-        Animated.timing(loadingOpacity, {
-          toValue: 0,
-          duration: 250,
           useNativeDriver: true,
         }),
       ]).start(() => {
-        // Finish after animation completes
         onFinish();
       });
     }
-  }, [minDisplayTime, isLoading]);
+  }, [minDisplayTime, isLoading, loadingProgress]);
 
   return (
     <Animated.View
       style={{
         flex: 1,
-        backgroundColor: "#1a1a1a",
-        justifyContent: "center",
-        alignItems: "center",
         transform: [{ scale: backgroundScaleAnim }],
       }}
     >
-      <Animated.View
-        style={{
-          opacity: fadeAnim,
-          transform: [{ scale: scaleAnim }],
-          alignItems: "center",
-        }}
+      <ImageBackground
+        source={require("@/assets/images/backgrounds/ZoneOneBattle.jpg")}
+        style={{ flex: 1 }}
+        resizeMode="cover"
       >
-        <Text
-          style={{
-            fontSize: 42,
-            fontWeight: "bold",
-            color: "#ffffff",
-            textAlign: "center",
-            marginBottom: 20,
-            letterSpacing: 2,
-          }}
-        >
-          Welcome to
-        </Text>
-        <Text
-          style={{
-            fontSize: 54,
-            fontWeight: "bold",
-            color: "#4ade80",
-            textAlign: "center",
-            letterSpacing: 3,
-            marginBottom: 40,
-          }}
-        >
-          SAGE
-        </Text>
-
-        {/* Loading indicator */}
         <Animated.View
           style={{
-            opacity: loadingOpacity,
-            alignItems: "center",
+            flex: 1,
+            opacity: fadeAnim,
+            transform: [{ scale: scaleAnim }],
           }}
         >
-          <ActivityIndicator size="large" color="#4ade80" />
-          <Text
+          {/* Character loading section */}
+          <View
             style={{
-              fontSize: 16,
-              color: "#ffffff",
-              marginTop: 12,
-              opacity: 0.8,
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              paddingHorizontal: 10,
+              marginTop: height * 0.1,
+              marginBottom: height * 0.15,
+              gap: 5, // Small gap between characters
             }}
           >
-            Loading your data...
-          </Text>
+            {characterImages.map((image, index) => (
+              <Animated.Image
+                key={index}
+                source={image}
+                style={{
+                  width: width * 0.22, // Smaller to fit all 4
+                  height: width * 0.28, // Smaller to fit all 4
+                  opacity: characterOpacities[index],
+                }}
+                resizeMode="contain"
+              />
+            ))}
+          </View>
+
+          {/* Logo at bottom */}
+          <View
+            style={{
+              position: "absolute",
+              bottom: height * 0.08,
+              left: 0,
+              right: 0,
+              alignItems: "center",
+            }}
+          >
+            <Image
+              source={require("@/assets/images/backgrounds/Logo.png")}
+              style={{
+                width: width * 0.85, // Maximum size logo
+                height: width * 0.25, // Maximum size logo
+              }}
+              resizeMode="contain"
+            />
+            {/* Small progress indicator */}
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 20,
+                gap: 8,
+              }}
+            >
+              {[0, 1, 2, 3].map((index) => (
+                <View
+                  key={index}
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: 4,
+                    backgroundColor:
+                      loadingProgress > index * 25
+                        ? "#ffffff"
+                        : "rgba(255,255,255,0.3)",
+                  }}
+                />
+              ))}
+            </View>
+          </View>
         </Animated.View>
-      </Animated.View>
+      </ImageBackground>
     </Animated.View>
   );
 }
