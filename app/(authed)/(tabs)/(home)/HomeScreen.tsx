@@ -34,10 +34,6 @@ import toggleMenu from "@/utils/animations/toggleMenu";
 import { getStyles } from "./HomeScreen.styles";
 import { Heading } from "@/components/Text/TextComponents";
 
-// Keys for secure storage
-const USER_DATA_KEY = "userData";
-const USER_ID_KEY = "userId";
-
 export default function HomeScreen() {
   const navigation = useNavigation();
   const params = useLocalSearchParams();
@@ -377,9 +373,8 @@ export default function HomeScreen() {
     <View style={styles.container}>
       {/* StatsHeader positioned absolutely at the top */}
       <StatsHeader
-        userGems={formatNumber(1000)}
-        userShards={formatNumber(1240)}
-        userStars={formatNumber(1400)}
+        userManna={formatNumber(userData?.currency?.manna || 0)}
+        userDenarii={formatNumber(userData?.currency?.denarii || 0)}
         characterImageSource={headshotImageSource}
       />
 

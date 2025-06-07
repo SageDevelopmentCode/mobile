@@ -12,16 +12,14 @@ import Denarii from "../../../app/(authed)/(tabs)/(home)/assets/Denarii.png";
 import Manna from "../../../app/(authed)/(tabs)/(home)/assets/Manna.png";
 
 type StatsHeaderProps = {
-  userGems: string;
-  userShards: string;
-  userStars: string;
+  userManna: string;
+  userDenarii: string;
   characterImageSource: any;
 };
 
 export const StatsHeader = ({
-  userGems,
-  userShards,
-  userStars,
+  userManna,
+  userDenarii,
   characterImageSource,
 }: StatsHeaderProps) => {
   return (
@@ -33,19 +31,19 @@ export const StatsHeader = ({
         <View style={styles.statsContainer}>
           <View style={styles.statBox}>
             <Image
-              source={Manna}
-              style={styles.statImage}
-              resizeMode="contain"
-            />
-            <StatText>{userGems}</StatText>
-          </View>
-          <View style={styles.statBox}>
-            <Image
               source={Denarii}
               style={styles.statImage}
               resizeMode="contain"
             />
-            <StatText>{userShards}</StatText>
+            <StatText>{userDenarii}</StatText>
+          </View>
+          <View style={styles.statBox}>
+            <Image
+              source={Manna}
+              style={styles.statImage}
+              resizeMode="contain"
+            />
+            <StatText>{userManna}</StatText>
           </View>
         </View>
       </View>

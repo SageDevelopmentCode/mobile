@@ -12,6 +12,7 @@ import {
   getUserActiveCharacterForWeek,
 } from "@/lib/supabase/db/user_characters";
 import { getUserById } from "@/lib/supabase/db/user";
+import { getUserCurrency } from "@/lib/supabase/db/user_currency";
 import { User } from "@/types/User";
 
 // Keys for secure storage
@@ -63,7 +64,23 @@ export function CharacterProvider({ children }: CharacterProviderProps) {
       try {
         const data = await getUserById(userId);
         if (data) {
-          setUserData(data);
+          // Fetch currency data for the user
+          try {
+            const currencyData = await getUserCurrency(userId);
+            // Nest currency data within user data
+            const userWithCurrency = {
+              ...data,
+              currency: currencyData,
+            };
+            setUserData(userWithCurrency);
+          } catch (currencyError) {
+            console.error(
+              "Context: Error refreshing user currency:",
+              currencyError
+            );
+            // Set user data without currency if currency fetch fails
+            setUserData({ ...data, currency: null });
+          }
         }
       } catch (error) {
         console.error("Context: Error refreshing user data:", error);
@@ -117,7 +134,23 @@ export function CharacterProvider({ children }: CharacterProviderProps) {
           try {
             const user = await getUserById(currentUserId);
             if (user) {
-              setUserData(user);
+              // Fetch currency data for the user
+              try {
+                const currencyData = await getUserCurrency(currentUserId);
+                // Nest currency data within user data
+                const userWithCurrency = {
+                  ...user,
+                  currency: currencyData,
+                };
+                setUserData(userWithCurrency);
+              } catch (currencyError) {
+                console.error(
+                  "Context: Error fetching user currency:",
+                  currencyError
+                );
+                // Set user data without currency if currency fetch fails
+                setUserData({ ...user, currency: null });
+              }
             } else {
               console.log("Context: No user data found for ID:", currentUserId);
             }
@@ -131,17 +164,7 @@ export function CharacterProvider({ children }: CharacterProviderProps) {
               currentUserId
             );
 
-            console.log("Context: Active character:", activeCharacter);
-            console.log(
-              "Context: Active character mood:",
-              activeCharacter?.user_character_mood
-            );
-
             if (activeCharacter && activeCharacter.character?.name) {
-              console.log(
-                "Context: Setting active character to:",
-                activeCharacter.character.name
-              );
               setActiveCharacter(activeCharacter.character.name);
               setActiveCharacterData(activeCharacter);
             } else {

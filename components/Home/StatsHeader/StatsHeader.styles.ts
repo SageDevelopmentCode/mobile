@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
   statBox: {
     backgroundColor: "#70CACA",
     borderRadius: 10,
-    paddingHorizontal: 7,
+    paddingHorizontal: 10,
     paddingVertical: 5,
     flexDirection: "row",
     justifyContent: "center",
