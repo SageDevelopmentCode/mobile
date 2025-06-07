@@ -8,6 +8,7 @@ import colors from "@/constants/colors";
 import { getHomeContentStyles } from "./HomeContent.styles";
 import { User } from "@/types/User";
 import { getUserGoals } from "@/lib/supabase/db/user_goals";
+import { router } from "expo-router";
 
 interface HomeContentProps {
   activeCharacter: string;
@@ -123,7 +124,7 @@ export const HomeContent = ({
       <View style={styles.chestRow}>
         <Chest
           onPress={() => {
-            console.log("Daily");
+            router.push("/(authed)/(tabs)/(home)/chest/DailyChest/DailyChest");
           }}
           type="Daily"
           timeRemaining="04:06"
