@@ -48,7 +48,7 @@ export async function getChestById(chestId: string) {
   return data?.[0] || null;
 }
 
-// Function to insert a new chest for a user and update last_chest_opened_at
+// Function to insert a new chest for a user and update last_daily_chest_opened_at
 export async function insertUserChest(userId: string, rewards: any) {
   const timestamp = new Date().toISOString();
 
@@ -71,17 +71,17 @@ export async function insertUserChest(userId: string, rewards: any) {
     throw chestError;
   }
 
-  // Update the user's last_chest_opened_at timestamp
+  // Update the user's last_daily_chest_opened_at timestamp
   const { data: userData, error: userError } = await makeSupabaseRequest(
     "rest/v1/users",
     "PATCH",
     { "id.eq": userId },
-    { last_chest_opened_at: timestamp }
+    { last_daily_chest_opened_at: timestamp }
   );
 
   if (userError) {
     console.error(
-      `Error updating last_chest_opened_at for user ${userId}:`,
+      `Error updating last_daily_chest_opened_at for user ${userId}:`,
       userError
     );
     throw userError;

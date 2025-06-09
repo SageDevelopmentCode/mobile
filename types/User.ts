@@ -10,5 +10,6 @@ export interface User {
   energy_last_reset: string;
   level: number;
   experience_points: number;
+  last_daily_chest_opened_at?: string;
   currency?: UserCurrency | null;
 }

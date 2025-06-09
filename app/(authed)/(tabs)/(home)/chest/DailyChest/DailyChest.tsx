@@ -18,6 +18,8 @@ import { Title, Heading, SubHeading } from "@/components/Text/TextComponents";
 import DenariiImage from "@/assets/images/currency/Denarii.png";
 import MannaImage from "@/assets/images/currency/Manna.png";
 import FruitImage from "@/assets/images/currency/Fruit.png";
+import { useCharacterContext } from "@/lib/context/CharacterContext";
+import { insertUserChest } from "@/lib/supabase/db/user_chest";
 
 const { width, height } = Dimensions.get("window");
 
@@ -59,9 +61,11 @@ const rewards: Reward[] = [
 
 export default function DailyChestScreen() {
   const navigation = useNavigation();
+  const { userData } = useCharacterContext();
   const [currentRewardIndex, setCurrentRewardIndex] = useState(0);
   const [showRewards, setShowRewards] = useState(true);
   const [isScreenReady, setIsScreenReady] = useState(false);
+  const [claimedRewards, setClaimedRewards] = useState<Reward[]>([]);
 
   // Animation values
   const scaleAnim = useRef(new Animated.Value(0)).current;
@@ -136,6 +140,11 @@ export default function DailyChestScreen() {
   };
 
   const handleTapReward = () => {
+    // Add current reward to claimed rewards
+    const currentReward = rewards[currentRewardIndex];
+    const updatedClaimedRewards = [...claimedRewards, currentReward];
+    setClaimedRewards(updatedClaimedRewards);
+
     if (currentRewardIndex < rewards.length - 1) {
       // Move to next reward
       Animated.sequence([
@@ -156,12 +165,40 @@ export default function DailyChestScreen() {
         setCurrentRewardIndex(currentRewardIndex + 1);
       });
     } else {
-      // All rewards claimed - celebrate and close
-      celebrateAndFinish();
+      // All rewards claimed - celebrate and close, pass the updated rewards
+      celebrateAndFinish(updatedClaimedRewards);
     }
   };
 
-  const celebrateAndFinish = () => {
+  const celebrateAndFinish = async (finalRewards?: Reward[]) => {
+    try {
+      // Use the passed rewards or fallback to state
+      const rewardsToSave = finalRewards || claimedRewards;
+
+      // Save chest data to database if we have user data
+      if (userData?.id && rewardsToSave.length > 0) {
+        // Format rewards data for database storage
+        const rewardsData = {
+          chest_type: "daily",
+          rewards: rewardsToSave.map((reward) => ({
+            type: reward.type,
+            amount: reward.amount,
+            name: reward.name,
+          })),
+          total_rewards: rewardsToSave.length,
+          claimed_at: new Date().toISOString(),
+        };
+
+        console.log("Saving daily chest rewards:", rewardsData);
+
+        await insertUserChest(userData.id, rewardsData);
+
+        console.log("Daily chest saved successfully");
+      }
+    } catch (error) {
+      console.error("Error saving daily chest:", error);
+    }
+
     // Simple fade out and navigate back
     Animated.timing(fadeAnim, {
       toValue: 0,

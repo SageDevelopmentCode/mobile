@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef, useCallback, useState } from "react";
 import { View, ActivityIndicator, Animated } from "react-native";
 import HeadingBar from "@/components/Heading/HeadingBar";
 import ProgressBar from "@/components/ProgressBar/ProgressBar";
@@ -43,34 +43,93 @@ export const HomeContent = ({
   setGoalsLoading,
 }: HomeContentProps) => {
   const styles = getHomeContentStyles();
+  const [dailyChestTimeRemaining, setDailyChestTimeRemaining] =
+    useState<string>("Available");
+  const [dailyChestProgress, setDailyChestProgress] = useState<number>(100);
 
   // Create animated values for each goal
   const fadeAnims = useRef(
     new Array(goals.length).fill(0).map(() => new Animated.Value(0))
   ).current;
 
-  // Separate goals into today's and past goals
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
+  // Separate goals into today's and past goals - memoized to prevent recalculation on every render
+  const { todaysGoals, pastGoals } = React.useMemo(() => {
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
 
-  const todayEnd = new Date();
-  todayEnd.setHours(23, 59, 59, 999);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
 
-  const todaysGoals = goals.filter((goal) => {
-    if (!goal.goal_time_set) return true; // Default to today if no timestamp
-    const goalDate = new Date(goal.goal_time_set);
-    return goalDate >= todayStart && goalDate <= todayEnd;
-  });
+    const todaysGoals = goals.filter((goal) => {
+      if (!goal.goal_time_set) return true; // Default to today if no timestamp
+      const goalDate = new Date(goal.goal_time_set);
+      return goalDate >= todayStart && goalDate <= todayEnd;
+    });
 
-  const pastGoals = goals.filter((goal) => {
-    if (!goal.goal_time_set) return false;
-    const goalDate = new Date(goal.goal_time_set);
-    return goalDate < todayStart;
-  });
+    const pastGoals = goals.filter((goal) => {
+      if (!goal.goal_time_set) return false;
+      const goalDate = new Date(goal.goal_time_set);
+      return goalDate < todayStart;
+    });
 
-  console.log(
-    `Split goals: Today=${todaysGoals.length}, Past=${pastGoals.length}`
-  );
+    console.log(
+      `Split goals: Today=${todaysGoals.length}, Past=${pastGoals.length}`
+    );
+
+    return { todaysGoals, pastGoals };
+  }, [goals]);
+
+  // Function to calculate daily chest countdown
+  const calculateDailyChestCountdown = useCallback(() => {
+    if (!userData?.last_daily_chest_opened_at) {
+      const newValue = "Available";
+      setDailyChestTimeRemaining((prev) =>
+        prev !== newValue ? newValue : prev
+      );
+      setDailyChestProgress((prev) => (prev !== 100 ? 100 : prev));
+      return;
+    }
+
+    const lastOpenedTime = new Date(userData.last_daily_chest_opened_at);
+    const nextAvailableTime = new Date(
+      lastOpenedTime.getTime() + 24 * 60 * 60 * 1000
+    ); // 24 hours later
+    const now = new Date();
+
+    if (now >= nextAvailableTime) {
+      const newValue = "Available";
+      setDailyChestTimeRemaining((prev) =>
+        prev !== newValue ? newValue : prev
+      );
+      setDailyChestProgress((prev) => (prev !== 100 ? 100 : prev));
+      return;
+    }
+
+    const timeRemaining = nextAvailableTime.getTime() - now.getTime();
+    const totalCooldownTime = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+    const timeElapsed = totalCooldownTime - timeRemaining;
+    const progressPercentage = Math.round(
+      (timeElapsed / totalCooldownTime) * 100
+    );
+
+    const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+    const minutes = Math.floor(
+      (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
+    );
+    const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+    const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
+    // Only update state if the value actually changed
+    setDailyChestTimeRemaining((prev) =>
+      prev !== formattedTime ? formattedTime : prev
+    );
+    setDailyChestProgress((prev) =>
+      prev !== progressPercentage ? progressPercentage : prev
+    );
+  }, [userData?.last_daily_chest_opened_at]);
 
   // Function to refresh goals
   const refreshGoals = useCallback(async () => {
@@ -100,6 +159,20 @@ export const HomeContent = ({
     }
   }, [goals]);
 
+  // Daily chest countdown timer effect
+  useEffect(() => {
+    // Calculate initial countdown
+    calculateDailyChestCountdown();
+
+    // Set up interval to update countdown every second
+    const interval = setInterval(() => {
+      calculateDailyChestCountdown();
+    }, 1000);
+
+    // Cleanup interval on unmount
+    return () => clearInterval(interval);
+  }, [calculateDailyChestCountdown]);
+
   // Update fadeAnims when goals change
   useEffect(() => {
     // Only animate if not loading
@@ -127,9 +200,11 @@ export const HomeContent = ({
             router.push("/(authed)/(tabs)/(home)/chest/DailyChest/DailyChest");
           }}
           type="Daily"
-          timeRemaining="04:06"
+          timeRemaining={dailyChestTimeRemaining}
           key="Daily"
           activeCharacter={activeCharacter}
+          disabled={dailyChestTimeRemaining !== "Available"}
+          progress={dailyChestProgress}
         />
         <Chest
           onPress={() => {
