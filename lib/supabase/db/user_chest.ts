@@ -8,6 +8,7 @@ interface UserChest {
   user_id: string;
   opened_at: string | null;
   rewards: any; // jsonb type
+  chest_type: string;
 }
 
 // Function to get all chests for a specific user
@@ -50,13 +51,18 @@ export async function getChestById(chestId: string) {
 }
 
 // Function to insert a new chest for a user and update last_daily_chest_opened_at
-export async function insertUserChest(userId: string, rewards: any) {
+export async function insertUserChest(
+  userId: string,
+  rewards: any,
+  chestType: string = "daily"
+) {
   const timestamp = new Date().toISOString();
 
   const chestPayload = {
     user_id: userId,
     opened_at: timestamp,
     rewards: rewards,
+    chest_type: chestType,
   };
 
   // Insert the chest
@@ -147,6 +153,37 @@ export async function getUserChestStats(userId: string) {
           (a: UserChest, b: UserChest) =>
             new Date(b.opened_at!).getTime() - new Date(a.opened_at!).getTime()
         )[0]?.opened_at || null,
+    chestsByType: chests.reduce(
+      (acc: Record<string, number>, chest: UserChest) => {
+        acc[chest.chest_type] = (acc[chest.chest_type] || 0) + 1;
+        return acc;
+      },
+      {}
+    ),
+  };
+
+  return stats;
+}
+
+// Function to get chest statistics by type
+export async function getChestStatsByType(userId: string, chestType: string) {
+  const chests = await getChestsByType(userId, chestType);
+
+  const stats = {
+    totalChests: chests.length,
+    openedChests: chests.filter((chest: UserChest) => chest.opened_at !== null)
+      .length,
+    unopenedChests: chests.filter(
+      (chest: UserChest) => chest.opened_at === null
+    ).length,
+    lastChestCreated: chests.length > 0 ? chests[0].created_at : null,
+    lastChestOpened:
+      chests
+        .filter((chest: UserChest) => chest.opened_at !== null)
+        .sort(
+          (a: UserChest, b: UserChest) =>
+            new Date(b.opened_at!).getTime() - new Date(a.opened_at!).getTime()
+        )[0]?.opened_at || null,
   };
 
   return stats;
@@ -192,6 +229,58 @@ export async function getOpenedChests(userId: string) {
   }
 
   return data || [];
+}
+
+// Function to get chests by type for a user
+export async function getChestsByType(userId: string, chestType: string) {
+  const { data, error } = await makeSupabaseRequest(
+    "rest/v1/user_chests",
+    "GET",
+    {
+      "user_id.eq": userId,
+      "chest_type.eq": chestType,
+      select: "*",
+      order: "created_at.desc",
+    }
+  );
+
+  if (error) {
+    console.error(
+      `Error fetching ${chestType} chests for user ${userId}:`,
+      error
+    );
+    throw error;
+  }
+
+  return data || [];
+}
+
+// Function to get user's most recent chest of a specific type
+export async function getUserLastChestByType(
+  userId: string,
+  chestType: string
+) {
+  const { data, error } = await makeSupabaseRequest(
+    "rest/v1/user_chests",
+    "GET",
+    {
+      "user_id.eq": userId,
+      "chest_type.eq": chestType,
+      select: "*",
+      order: "created_at.desc",
+      limit: 1,
+    }
+  );
+
+  if (error) {
+    console.error(
+      `Error fetching last ${chestType} chest for user ${userId}:`,
+      error
+    );
+    throw error;
+  }
+
+  return data?.[0] || null;
 }
 
 // Function to delete a chest (admin only or for cleanup)

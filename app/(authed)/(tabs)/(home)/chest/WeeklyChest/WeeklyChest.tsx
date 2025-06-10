@@ -10,16 +10,15 @@ import {
   Text,
 } from "react-native";
 import { tabBarOptions } from "@/constants/tabBarOptions";
-import { styles } from "./DailyChest.styles";
+import { styles } from "./WeeklyChest.styles";
 import { MaterialIcons } from "@/utils/icons";
 import colors from "@/constants/colors";
-import ChestOpenBackground from "@/assets/images/backgrounds/ChestOpen.jpg";
+import ChestOpenBackground from "@/assets/images/backgrounds/ChestOpenWeekly.jpg";
 import { Title, Heading, SubHeading } from "@/components/Text/TextComponents";
 import DenariiImage from "@/assets/images/currency/Denarii.png";
 import MannaImage from "@/assets/images/currency/Manna.png";
 import FruitImage from "@/assets/images/currency/Fruit.png";
 import { useCharacterContext } from "@/lib/context/CharacterContext";
-import { insertUserChest } from "@/lib/supabase/db/user_chest";
 
 const { width, height } = Dimensions.get("window");
 
@@ -35,33 +34,34 @@ const getRandomAmount = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+// Higher amounts for weekly chest
 const rewards: Reward[] = [
   {
     id: "1",
     type: "fruit",
-    amount: getRandomAmount(500, 1000),
+    amount: getRandomAmount(2000, 5000),
     image: FruitImage,
     name: "Fruit",
   },
   {
     id: "2",
     type: "denarii",
-    amount: getRandomAmount(100, 200),
+    amount: getRandomAmount(500, 1000),
     image: DenariiImage,
     name: "Denarii",
   },
   {
     id: "3",
     type: "manna",
-    amount: getRandomAmount(1, 5),
+    amount: getRandomAmount(10, 25),
     image: MannaImage,
     name: "Manna",
   },
 ];
 
-export default function DailyChestScreen() {
+export default function WeeklyChestScreen() {
   const navigation = useNavigation();
-  const { userData, refreshUserData } = useCharacterContext();
+  const { userData } = useCharacterContext();
   const [currentRewardIndex, setCurrentRewardIndex] = useState(0);
   const [showRewards, setShowRewards] = useState(true);
   const [isScreenReady, setIsScreenReady] = useState(false);
@@ -165,43 +165,20 @@ export default function DailyChestScreen() {
         setCurrentRewardIndex(currentRewardIndex + 1);
       });
     } else {
-      // All rewards claimed - celebrate and close, pass the updated rewards
+      // All rewards claimed - celebrate and close
       celebrateAndFinish(updatedClaimedRewards);
     }
   };
 
   const celebrateAndFinish = async (finalRewards?: Reward[]) => {
     try {
-      // Use the passed rewards or fallback to state
-      const rewardsToSave = finalRewards || claimedRewards;
+      // For now, just log the rewards without saving to database
+      const rewardsToLog = finalRewards || claimedRewards;
+      console.log("Weekly chest rewards claimed:", rewardsToLog);
 
-      // Save chest data to database if we have user data
-      if (userData?.id && rewardsToSave.length > 0) {
-        // Format rewards data for database storage
-        const rewardsData = {
-          chest_type: "daily",
-          rewards: rewardsToSave.map((reward) => ({
-            type: reward.type,
-            amount: reward.amount,
-            name: reward.name,
-          })),
-          total_rewards: rewardsToSave.length,
-          claimed_at: new Date().toISOString(),
-        };
-
-        console.log("Saving daily chest rewards:", rewardsData);
-
-        await insertUserChest(userData.id, rewardsData, "daily");
-
-        console.log("Daily chest saved successfully");
-
-        // Refresh user data to update the last_daily_chest_opened_at timestamp
-        await refreshUserData();
-
-        console.log("User data refreshed after chest opening");
-      }
+      // TODO: Implement weekly chest saving logic later
     } catch (error) {
-      console.error("Error saving daily chest:", error);
+      console.error("Error with weekly chest:", error);
     }
 
     // Simple fade out and navigate back

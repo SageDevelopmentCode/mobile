@@ -208,7 +208,9 @@ export const HomeContent = ({
         />
         <Chest
           onPress={() => {
-            console.log("Weekly");
+            router.push(
+              "/(authed)/(tabs)/(home)/chest/WeeklyChest/WeeklyChest"
+            );
           }}
           type="Weekly"
           timeRemaining="05:06"
