@@ -43,6 +43,9 @@ export const Chest = ({
     2 * (chestWidth - strokeWidth * 2) + 2 * (chestHeight - strokeWidth * 2);
   const progressLength = (progress / 100) * rectPerimeter;
 
+  // When progress is 100%, show full border without dashes
+  const isFullyAvailable = progress >= 100;
+
   return (
     <TouchableOpacity
       onPress={disabled ? undefined : onPress}
@@ -90,10 +93,12 @@ export const Chest = ({
             stroke={progressColor}
             strokeWidth={strokeWidth}
             fill="none"
-            strokeDasharray={rectPerimeter}
-            strokeDashoffset={rectPerimeter - progressLength}
+            strokeDasharray={isFullyAvailable ? "none" : rectPerimeter}
+            strokeDashoffset={
+              isFullyAvailable ? 0 : rectPerimeter - progressLength
+            }
             strokeLinecap="round"
-            opacity={progress === 100 ? 0.9 : 1}
+            opacity={isFullyAvailable ? 1 : 0.8}
           />
         </Svg>
 

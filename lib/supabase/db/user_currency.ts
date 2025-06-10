@@ -7,6 +7,7 @@ export interface UserCurrency {
   user_id: string;
   denarii: number;
   manna: number;
+  fruit: number;
 }
 
 // Function to create a new user currency record using REST API
@@ -134,7 +135,8 @@ export async function updateUserCurrencyByUserId(
 export async function addCurrencyToUser(
   userId: string,
   denariiToAdd: number = 0,
-  mannaToAdd: number = 0
+  mannaToAdd: number = 0,
+  fruitToAdd: number = 0
 ) {
   // First, get the current currency
   const currentCurrency = await getUserCurrency(userId);
@@ -145,6 +147,7 @@ export async function addCurrencyToUser(
       user_id: userId,
       denarii: denariiToAdd,
       manna: mannaToAdd,
+      fruit: fruitToAdd,
     });
   }
 
@@ -152,6 +155,7 @@ export async function addCurrencyToUser(
   const updatedCurrency = await updateUserCurrency(currentCurrency.id!, {
     denarii: currentCurrency.denarii + denariiToAdd,
     manna: currentCurrency.manna + mannaToAdd,
+    fruit: currentCurrency.fruit + fruitToAdd,
   });
 
   return updatedCurrency;
@@ -161,7 +165,8 @@ export async function addCurrencyToUser(
 export async function subtractCurrencyFromUser(
   userId: string,
   denariiToSubtract: number = 0,
-  mannaToSubtract: number = 0
+  mannaToSubtract: number = 0,
+  fruitToSubtract: number = 0
 ) {
   // First, get the current currency
   const currentCurrency = await getUserCurrency(userId);
@@ -183,10 +188,17 @@ export async function subtractCurrencyFromUser(
     );
   }
 
+  if (currentCurrency.fruit < fruitToSubtract) {
+    throw new Error(
+      `Insufficient fruit. Current: ${currentCurrency.fruit}, Required: ${fruitToSubtract}`
+    );
+  }
+
   // Update the existing currency by subtracting from current values
   const updatedCurrency = await updateUserCurrency(currentCurrency.id!, {
     denarii: currentCurrency.denarii - denariiToSubtract,
     manna: currentCurrency.manna - mannaToSubtract,
+    fruit: currentCurrency.fruit - fruitToSubtract,
   });
 
   return updatedCurrency;

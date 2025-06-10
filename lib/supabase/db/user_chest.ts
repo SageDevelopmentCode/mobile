@@ -1,4 +1,5 @@
 import { makeSupabaseRequest } from "../rest-api";
+import { addCurrencyToUser } from "./user_currency";
 
 // Type definition for user chest
 interface UserChest {
@@ -69,6 +70,43 @@ export async function insertUserChest(userId: string, rewards: any) {
   if (chestError) {
     console.error(`Error inserting chest for user ${userId}:`, chestError);
     throw chestError;
+  }
+
+  // Extract currency amounts from rewards
+  let fruitToAdd = 0;
+  let denariiToAdd = 0;
+  let mannaToAdd = 0;
+
+  if (rewards.rewards && Array.isArray(rewards.rewards)) {
+    rewards.rewards.forEach((reward: any) => {
+      switch (reward.type) {
+        case "fruit":
+          fruitToAdd += reward.amount || 0;
+          break;
+        case "denarii":
+          denariiToAdd += reward.amount || 0;
+          break;
+        case "manna":
+          mannaToAdd += reward.amount || 0;
+          break;
+      }
+    });
+  }
+
+  // Update user currency if there are any currency rewards
+  if (fruitToAdd > 0 || denariiToAdd > 0 || mannaToAdd > 0) {
+    try {
+      await addCurrencyToUser(userId, denariiToAdd, mannaToAdd, fruitToAdd);
+      console.log(
+        `Added currency to user ${userId}: fruit=${fruitToAdd}, denarii=${denariiToAdd}, manna=${mannaToAdd}`
+      );
+    } catch (currencyError) {
+      console.error(
+        `Error updating currency for user ${userId}:`,
+        currencyError
+      );
+      // Don't throw here - chest was already saved, currency update failure shouldn't block the process
+    }
   }
 
   // Update the user's last_daily_chest_opened_at timestamp

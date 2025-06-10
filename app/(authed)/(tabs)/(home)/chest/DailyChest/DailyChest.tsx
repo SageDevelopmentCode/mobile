@@ -61,7 +61,7 @@ const rewards: Reward[] = [
 
 export default function DailyChestScreen() {
   const navigation = useNavigation();
-  const { userData } = useCharacterContext();
+  const { userData, refreshUserData } = useCharacterContext();
   const [currentRewardIndex, setCurrentRewardIndex] = useState(0);
   const [showRewards, setShowRewards] = useState(true);
   const [isScreenReady, setIsScreenReady] = useState(false);
@@ -194,6 +194,11 @@ export default function DailyChestScreen() {
         await insertUserChest(userData.id, rewardsData);
 
         console.log("Daily chest saved successfully");
+
+        // Refresh user data to update the last_daily_chest_opened_at timestamp
+        await refreshUserData();
+
+        console.log("User data refreshed after chest opening");
       }
     } catch (error) {
       console.error("Error saving daily chest:", error);
