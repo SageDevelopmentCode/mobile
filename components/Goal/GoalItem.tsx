@@ -20,6 +20,7 @@ import {
   resetGoalToToday,
   updateUserGoal,
 } from "@/lib/supabase/db/user_goals";
+import { FontAwesome5 } from "@/utils/icons";
 
 type GoalItemProps = {
   title: string;
@@ -491,10 +492,10 @@ export const GoalItem = ({
                   <FontAwesome6 color="#5878d9" name="rotate" size={18} />
                 )
               ) : (
-                <FontAwesome6
+                <FontAwesome5
                   color={colors.SolaraGreen}
-                  name="play"
-                  size={23}
+                  name="check"
+                  size={20}
                 />
               )
             }

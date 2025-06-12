@@ -15,11 +15,13 @@ import colors from "@/constants/colors";
 import { getCheckInCompleteScreenStyles } from "./CheckInCompleteScreen.styles";
 import { ActionButton } from "@/components/Buttons/ActionButtons/ActionButton";
 import { useAuth } from "@/context/AuthContext";
+import { useCharacterContext } from "@/lib/context/CharacterContext";
 import {
   getLatestUserCheckIn,
   createUserCheckIn,
   getUserCheckInCountForToday,
 } from "@/lib/supabase/db/user_check_in";
+import { addCurrencyToUser } from "@/lib/supabase/db/user_currency";
 
 // Reward items with their icons, amounts, and labels
 const rewardItems = [
@@ -58,6 +60,7 @@ export default function CheckInCompleteScreen() {
   const params = useLocalSearchParams();
   const styles = getCheckInCompleteScreenStyles();
   const { session } = useAuth();
+  const { refreshUserData } = useCharacterContext();
   const [isFirstCheckIn, setIsFirstCheckIn] = useState<boolean>(false);
   const [rewardsLoaded, setRewardsLoaded] = useState<boolean>(false);
   const [isCreatingCheckIn, setIsCreatingCheckIn] = useState<boolean>(false);
@@ -215,7 +218,18 @@ export default function CheckInCompleteScreen() {
 
       await createUserCheckIn(checkInData);
 
-      console.log("Check-in created successfully!");
+      // Add currency to user's balance
+      await addCurrencyToUser(
+        session.user.id,
+        checkInData.denarii_earned,
+        checkInData.manna_earned,
+        checkInData.fruit_earned
+      );
+
+      console.log("Check-in created and currency added successfully!");
+
+      // Refresh user data to update currency display
+      await refreshUserData();
 
       // Navigate back to home after successfully creating check-in
       router.push("/(authed)/(tabs)/(home)");
