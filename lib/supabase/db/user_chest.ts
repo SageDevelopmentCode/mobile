@@ -115,17 +115,28 @@ export async function insertUserChest(
     }
   }
 
-  // Update the user's last_daily_chest_opened_at timestamp
+  // Update the user's last chest opened timestamp based on chest type
+  let updateField: string;
+  switch (chestType) {
+    case "weekly":
+      updateField = "last_weekly_chest_opened_at";
+      break;
+    case "daily":
+    default:
+      updateField = "last_daily_chest_opened_at";
+      break;
+  }
+
   const { data: userData, error: userError } = await makeSupabaseRequest(
     "rest/v1/users",
     "PATCH",
     { "id.eq": userId },
-    { last_daily_chest_opened_at: timestamp }
+    { [updateField]: timestamp }
   );
 
   if (userError) {
     console.error(
-      `Error updating last_daily_chest_opened_at for user ${userId}:`,
+      `Error updating ${updateField} for user ${userId}:`,
       userError
     );
     throw userError;

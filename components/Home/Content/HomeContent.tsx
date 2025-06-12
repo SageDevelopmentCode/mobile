@@ -46,6 +46,9 @@ export const HomeContent = ({
   const [dailyChestTimeRemaining, setDailyChestTimeRemaining] =
     useState<string>("Available");
   const [dailyChestProgress, setDailyChestProgress] = useState<number>(100);
+  const [weeklyChestTimeRemaining, setWeeklyChestTimeRemaining] =
+    useState<string>("Available");
+  const [weeklyChestProgress, setWeeklyChestProgress] = useState<number>(100);
 
   // Create animated values for each goal
   const fadeAnims = useRef(
@@ -131,6 +134,80 @@ export const HomeContent = ({
     );
   }, [userData?.last_daily_chest_opened_at]);
 
+  // Function to calculate weekly chest countdown
+  const calculateWeeklyChestCountdown = useCallback(() => {
+    if (!userData?.last_weekly_chest_opened_at) {
+      const newValue = "Available";
+      setWeeklyChestTimeRemaining((prev) =>
+        prev !== newValue ? newValue : prev
+      );
+      setWeeklyChestProgress((prev) => (prev !== 100 ? 100 : prev));
+      return;
+    }
+
+    const lastOpenedTime = new Date(userData.last_weekly_chest_opened_at);
+    const nextAvailableTime = new Date(
+      lastOpenedTime.getTime() + 7 * 24 * 60 * 60 * 1000
+    ); // 7 days later
+    const now = new Date();
+
+    if (now >= nextAvailableTime) {
+      const newValue = "Available";
+      setWeeklyChestTimeRemaining((prev) =>
+        prev !== newValue ? newValue : prev
+      );
+      setWeeklyChestProgress((prev) => (prev !== 100 ? 100 : prev));
+      return;
+    }
+
+    const timeRemaining = nextAvailableTime.getTime() - now.getTime();
+    const totalCooldownTime = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+    const timeElapsed = totalCooldownTime - timeRemaining;
+    const progressPercentage = Math.round(
+      (timeElapsed / totalCooldownTime) * 100
+    );
+
+    const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor(
+      (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
+    );
+
+    let formattedTime: string;
+    if (days > 1) {
+      // More than 1 day: show "X days left"
+      formattedTime = `${days} days left`;
+    } else if (days === 1) {
+      // Exactly 1 day: show "1 day left"
+      formattedTime = "1 day left";
+    } else if (hours > 1) {
+      // Less than 1 day but more than 1 hour: show "X hours left"
+      formattedTime = `${hours} hours left`;
+    } else if (hours === 1) {
+      // Exactly 1 hour: show "1 hour left"
+      formattedTime = "1 hour left";
+    } else if (minutes > 1) {
+      // Less than 1 hour: show "X minutes left"
+      formattedTime = `${minutes} minutes left`;
+    } else if (minutes === 1) {
+      // Exactly 1 minute: show "1 minute left"
+      formattedTime = "1 minute left";
+    } else {
+      // Less than 1 minute: show "Available soon"
+      formattedTime = "Available soon";
+    }
+
+    // Only update state if the value actually changed
+    setWeeklyChestTimeRemaining((prev) =>
+      prev !== formattedTime ? formattedTime : prev
+    );
+    setWeeklyChestProgress((prev) =>
+      prev !== progressPercentage ? progressPercentage : prev
+    );
+  }, [userData?.last_weekly_chest_opened_at]);
+
   // Function to refresh goals
   const refreshGoals = useCallback(async () => {
     if (!userData || !userData.id || !setGoals || !setGoalsLoading) {
@@ -159,19 +236,21 @@ export const HomeContent = ({
     }
   }, [goals]);
 
-  // Daily chest countdown timer effect
+  // Chest countdown timer effects
   useEffect(() => {
-    // Calculate initial countdown
+    // Calculate initial countdowns
     calculateDailyChestCountdown();
+    calculateWeeklyChestCountdown();
 
-    // Set up interval to update countdown every second
+    // Set up interval to update countdowns every second
     const interval = setInterval(() => {
       calculateDailyChestCountdown();
+      calculateWeeklyChestCountdown();
     }, 1000);
 
     // Cleanup interval on unmount
     return () => clearInterval(interval);
-  }, [calculateDailyChestCountdown]);
+  }, [calculateDailyChestCountdown, calculateWeeklyChestCountdown]);
 
   // Update fadeAnims when goals change
   useEffect(() => {
@@ -213,9 +292,11 @@ export const HomeContent = ({
             );
           }}
           type="Weekly"
-          timeRemaining="05:06"
+          timeRemaining={weeklyChestTimeRemaining}
           key="Weekly"
           activeCharacter={activeCharacter}
+          disabled={weeklyChestTimeRemaining !== "Available"}
+          progress={weeklyChestProgress}
         />
       </View>
 

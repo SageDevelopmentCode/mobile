@@ -11,5 +11,6 @@ export interface User {
   level: number;
   experience_points: number;
   last_daily_chest_opened_at?: string;
+  last_weekly_chest_opened_at?: string;
   currency?: UserCurrency | null;
 }

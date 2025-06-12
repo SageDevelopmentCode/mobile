@@ -19,6 +19,7 @@ import DenariiImage from "@/assets/images/currency/Denarii.png";
 import MannaImage from "@/assets/images/currency/Manna.png";
 import FruitImage from "@/assets/images/currency/Fruit.png";
 import { useCharacterContext } from "@/lib/context/CharacterContext";
+import { insertUserChest } from "@/lib/supabase/db/user_chest";
 
 const { width, height } = Dimensions.get("window");
 
@@ -61,7 +62,7 @@ const rewards: Reward[] = [
 
 export default function WeeklyChestScreen() {
   const navigation = useNavigation();
-  const { userData } = useCharacterContext();
+  const { userData, refreshUserData } = useCharacterContext();
   const [currentRewardIndex, setCurrentRewardIndex] = useState(0);
   const [showRewards, setShowRewards] = useState(true);
   const [isScreenReady, setIsScreenReady] = useState(false);
@@ -172,13 +173,36 @@ export default function WeeklyChestScreen() {
 
   const celebrateAndFinish = async (finalRewards?: Reward[]) => {
     try {
-      // For now, just log the rewards without saving to database
-      const rewardsToLog = finalRewards || claimedRewards;
-      console.log("Weekly chest rewards claimed:", rewardsToLog);
+      // Use the passed rewards or fallback to state
+      const rewardsToSave = finalRewards || claimedRewards;
 
-      // TODO: Implement weekly chest saving logic later
+      // Save chest data to database if we have user data
+      if (userData?.id && rewardsToSave.length > 0) {
+        // Format rewards data for database storage
+        const rewardsData = {
+          chest_type: "weekly",
+          rewards: rewardsToSave.map((reward) => ({
+            type: reward.type,
+            amount: reward.amount,
+            name: reward.name,
+          })),
+          total_rewards: rewardsToSave.length,
+          claimed_at: new Date().toISOString(),
+        };
+
+        console.log("Saving weekly chest rewards:", rewardsData);
+
+        await insertUserChest(userData.id, rewardsData, "weekly");
+
+        console.log("Weekly chest saved successfully");
+
+        // Refresh user data to update the last_weekly_chest_opened_at timestamp
+        await refreshUserData();
+
+        console.log("User data refreshed after weekly chest opening");
+      }
     } catch (error) {
-      console.error("Error with weekly chest:", error);
+      console.error("Error saving weekly chest:", error);
     }
 
     // Simple fade out and navigate back

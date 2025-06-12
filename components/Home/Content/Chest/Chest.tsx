@@ -1,7 +1,7 @@
 import { StatText, SubHeading } from "@/components/Text/TextComponents";
 import colors from "@/constants/colors";
-import React from "react";
-import { Image, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { Image, TouchableOpacity, View, Animated } from "react-native";
 import { capitalizeFirstLetter } from "@/utils/format/capitalizeFirstLetter";
 import CommonChest from "../../../../assets/images/chests/CommonChest.png";
 import RareChest from "../../../../assets/images/chests/RareChest.png";
@@ -27,6 +27,9 @@ export const Chest = ({
 }: ChestProps) => {
   const styles = getStyles(activeCharacter);
 
+  // Animation ref for jumping effect
+  const jumpAnim = useRef(new Animated.Value(0)).current;
+
   // Calculate progress for rounded rectangle indicator
   const chestWidth = 55;
   const chestHeight = 55;
@@ -45,6 +48,45 @@ export const Chest = ({
 
   // When progress is 100%, show full border without dashes
   const isFullyAvailable = progress >= 100;
+
+  // Check if this chest should have jumping animation
+  const shouldJump =
+    type === "Daily" && timeRemaining === "Available" && !disabled;
+
+  // Set up jumping animation
+  useEffect(() => {
+    if (shouldJump) {
+      // Create a subtle jumping animation
+      const createJumpAnimation = () => {
+        return Animated.sequence([
+          Animated.timing(jumpAnim, {
+            toValue: -8, // Jump up by 8 pixels
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(jumpAnim, {
+            toValue: 0, // Return to original position
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.delay(1500), // Wait 1.5 seconds before next jump
+        ]);
+      };
+
+      // Start the looping animation
+      const loopAnimation = Animated.loop(createJumpAnimation());
+      loopAnimation.start();
+
+      // Cleanup function to stop animation
+      return () => {
+        loopAnimation.stop();
+        jumpAnim.setValue(0);
+      };
+    } else {
+      // Reset animation if conditions not met
+      jumpAnim.setValue(0);
+    }
+  }, [shouldJump, jumpAnim]);
 
   return (
     <TouchableOpacity
@@ -102,12 +144,15 @@ export const Chest = ({
           />
         </Svg>
 
-        <Image
+        <Animated.Image
           source={type === "Weekly" ? RareChest : CommonChest}
           style={[
             styles.chestImage,
             disabled ? { opacity: 0.4 } : { opacity: 1 },
             { zIndex: 2 },
+            {
+              transform: [{ translateY: jumpAnim }],
+            },
           ]}
           resizeMode="contain"
         />
