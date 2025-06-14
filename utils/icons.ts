@@ -5,6 +5,7 @@ import AntIcons from "react-native-vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Octicons from "react-native-vector-icons/Octicons";
+import MaterialDesignIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 export {
   MaterialIcons,
@@ -14,4 +15,5 @@ export {
   Ionicons,
   FontAwesome,
   Octicons,
+  MaterialDesignIcons,
 };

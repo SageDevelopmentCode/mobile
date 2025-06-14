@@ -32,6 +32,88 @@ export const styles = StyleSheet.create({
     elevation: 5,
   },
 
+  // Translation Dropdown Styles
+  translationDropdownContainer: {
+    position: "absolute",
+    top: 60, // Account for status bar
+    right: 20,
+    height: 50, // Same height as search icon
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    backgroundColor: "#2C2E4B", // Same as search icon background
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+
+  translationDropdownText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+    marginRight: 8,
+  },
+
+  translationDropdownOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 14,
+  },
+
+  translationDropdownMenu: {
+    position: "absolute",
+    top: 120, // Below the dropdown button
+    right: 20,
+    backgroundColor: "#2C2E4B",
+    borderRadius: 12,
+    minWidth: 200,
+    maxHeight: 300,
+    zIndex: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+  },
+
+  translationDropdownList: {
+    flex: 1,
+  },
+
+  translationDropdownItem: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255, 255, 255, 0.1)",
+  },
+
+  translationDropdownItemText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 2,
+  },
+
+  translationDropdownItemDesc: {
+    color: "rgba(255, 255, 255, 0.7)",
+    fontSize: 12,
+    fontWeight: "400",
+  },
+
   // ScrollView that contains everything
   scrollView: {
     flex: 1,
@@ -62,9 +144,6 @@ export const styles = StyleSheet.create({
   },
 
   quickReadTitle: {
-    color: colors.PrimaryWhite,
-    fontSize: 24,
-    fontWeight: "bold",
     marginBottom: 10,
     paddingHorizontal: 20,
   },
@@ -143,6 +222,75 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
     marginLeft: 6,
+  },
+
+  // Continue Reading Section Styles
+  continueReadingSection: {
+    marginBottom: 30,
+  },
+
+  continueReadingTitle: {
+    color: colors.PrimaryWhite,
+    marginBottom: 10,
+    paddingHorizontal: 20,
+  },
+
+  continueReadingList: {
+    paddingHorizontal: 20,
+  },
+
+  continueReadingCard: {
+    marginRight: 16,
+    alignItems: "flex-start",
+    width: 140,
+  },
+
+  continueReadingBookCover: {
+    width: 140,
+    height: 200,
+    borderRadius: 5,
+    marginBottom: 12,
+    // Drop shadow styling as requested: box-shadow: 0px 4px 0px #171717;
+    shadowColor: "#171717",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 4,
+  },
+
+  continueReadingBookInfo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    width: "100%",
+  },
+
+  continueReadingTextContainer: {
+    flex: 1,
+    marginRight: 8,
+  },
+
+  continueReadingBookTitle: {
+    color: colors.PrimaryWhite,
+    fontSize: 14,
+    fontWeight: "bold",
+    textAlign: "left",
+    lineHeight: 18,
+    marginBottom: 2, // Small gap between title and progress
+  },
+
+  bookmarkButton: {
+    padding: 2,
+    marginTop: -2, // Slight adjustment to align with text
+  },
+
+  continueReadingProgress: {
+    color: colors.GrayText,
+    fontSize: 12,
+    fontWeight: "400",
   },
 
   hero: {

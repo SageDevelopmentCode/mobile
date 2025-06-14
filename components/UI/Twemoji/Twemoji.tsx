@@ -15,7 +15,8 @@ const emojiAssets: { [key: string]: any } = {
   "1f932": require("@/assets/images/emojis/1f932.png"), // 🙌 grateful
   "1f636": require("@/assets/images/emojis/1f636.png"), // 😶 distant (face without mouth)
   "1f6ab": require("@/assets/images/emojis/1f6ab.png"), // 🚫 rebellious
-  "1f494": require("@/assets/images/emojis/1f494.png"), // 💔 broken heart
+  "1f494": require("@/assets/images/emojis/1f494.png"), // �� broken heart
+  "1f495": require("@/assets/images/emojis/1f495.png"), // 💕 two hearts
   "1f91d": require("@/assets/images/emojis/1f91d.png"), // 🤝 forgiving (handshake)
   "1f64c": require("@/assets/images/emojis/1f64c.png"), // 🙌 serving (hands raised)
   "1f31f": require("@/assets/images/emojis/1f31f.png"), // ⭐ encouraging (star)
