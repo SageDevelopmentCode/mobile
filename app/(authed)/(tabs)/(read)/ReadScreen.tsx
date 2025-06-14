@@ -24,6 +24,14 @@ import {
   categoriesDisplay,
   CategoryDisplayItem,
 } from "@/utils/data/categoriesDisplay";
+import {
+  oldTestamentBooks,
+  OldTestamentBook,
+} from "@/utils/data/oldTestamentBooks";
+import {
+  newTestamentBooks,
+  NewTestamentBook,
+} from "@/utils/data/newTestamentBooks";
 
 // Import Psalms image
 import PsalmsImage from "../../../../assets/images/books/Psalms.png";
@@ -50,6 +58,16 @@ export default function ReadScreen() {
   const [bookmarkedBooks, setBookmarkedBooks] = useState<Set<number>>(
     new Set([1, 3, 5])
   ); // Some books pre-bookmarked
+
+  // State for tracking bookmarked Old Testament books
+  const [bookmarkedOTBooks, setBookmarkedOTBooks] = useState<Set<number>>(
+    new Set([1, 19, 20])
+  ); // Some OT books pre-bookmarked (Genesis, Psalms, Proverbs)
+
+  // State for tracking bookmarked New Testament books
+  const [bookmarkedNTBooks, setBookmarkedNTBooks] = useState<Set<number>>(
+    new Set([43, 45, 50])
+  ); // Some NT books pre-bookmarked (John, Romans, Philippians)
 
   // Translation dropdown states
   const [translations, setTranslations] = useState<Translation[]>([]);
@@ -140,6 +158,32 @@ export default function ReadScreen() {
     });
   };
 
+  // Toggle bookmark function for Old Testament books
+  const toggleOTBookmark = (bookId: number) => {
+    setBookmarkedOTBooks((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(bookId)) {
+        newSet.delete(bookId);
+      } else {
+        newSet.add(bookId);
+      }
+      return newSet;
+    });
+  };
+
+  // Toggle bookmark function for New Testament books
+  const toggleNTBookmark = (bookId: number) => {
+    setBookmarkedNTBooks((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(bookId)) {
+        newSet.delete(bookId);
+      } else {
+        newSet.add(bookId);
+      }
+      return newSet;
+    });
+  };
+
   // Translation dropdown functions
   const toggleTranslationDropdown = () => {
     setIsTranslationDropdownVisible(!isTranslationDropdownVisible);
@@ -193,12 +237,21 @@ export default function ReadScreen() {
     item: ContinueReadingBook;
   }) => (
     <TouchableOpacity style={styles.continueReadingCard}>
-      <Image source={item.coverImage} style={styles.continueReadingBookCover} />
+      <View style={styles.continueReadingBookCoverShadow}>
+        <Image
+          source={item.coverImage}
+          style={styles.continueReadingBookCover}
+        />
+      </View>
       <View style={styles.continueReadingBookInfo}>
         <View style={styles.continueReadingTextContainer}>
-          <Text style={styles.continueReadingBookTitle}>{item.title}</Text>
+          <ButtonText style={styles.continueReadingBookTitle}>
+            {item.title}
+          </ButtonText>
           {item.progress && (
-            <Text style={styles.continueReadingProgress}>{item.progress}</Text>
+            <ButtonText style={styles.continueReadingProgress}>
+              {item.progress}
+            </ButtonText>
           )}
         </View>
         <TouchableOpacity
@@ -214,6 +267,76 @@ export default function ReadScreen() {
       </View>
     </TouchableOpacity>
   );
+
+  const renderOldTestamentItem = ({ item }: { item: OldTestamentBook }) => {
+    const isBookmarked = bookmarkedOTBooks.has(item.id);
+
+    return (
+      <TouchableOpacity style={styles.continueReadingCard}>
+        <View style={styles.continueReadingBookCoverShadow}>
+          <Image
+            source={item.coverImage}
+            style={styles.continueReadingBookCover}
+          />
+        </View>
+        <View style={styles.continueReadingBookInfo}>
+          <View style={styles.continueReadingTextContainer}>
+            <ButtonText style={styles.continueReadingBookTitle}>
+              {item.title}
+            </ButtonText>
+            <ButtonText style={styles.continueReadingProgress}>
+              {item.description}
+            </ButtonText>
+          </View>
+          <TouchableOpacity
+            style={styles.bookmarkButton}
+            onPress={() => toggleOTBookmark(item.id)}
+          >
+            <MaterialDesignIcons
+              name={isBookmarked ? "bookmark" : "bookmark-outline"}
+              size={28}
+              color={isBookmarked ? "#FFD700" : "#8A8A8A"}
+            />
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderNewTestamentItem = ({ item }: { item: NewTestamentBook }) => {
+    const isBookmarked = bookmarkedNTBooks.has(item.id);
+
+    return (
+      <TouchableOpacity style={styles.continueReadingCard}>
+        <View style={styles.continueReadingBookCoverShadow}>
+          <Image
+            source={item.coverImage}
+            style={styles.continueReadingBookCover}
+          />
+        </View>
+        <View style={styles.continueReadingBookInfo}>
+          <View style={styles.continueReadingTextContainer}>
+            <ButtonText style={styles.continueReadingBookTitle}>
+              {item.title}
+            </ButtonText>
+            <ButtonText style={styles.continueReadingProgress}>
+              {item.description}
+            </ButtonText>
+          </View>
+          <TouchableOpacity
+            style={styles.bookmarkButton}
+            onPress={() => toggleNTBookmark(item.id)}
+          >
+            <MaterialDesignIcons
+              name={isBookmarked ? "bookmark" : "bookmark-outline"}
+              size={28}
+              color={isBookmarked ? "#FFD700" : "#8A8A8A"}
+            />
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   const renderCategoryItem = ({ item }: { item: CategoryDisplayItem }) => (
     <TouchableOpacity
@@ -408,6 +531,32 @@ export default function ReadScreen() {
           <FlatList
             data={continueReadingBooks}
             renderItem={renderContinueReadingItem}
+            keyExtractor={(item) => item.id.toString()}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.continueReadingList}
+          />
+        </View>
+
+        {/* New Testament Section */}
+        <View style={styles.continueReadingSection}>
+          <Heading style={styles.continueReadingTitle}>New Testament</Heading>
+          <FlatList
+            data={newTestamentBooks}
+            renderItem={renderNewTestamentItem}
+            keyExtractor={(item) => item.id.toString()}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.continueReadingList}
+          />
+        </View>
+
+        {/* Old Testament Section */}
+        <View style={styles.continueReadingSection}>
+          <Heading style={styles.continueReadingTitle}>Old Testament</Heading>
+          <FlatList
+            data={oldTestamentBooks}
+            renderItem={renderOldTestamentItem}
             keyExtractor={(item) => item.id.toString()}
             horizontal
             showsHorizontalScrollIndicator={false}

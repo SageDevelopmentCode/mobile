@@ -314,20 +314,26 @@ export const styles = StyleSheet.create({
     width: 140,
   },
 
-  continueReadingBookCover: {
-    width: 140,
-    height: 200,
-    borderRadius: 5,
-    marginBottom: 12,
-    // Drop shadow styling as requested: box-shadow: 0px 4px 0px #171717;
+  continueReadingBookCoverShadow: {
+    marginBottom: 16,
     shadowColor: "#171717",
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 6,
     },
     shadowOpacity: 1,
     shadowRadius: 0,
-    elevation: 4,
+    elevation: 6,
+    borderRadius: 10,
+  },
+
+  continueReadingBookCover: {
+    width: 140,
+    height: 200,
+    borderTopRightRadius: 15,
+    borderBottomRightRadius: 15,
+    borderTopLeftRadius: 2,
+    borderBottomLeftRadius: 2,
   },
 
   continueReadingBookInfo: {
