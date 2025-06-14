@@ -18,6 +18,7 @@ import { MaterialDesignIcons } from "@/utils/icons";
 import { styles } from "./ReadScreen.styles";
 import colors from "@/constants/colors";
 import { Twemoji } from "@/components/UI/Twemoji/Twemoji";
+import { DynamicBookImage } from "@/components/UI/DynamicBookImage/DynamicBookImage";
 import { getTranslations, Translation } from "@/lib/api/bible";
 import { quickReadStories, QuickReadItem } from "@/utils/data/quickReadStories";
 import {
@@ -82,7 +83,7 @@ export default function ReadScreen() {
     {
       id: 1,
       title: "Ruth",
-      bookName: "RUTH",
+      bookName: "Ruth",
       progress: "Chapter 2",
       coverImage: PsalmsImage,
       isBookmarked: bookmarkedBooks.has(1),
@@ -90,7 +91,7 @@ export default function ReadScreen() {
     {
       id: 2,
       title: "Genesis",
-      bookName: "GENESIS",
+      bookName: "Genesis",
       progress: "Chapter 12",
       coverImage: PsalmsImage,
       isBookmarked: bookmarkedBooks.has(2),
@@ -98,7 +99,7 @@ export default function ReadScreen() {
     {
       id: 3,
       title: "Leviticus",
-      bookName: "LEVITICUS",
+      bookName: "Leviticus",
       progress: "Chapter 5",
       coverImage: PsalmsImage,
       isBookmarked: bookmarkedBooks.has(3),
@@ -106,7 +107,7 @@ export default function ReadScreen() {
     {
       id: 4,
       title: "Psalms",
-      bookName: "PSALMS",
+      bookName: "Psalms",
       progress: "Psalm 23",
       coverImage: PsalmsImage,
       isBookmarked: bookmarkedBooks.has(4),
@@ -114,7 +115,7 @@ export default function ReadScreen() {
     {
       id: 5,
       title: "Matthew",
-      bookName: "MATTHEW",
+      bookName: "Matthew",
       progress: "Chapter 8",
       coverImage: PsalmsImage,
       isBookmarked: bookmarkedBooks.has(5),
@@ -122,7 +123,7 @@ export default function ReadScreen() {
     {
       id: 6,
       title: "John",
-      bookName: "JOHN",
+      bookName: "John",
       progress: "Chapter 14",
       coverImage: PsalmsImage,
       isBookmarked: bookmarkedBooks.has(6),
@@ -130,7 +131,7 @@ export default function ReadScreen() {
     {
       id: 7,
       title: "Romans",
-      bookName: "ROMANS",
+      bookName: "Romans",
       progress: "Chapter 3",
       coverImage: PsalmsImage,
       isBookmarked: bookmarkedBooks.has(7),
@@ -138,7 +139,7 @@ export default function ReadScreen() {
     {
       id: 8,
       title: "James",
-      bookName: "JAMES",
+      bookName: "James",
       progress: "Chapter 1",
       coverImage: PsalmsImage,
       isBookmarked: bookmarkedBooks.has(8),
@@ -209,10 +210,9 @@ export default function ReadScreen() {
   const renderQuickReadItem = ({ item }: { item: QuickReadItem }) => (
     <TouchableOpacity style={styles.quickReadCard}>
       <View style={[styles.quickReadCircle, { borderColor: item.borderColor }]}>
-        <ImageBackground
-          source={PsalmsImage}
-          style={styles.quickReadImageBackground}
-          imageStyle={styles.quickReadImage}
+        <DynamicBookImage
+          bookName={item.bookName}
+          style={styles.quickReadImage}
         />
       </View>
       <Paragraph
@@ -238,8 +238,8 @@ export default function ReadScreen() {
   }) => (
     <TouchableOpacity style={styles.continueReadingCard}>
       <View style={styles.continueReadingBookCoverShadow}>
-        <Image
-          source={item.coverImage}
+        <DynamicBookImage
+          bookName={item.bookName}
           style={styles.continueReadingBookCover}
         />
       </View>
@@ -274,8 +274,8 @@ export default function ReadScreen() {
     return (
       <TouchableOpacity style={styles.continueReadingCard}>
         <View style={styles.continueReadingBookCoverShadow}>
-          <Image
-            source={item.coverImage}
+          <DynamicBookImage
+            bookName={item.title}
             style={styles.continueReadingBookCover}
           />
         </View>
@@ -309,8 +309,8 @@ export default function ReadScreen() {
     return (
       <TouchableOpacity style={styles.continueReadingCard}>
         <View style={styles.continueReadingBookCoverShadow}>
-          <Image
-            source={item.coverImage}
+          <DynamicBookImage
+            bookName={item.title}
             style={styles.continueReadingBookCover}
           />
         </View>

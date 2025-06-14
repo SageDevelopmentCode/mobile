@@ -190,6 +190,8 @@ export const styles = StyleSheet.create({
   },
 
   quickReadImage: {
+    width: "100%",
+    height: "100%",
     borderRadius: 36.5,
   },
 

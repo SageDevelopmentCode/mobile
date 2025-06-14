@@ -10,7 +10,7 @@ export interface QuickReadItem {
 export const quickReadStories: QuickReadItem[] = [
   {
     id: 1,
-    bookName: "JOHN",
+    bookName: "John",
     verse: "John 4:25-30",
     category: "Love",
     categoryEmoji: "1f495", // 💕 heart
@@ -18,7 +18,7 @@ export const quickReadStories: QuickReadItem[] = [
   },
   {
     id: 2,
-    bookName: "RUTH",
+    bookName: "Ruth",
     verse: "Ruth 2:8-12",
     category: "Work",
     categoryEmoji: "1f91d", // 🤝 handshake
@@ -26,7 +26,7 @@ export const quickReadStories: QuickReadItem[] = [
   },
   {
     id: 3,
-    bookName: "GENESIS",
+    bookName: "Genesis",
     verse: "Genesis 1:1-5",
     category: "Love",
     categoryEmoji: "1f495", // 💕 heart
@@ -34,7 +34,7 @@ export const quickReadStories: QuickReadItem[] = [
   },
   {
     id: 4,
-    bookName: "PROVERBS",
+    bookName: "Proverbs",
     verse: "Proverbs 3:5-6",
     category: "Love",
     categoryEmoji: "1f495", // 💕 heart
@@ -42,7 +42,7 @@ export const quickReadStories: QuickReadItem[] = [
   },
   {
     id: 5,
-    bookName: "PSALMS",
+    bookName: "Psalms",
     verse: "Psalms 23:1-4",
     category: "Faith",
     categoryEmoji: "1f64f", // 🙏 praying hands
@@ -50,7 +50,7 @@ export const quickReadStories: QuickReadItem[] = [
   },
   {
     id: 6,
-    bookName: "MATTHEW",
+    bookName: "Matthew",
     verse: "Matthew 5:3-8",
     category: "Hope",
     categoryEmoji: "1f31f", // ⭐ star
@@ -58,7 +58,7 @@ export const quickReadStories: QuickReadItem[] = [
   },
   {
     id: 7,
-    bookName: "ROMANS",
+    bookName: "Romans",
     verse: "Romans 8:28-30",
     category: "Peace",
     categoryEmoji: "1f64c", // 🙌 raised hands
@@ -66,7 +66,7 @@ export const quickReadStories: QuickReadItem[] = [
   },
   {
     id: 8,
-    bookName: "JAMES",
+    bookName: "James",
     verse: "James 1:2-4",
     category: "Joy",
     categoryEmoji: "1f973", // 🥳 party face
