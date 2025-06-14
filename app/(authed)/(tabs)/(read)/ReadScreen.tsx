@@ -55,6 +55,8 @@ interface ContinueReadingBook {
 }
 
 export default function ReadScreen() {
+  const router = useRouter();
+
   // State for tracking bookmarked books
   const [bookmarkedBooks, setBookmarkedBooks] = useState<Set<number>>(
     new Set([1, 3, 5])
@@ -426,7 +428,10 @@ export default function ReadScreen() {
   return (
     <View style={styles.container}>
       {/* Search Icon in top left */}
-      <TouchableOpacity style={styles.searchIconContainer}>
+      <TouchableOpacity
+        style={styles.searchIconContainer}
+        onPress={() => router.push("/(authed)/(tabs)/(read)/search")}
+      >
         <Ionicons name="search" size={24} color="#FFFFFF" />
       </TouchableOpacity>
 

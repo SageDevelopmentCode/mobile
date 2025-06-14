@@ -9,6 +9,13 @@ export default function ReadLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="search"
+        options={{
+          headerShown: false,
+          presentation: "modal",
+        }}
+      />
     </Stack>
   );
 }

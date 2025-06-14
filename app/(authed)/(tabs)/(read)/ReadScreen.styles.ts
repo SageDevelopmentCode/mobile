@@ -455,4 +455,68 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
   },
+
+  // Search Screen Styles
+  searchHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    backgroundColor: "#1E1F33",
+  },
+
+  searchBackButton: {
+    marginRight: 16,
+    padding: 4,
+  },
+
+  searchInputContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#252642",
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: "#3A3B52",
+  },
+
+  searchInput: {
+    flex: 1,
+    color: colors.PrimaryWhite,
+    fontSize: 16,
+    marginLeft: 12,
+    marginRight: 12,
+  },
+
+  searchEmptyState: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 40,
+    paddingTop: 60,
+  },
+
+  searchEmptyTitle: {
+    marginTop: 24,
+    marginBottom: 12,
+    textAlign: "center",
+  },
+
+  searchEmptyDescription: {
+    color: colors.GrayText,
+    textAlign: "center",
+    lineHeight: 22,
+  },
+
+  searchResultsSection: {
+    marginBottom: 24,
+  },
+
+  searchSectionTitle: {
+    color: colors.PrimaryWhite,
+    marginBottom: 12,
+    paddingHorizontal: 20,
+  },
 });
