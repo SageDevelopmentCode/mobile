@@ -224,6 +224,75 @@ export const styles = StyleSheet.create({
     marginLeft: 6,
   },
 
+  // Categories Section Styles
+  categoriesSection: {
+    marginBottom: 30,
+  },
+
+  categoriesHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+
+  categoriesTitle: {
+    color: colors.PrimaryWhite,
+  },
+
+  viewAllButton: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  viewAllText: {
+    color: colors.PrimaryPurpleBackground,
+    fontSize: 14,
+    marginRight: 4,
+  },
+
+  categoriesScrollContainer: {
+    paddingHorizontal: 20,
+  },
+
+  categoriesRows: {
+    // Container for both rows
+  },
+
+  categoryRow: {
+    marginBottom: 8,
+  },
+
+  categoryCard: {
+    borderRadius: 100,
+    paddingLeft: 6,
+    paddingRight: 10,
+    paddingVertical: 5,
+    marginRight: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    minHeight: 48,
+  },
+
+  categoryIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+    backgroundColor: "#001123",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+
+  categoryText: {
+    color: colors.PrimaryWhite,
+    fontWeight: "500",
+    textAlign: "left",
+    marginRight: 10,
+    flexShrink: 1,
+  },
+
   // Continue Reading Section Styles
   continueReadingSection: {
     marginBottom: 30,

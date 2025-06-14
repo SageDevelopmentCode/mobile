@@ -20,6 +20,10 @@ import colors from "@/constants/colors";
 import { Twemoji } from "@/components/UI/Twemoji/Twemoji";
 import { getTranslations, Translation } from "@/lib/api/bible";
 import { quickReadStories, QuickReadItem } from "@/utils/data/quickReadStories";
+import {
+  categoriesDisplay,
+  CategoryDisplayItem,
+} from "@/utils/data/categoriesDisplay";
 
 // Import Psalms image
 import PsalmsImage from "../../../../assets/images/books/Psalms.png";
@@ -211,6 +215,27 @@ export default function ReadScreen() {
     </TouchableOpacity>
   );
 
+  const renderCategoryItem = ({ item }: { item: CategoryDisplayItem }) => (
+    <TouchableOpacity
+      style={[styles.categoryCard, { backgroundColor: item.color }]}
+    >
+      <View style={styles.categoryIconContainer}>
+        <Twemoji hex={item.emojiHex} size={20} />
+      </View>
+      <ButtonText style={styles.categoryText} numberOfLines={2}>
+        {item.name}
+      </ButtonText>
+    </TouchableOpacity>
+  );
+
+  // Split categories into two rows for independent flow
+  const topRowCategories = categoriesDisplay.filter(
+    (_, index) => index % 2 === 0
+  );
+  const bottomRowCategories = categoriesDisplay.filter(
+    (_, index) => index % 2 === 1
+  );
+
   // Fetch translations on component mount
   useEffect(() => {
     const fetchTranslations = async () => {
@@ -336,6 +361,43 @@ export default function ReadScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.quickReadList}
           />
+        </View>
+
+        {/* Categories Section */}
+        <View style={styles.categoriesSection}>
+          <View style={styles.categoriesHeader}>
+            <Heading color={colors.PrimaryWhite} style={styles.categoriesTitle}>
+              Categories
+            </Heading>
+            <TouchableOpacity style={styles.viewAllButton}>
+              <ButtonText style={styles.viewAllText}>View All</ButtonText>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={colors.PrimaryPurpleBackground}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.categoriesRows}>
+            <FlatList
+              data={topRowCategories}
+              renderItem={renderCategoryItem}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.categoriesScrollContainer}
+              style={styles.categoryRow}
+            />
+            <FlatList
+              data={bottomRowCategories}
+              renderItem={renderCategoryItem}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.categoriesScrollContainer}
+              style={styles.categoryRow}
+            />
+          </View>
         </View>
 
         {/* Continue Reading Section */}
