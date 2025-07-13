@@ -16,6 +16,12 @@ export default function ReadLayout() {
           presentation: "modal",
         }}
       />
+      <Stack.Screen
+        name="[bookName]"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

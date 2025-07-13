@@ -274,7 +274,14 @@ export default function ReadScreen() {
     const isBookmarked = bookmarkedOTBooks.has(item.id);
 
     return (
-      <TouchableOpacity style={styles.continueReadingCard}>
+      <TouchableOpacity
+        style={styles.continueReadingCard}
+        onPress={() =>
+          router.push(
+            `/(authed)/(tabs)/(read)/${encodeURIComponent(item.title)}`
+          )
+        }
+      >
         <View style={styles.continueReadingBookCoverShadow}>
           <DynamicBookImage
             bookName={item.title}
@@ -292,7 +299,10 @@ export default function ReadScreen() {
           </View>
           <TouchableOpacity
             style={styles.bookmarkButton}
-            onPress={() => toggleOTBookmark(item.id)}
+            onPress={(e) => {
+              e.stopPropagation();
+              toggleOTBookmark(item.id);
+            }}
           >
             <MaterialDesignIcons
               name={isBookmarked ? "bookmark" : "bookmark-outline"}
@@ -309,7 +319,14 @@ export default function ReadScreen() {
     const isBookmarked = bookmarkedNTBooks.has(item.id);
 
     return (
-      <TouchableOpacity style={styles.continueReadingCard}>
+      <TouchableOpacity
+        style={styles.continueReadingCard}
+        onPress={() =>
+          router.push(
+            `/(authed)/(tabs)/(read)/${encodeURIComponent(item.title)}`
+          )
+        }
+      >
         <View style={styles.continueReadingBookCoverShadow}>
           <DynamicBookImage
             bookName={item.title}
@@ -327,7 +344,10 @@ export default function ReadScreen() {
           </View>
           <TouchableOpacity
             style={styles.bookmarkButton}
-            onPress={() => toggleNTBookmark(item.id)}
+            onPress={(e) => {
+              e.stopPropagation();
+              toggleNTBookmark(item.id);
+            }}
           >
             <MaterialDesignIcons
               name={isBookmarked ? "bookmark" : "bookmark-outline"}
@@ -528,19 +548,45 @@ export default function ReadScreen() {
           </View>
         </View>
 
-        {/* Continue Reading Section */}
-        <View style={styles.continueReadingSection}>
-          <Heading style={styles.continueReadingTitle}>
-            Continue Reading
-          </Heading>
-          <FlatList
-            data={continueReadingBooks}
-            renderItem={renderContinueReadingItem}
-            keyExtractor={(item) => item.id.toString()}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.continueReadingList}
-          />
+        {/* Featured Book Section */}
+        <View style={styles.featuredBookSection}>
+          <TouchableOpacity style={styles.featuredBookCard}>
+            <View style={styles.featuredBookContent}>
+              <View style={styles.featuredBookInfo}>
+                <View style={styles.featuredBookTextContent}>
+                  <ButtonText style={styles.featuredBookLabel}>
+                    Continue Reading
+                  </ButtonText>
+                  <Heading style={styles.featuredBookTitle}>
+                    Book of Ruth
+                  </Heading>
+                </View>
+                <TouchableOpacity style={styles.chapterProgressContainer}>
+                  <View style={styles.chapterInfoRow}>
+                    <ButtonText style={styles.chapterText}>
+                      Chapter 2 of 4
+                    </ButtonText>
+                    <Ionicons
+                      name="chevron-forward"
+                      size={16}
+                      color="#ECA7C8"
+                    />
+                  </View>
+                  <View style={styles.progressBarContainer}>
+                    <View style={styles.progressBarTrack}>
+                      <View style={styles.progressBarFill} />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.featuredBookImageContainer}>
+                <DynamicBookImage
+                  bookName="Ruth"
+                  style={styles.featuredBookImage}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
         </View>
 
         {/* New Testament Section */}

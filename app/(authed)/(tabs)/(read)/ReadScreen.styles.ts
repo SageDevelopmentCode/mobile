@@ -6,7 +6,7 @@ const { height } = Dimensions.get("window");
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1E1F33", // Set the base background color
+    backgroundColor: "#181818", // Set the base background color
     width: "100%",
   },
 
@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: "#2C2E4B", // Light gray circle background
+    backgroundColor: "#282828", // Light gray circle background
     justifyContent: "center",
     alignItems: "center",
     zIndex: 10,
@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
     height: 50, // Same height as search icon
     paddingHorizontal: 20,
     borderRadius: 25,
-    backgroundColor: "#2C2E4B", // Same as search icon background
+    backgroundColor: "#282828", // Same as search icon background
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -295,7 +295,123 @@ export const styles = StyleSheet.create({
     flexShrink: 1,
   },
 
-  // Continue Reading Section Styles
+  // Featured Book Section Styles
+  featuredBookSection: {
+    marginBottom: 30,
+    paddingHorizontal: 20,
+  },
+
+  featuredBookCard: {
+    backgroundColor: "#282828",
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+
+  featuredBookContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+
+  featuredBookInfo: {
+    flex: 1,
+    marginRight: 16,
+    justifyContent: "space-between",
+    minHeight: 150, // Ensure enough height for space-between to work
+  },
+
+  featuredBookTextContent: {},
+
+  featuredBookLabel: {
+    color: "#B5B5B5",
+    fontSize: 12,
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+
+  featuredBookTitle: {
+    color: colors.PrimaryWhite,
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 8,
+    lineHeight: 28,
+  },
+
+  featuredBookSubtitle: {
+    color: colors.GrayText,
+    fontSize: 14,
+    fontWeight: "400",
+    marginBottom: 16,
+  },
+
+  chapterProgressContainer: {
+    backgroundColor: "transparent",
+    padding: 0,
+    alignSelf: "stretch",
+  },
+
+  chapterInfoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+
+  chapterText: {
+    color: "#ECA7C8",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+
+  progressBarContainer: {
+    width: "100%",
+    marginBottom: 4,
+  },
+
+  progressBarTrack: {
+    height: 6,
+    backgroundColor: "rgba(236, 167, 200, 0.2)",
+    borderRadius: 3,
+    overflow: "hidden",
+  },
+
+  progressBarFill: {
+    height: "100%",
+    width: "50%", // 50% progress for chapter 2 of 4
+    backgroundColor: "#ECA7C8",
+    borderRadius: 3,
+  },
+
+  featuredBookImageContainer: {
+    width: 100,
+    height: 150,
+    borderRadius: 8,
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+
+  featuredBookImage: {
+    width: "100%",
+    height: "100%",
+  },
+
+  // Continue Reading Section Styles (for other sections)
   continueReadingSection: {
     marginBottom: 30,
   },
