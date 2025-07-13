@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -15,6 +15,8 @@ import {
   ButtonText,
   Heading,
   Paragraph,
+  SubHeading,
+  Title,
 } from "@/components/Text/TextComponents";
 import colors from "@/constants/colors";
 import {
@@ -25,11 +27,19 @@ import {
   newTestamentBooks,
   NewTestamentBook,
 } from "@/utils/data/newTestamentBooks";
+import { Twemoji } from "@/components/UI/Twemoji/Twemoji";
+import {
+  getBookSummaryByBook,
+  BookSummary,
+} from "@/lib/supabase/db/book_summaries";
 import { styles } from "./BookOverviewScreen.styles";
 
 export default function BookOverviewScreen() {
   const router = useRouter();
   const { bookName } = useLocalSearchParams<{ bookName: string }>();
+  const [bookSummary, setBookSummary] = useState<BookSummary | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Find book information and determine testament
   const bookInfo = useMemo(() => {
@@ -62,8 +72,79 @@ export default function BookOverviewScreen() {
     return null;
   }, [bookName]);
 
+  // Fetch book summary data on component mount
+  useEffect(() => {
+    const fetchBookSummary = async () => {
+      if (!bookName) return;
+
+      try {
+        setLoading(true);
+        const summary = await getBookSummaryByBook(bookName);
+        setBookSummary(summary);
+      } catch (error) {
+        console.error("Error fetching book summary:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookSummary();
+  }, [bookName]);
+
   const handleBack = () => {
     router.back();
+  };
+
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  // Function to truncate text for inline read more
+  const getTruncatedText = (text: string, maxLength: number = 130) => {
+    if (text.length <= maxLength) return text;
+    const truncated = text.substring(0, maxLength);
+    const lastSpace = truncated.lastIndexOf(" ");
+    return lastSpace > 0 ? truncated.substring(0, lastSpace) : truncated;
+  };
+
+  const renderSummaryText = () => {
+    if (!bookSummary?.short_summary) return null;
+
+    const fullText = bookSummary.short_summary;
+    const shouldTruncate = fullText.length > 130;
+    const themeColor = bookSummary?.theme_color || "#ECA7C8";
+
+    if (isExpanded || !shouldTruncate) {
+      return (
+        <View>
+          <Paragraph style={styles.summaryText}>{fullText}</Paragraph>
+          {shouldTruncate && (
+            <TouchableOpacity
+              onPress={toggleExpanded}
+              style={styles.readMoreButton}
+            >
+              <ButtonText style={[styles.readMoreText, { color: themeColor }]}>
+                Read Less
+              </ButtonText>
+            </TouchableOpacity>
+          )}
+        </View>
+      );
+    }
+
+    const truncatedText = getTruncatedText(fullText);
+
+    return (
+      <Paragraph style={styles.summaryText}>
+        {truncatedText}...
+        <Text
+          style={[styles.readMoreText, { color: themeColor }]}
+          onPress={toggleExpanded}
+        >
+          Read More
+        </Text>
+      </Paragraph>
+    );
   };
 
   return (
@@ -105,50 +186,45 @@ export default function BookOverviewScreen() {
           </View>
         </View>
 
-        {/* Book Info Section */}
-        <View style={styles.bookInfoSection}>
-          <View style={styles.infoCard}>
-            <ButtonText style={styles.infoLabel}>Book Name</ButtonText>
-            <Paragraph style={styles.infoValue}>{bookName}</Paragraph>
-          </View>
-
-          <View style={styles.infoCard}>
-            <ButtonText style={styles.infoLabel}>Testament</ButtonText>
-            <Paragraph style={styles.infoValue}>
-              {bookInfo?.testament || "Unknown"}
-            </Paragraph>
-          </View>
-
-          {bookInfo?.genre && (
-            <View style={styles.infoCard}>
-              <ButtonText style={styles.infoLabel}>Genre</ButtonText>
-              <Paragraph style={styles.infoValue}>{bookInfo.genre}</Paragraph>
+        {/* Stats Section */}
+        <View style={styles.statsSection}>
+          <Heading style={styles.statsTitle}>Stats</Heading>
+          <View style={styles.statsContainer}>
+            <View style={styles.statItem}>
+              <Twemoji hex="270d" size={24} />
+              <SubHeading style={styles.statValue}>
+                {loading ? "..." : `${bookSummary?.verses || 0} Verses`}
+              </SubHeading>
             </View>
-          )}
-
-          {bookInfo?.description && (
-            <View style={styles.infoCard}>
-              <ButtonText style={styles.infoLabel}>Description</ButtonText>
-              <Paragraph style={styles.infoValue}>
-                {bookInfo.description}
-              </Paragraph>
+            <View style={styles.statItem}>
+              <Twemoji hex="23f1" size={24} />
+              <SubHeading style={styles.statValue}>
+                {loading
+                  ? "..."
+                  : `${bookSummary?.read_time_minutes || 0} Minutes`}
+              </SubHeading>
             </View>
-          )}
+            <View style={styles.statItem}>
+              <Twemoji hex="1f4d6" size={24} />
+              <SubHeading style={styles.statValue}>
+                {loading ? "..." : `${bookSummary?.chapters || 0} Chapters`}
+              </SubHeading>
+            </View>
+          </View>
         </View>
 
-        {/* Action Buttons */}
-        <View style={styles.actionButtonsSection}>
-          <TouchableOpacity style={styles.primaryButton}>
-            <ButtonText style={styles.primaryButtonText}>
-              Start Reading
-            </ButtonText>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.secondaryButton}>
-            <ButtonText style={styles.secondaryButtonText}>
-              Add to Bookmarks
-            </ButtonText>
-          </TouchableOpacity>
+        {/* Summary Section */}
+        <View style={styles.summarySection}>
+          <Heading style={styles.summaryTitle}>Summary</Heading>
+          {loading ? (
+            <Paragraph style={styles.summaryText}>Loading summary...</Paragraph>
+          ) : bookSummary?.short_summary ? (
+            renderSummaryText()
+          ) : (
+            <Paragraph style={styles.summaryText}>
+              No summary available.
+            </Paragraph>
+          )}
         </View>
       </ScrollView>
     </View>

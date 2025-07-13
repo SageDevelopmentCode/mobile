@@ -24,6 +24,9 @@ const emojiAssets: { [key: string]: any } = {
   "1f644": require("@/assets/images/emojis/1f644.png"), // 🙄 selfish (eye roll)
   "1f32b": require("@/assets/images/emojis/1f32b.png"), // ◻️ isolated (white square)
   "1f973": require("@/assets/images/emojis/1f973.png"), // 🥳 celebrating (party face)
+  "270d": require("@/assets/images/emojis/270d.png"), // ✍️ writing hand (verses)
+  "23f1": require("@/assets/images/emojis/23f1.png"), // ⏱️ stopwatch (minutes)
+  "1f4d6": require("@/assets/images/emojis/1f4d6.png"), // 📖 open book (chapters)
 };
 
 interface TwemojiProps {

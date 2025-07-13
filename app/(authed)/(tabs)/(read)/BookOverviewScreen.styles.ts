@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   heroSection: {
-    height: height * 0.5,
+    height: height * 0.45,
     position: "relative",
     justifyContent: "center",
     alignItems: "center",
@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
   },
   heroHeader: {
     position: "absolute",
-    top: 70,
+    top: 60,
     left: 0,
     right: 0,
     flexDirection: "row",
@@ -58,13 +58,11 @@ export const styles = StyleSheet.create({
     zIndex: 3,
   },
   backButton: {
-    padding: 8,
-    width: 40,
-    height: 40,
+    padding: 13,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#282828",
-    borderRadius: 20,
+    borderRadius: 100,
   },
   heroTitle: {
     fontSize: 24,
@@ -74,13 +72,11 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   shareButton: {
-    padding: 8,
-    width: 40,
-    height: 40,
+    padding: 13,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#282828",
-    borderRadius: 20,
+    borderRadius: 100,
   },
   bookImageContainer: {
     shadowColor: "#000",
@@ -92,12 +88,60 @@ export const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 12,
     zIndex: 3,
-    marginTop: 60,
+    marginTop: 80,
   },
   bookImage: {
-    width: 160,
-    height: 250,
+    width: 150,
+    height: 240,
     borderRadius: 16,
+  },
+  statsSection: {
+    paddingHorizontal: 20,
+    marginBottom: 30,
+  },
+  statsTitle: {
+    fontWeight: "600",
+    color: colors.PrimaryWhite,
+    marginBottom: 16,
+  },
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  statItem: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  statValue: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "#B5B5B5",
+    marginLeft: 6,
+  },
+  summarySection: {
+    paddingHorizontal: 20,
+    marginBottom: 30,
+  },
+  summaryTitle: {
+    fontWeight: "600",
+    color: colors.PrimaryWhite,
+    marginBottom: 16,
+  },
+  summaryText: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#B5B5B5",
+    marginBottom: 12,
+  },
+  readMoreButton: {
+    alignSelf: "flex-start",
+    paddingVertical: 4,
+    marginTop: 8,
+  },
+  readMoreText: {
+    fontSize: 16,
+    fontWeight: "600",
   },
   bookInfoSection: {
     paddingHorizontal: 20,
