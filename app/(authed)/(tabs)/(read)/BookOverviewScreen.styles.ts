@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 120,
   },
   heroSection: {
     height: height * 0.45,
@@ -121,7 +121,7 @@ export const styles = StyleSheet.create({
   },
   summarySection: {
     paddingHorizontal: 20,
-    marginBottom: 10,
+    marginBottom: 40,
   },
   summaryTitle: {
     fontWeight: "600",
@@ -145,18 +145,26 @@ export const styles = StyleSheet.create({
   },
   hashtagsSection: {
     paddingHorizontal: 20,
-    marginBottom: 30,
+    marginBottom: 40,
   },
   hashtagsContainer: {
     paddingRight: 20,
     gap: 12,
   },
+  hashtagItem: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    backgroundColor: "transparent",
+  },
   hashtagText: {
+    fontSize: 14,
     fontWeight: "500",
   },
   themesSection: {
     paddingHorizontal: 20,
-    marginBottom: 30,
+    marginBottom: 40,
   },
   themesTitle: {
     fontWeight: "600",
@@ -179,7 +187,7 @@ export const styles = StyleSheet.create({
   },
   keyVerseSection: {
     paddingHorizontal: 20,
-    marginBottom: 30,
+    marginBottom: 40,
   },
   keyVerseTitle: {
     fontWeight: "600",
@@ -204,7 +212,7 @@ export const styles = StyleSheet.create({
   },
   charactersSection: {
     paddingHorizontal: 20,
-    marginBottom: 30,
+    marginBottom: 40,
   },
   charactersTitle: {
     fontWeight: "600",
@@ -224,6 +232,122 @@ export const styles = StyleSheet.create({
   characterText: {
     fontSize: 14,
     fontWeight: "500",
+  },
+  bottomButtonsContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingBottom: 30,
+    paddingTop: 12,
+    backgroundColor: "#181818",
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255, 255, 255, 0.1)",
+    gap: 12,
+  },
+  saveButton: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  readNowButton: {
+    flex: 1,
+    height: 56,
+    borderRadius: 28,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  readNowButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#FFFFFF",
+  },
+  commentsSection: {
+    paddingHorizontal: 20,
+    marginBottom: 40,
+  },
+  commentsTitle: {
+    fontWeight: "600",
+    color: colors.PrimaryWhite,
+    marginBottom: 16,
+  },
+  commentsContainer: {
+    gap: 16,
+  },
+  commentItem: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12,
+  },
+  commentAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+  },
+  commentContent: {
+    flex: 1,
+  },
+  commentHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  commentUsername: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: colors.PrimaryWhite,
+  },
+  commentTime: {
+    fontSize: 12,
+    color: "#888888",
+  },
+  commentText: {
+    fontSize: 14,
+    lineHeight: 20,
+    color: "#B5B5B5",
+  },
+  commentActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    marginTop: 8,
+  },
+  actionButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    paddingVertical: 4,
+  },
+  actionText: {
+    fontSize: 12,
+    color: "#B5B5B5",
+  },
+  viewRepliesButton: {
+    marginTop: 8,
+  },
+  viewRepliesText: {
+    fontSize: 12,
+    color: "#888888",
+    fontWeight: "500",
+  },
+  repliesContainer: {
+    marginTop: 12,
+    paddingLeft: 16,
+    borderLeftWidth: 2,
+    borderLeftColor: "rgba(255, 255, 255, 0.1)",
+  },
+  replyItem: {
+    marginLeft: 0,
   },
   bookInfoSection: {
     paddingHorizontal: 20,

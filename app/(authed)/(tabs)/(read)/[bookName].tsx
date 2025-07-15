@@ -7,7 +7,7 @@ import {
   Image,
   ImageBackground,
 } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 import { DynamicBookImage } from "@/components/UI/DynamicBookImage/DynamicBookImage";
@@ -33,6 +33,7 @@ import {
   BookSummary,
 } from "@/lib/supabase/db/book_summaries";
 import { styles } from "./BookOverviewScreen.styles";
+import { tabBarOptions } from "@/constants/tabBarOptions";
 
 export default function BookOverviewScreen() {
   const router = useRouter();
@@ -40,6 +41,10 @@ export default function BookOverviewScreen() {
   const [bookSummary, setBookSummary] = useState<BookSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [expandedReplies, setExpandedReplies] = useState<{
+    [key: number]: boolean;
+  }>({});
+  const navigation = useNavigation();
 
   // Find book information and determine testament
   const bookInfo = useMemo(() => {
@@ -91,12 +96,34 @@ export default function BookOverviewScreen() {
     fetchBookSummary();
   }, [bookName]);
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+    navigation.getParent()?.setOptions({
+      tabBarStyle: {
+        display: "none",
+      },
+    });
+    return () =>
+      navigation.getParent()?.setOptions({
+        ...tabBarOptions,
+      });
+  }, [navigation]);
+
   const handleBack = () => {
     router.back();
   };
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  const toggleReplies = (commentId: number) => {
+    setExpandedReplies((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId],
+    }));
   };
 
   // Function to truncate text for inline read more
@@ -136,16 +163,73 @@ export default function BookOverviewScreen() {
 
     return (
       <Paragraph style={styles.summaryText}>
-        {truncatedText}...
+        {truncatedText}
         <Text
           style={[styles.readMoreText, { color: themeColor }]}
           onPress={toggleExpanded}
         >
-          Read More
+          ... Read More
         </Text>
       </Paragraph>
     );
   };
+
+  const renderComment = (comment: any, isReply: boolean = false) => (
+    <View
+      key={comment.id}
+      style={[styles.commentItem, isReply && styles.replyItem]}
+    >
+      <Image source={{ uri: comment.avatar }} style={styles.commentAvatar} />
+      <View style={styles.commentContent}>
+        <View style={styles.commentHeader}>
+          <SubHeading style={styles.commentUsername}>
+            {comment.username}
+          </SubHeading>
+          <Text style={styles.commentTime}>{comment.timestamp}</Text>
+        </View>
+        <Paragraph style={styles.commentText}>{comment.text}</Paragraph>
+
+        {/* Action buttons */}
+        <View style={styles.commentActions}>
+          <TouchableOpacity style={styles.actionButton}>
+            <Ionicons
+              name="arrow-up"
+              size={16}
+              color={bookSummary?.theme_color || "#ECA7C8"}
+            />
+            <Text style={styles.actionText}>{comment.upvotes}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionButton}>
+            <Ionicons name="arrow-down" size={16} color="#B5B5B5" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionButton}>
+            <Ionicons name="chatbubble-outline" size={16} color="#B5B5B5" />
+            <Text style={styles.actionText}>Reply</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* View replies button */}
+        {!isReply && comment.replies && comment.replies.length > 0 && (
+          <TouchableOpacity
+            style={styles.viewRepliesButton}
+            onPress={() => toggleReplies(comment.id)}
+          >
+            <Text style={styles.viewRepliesText}>
+              {expandedReplies[comment.id] ? "Hide" : "View"}{" "}
+              {comment.replies.length} replies
+            </Text>
+          </TouchableOpacity>
+        )}
+
+        {/* Replies */}
+        {!isReply && expandedReplies[comment.id] && comment.replies && (
+          <View style={styles.repliesContainer}>
+            {comment.replies.map((reply: any) => renderComment(reply, true))}
+          </View>
+        )}
+      </View>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -360,7 +444,119 @@ export default function BookOverviewScreen() {
               </ScrollView>
             </View>
           )}
+
+        {/* Comments Section */}
+        <View style={styles.commentsSection}>
+          <Heading style={styles.commentsTitle}>
+            See what others are saying
+          </Heading>
+          <View style={styles.commentsContainer}>
+            {mockComments.map((comment) => renderComment(comment))}
+          </View>
+        </View>
       </ScrollView>
+
+      {/* Fixed Bottom Buttons */}
+      <View style={styles.bottomButtonsContainer}>
+        <TouchableOpacity style={styles.saveButton}>
+          <Ionicons name="bookmark-outline" size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.readNowButton,
+            { backgroundColor: `${bookSummary?.theme_color || "#ECA7C8"}95` },
+          ]}
+        >
+          <Ionicons name="book-outline" size={24} color="#FFFFFF" />
+          <ButtonText style={styles.readNowButtonText}>
+            Start Reading
+          </ButtonText>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
+
+// Mock comments data
+const mockComments = [
+  {
+    id: 1,
+    username: "Sarah_M",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108755-2616b0e86307?w=100&h=100&fit=crop&crop=face",
+    text: "This book completely changed my perspective on faith and redemption. The stories are so powerful and relatable.",
+    timestamp: "3 min. ago",
+    upvotes: 12,
+    replies: [
+      {
+        id: 11,
+        username: "David_K",
+        avatar:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+        text: "I agree! The character development is incredible.",
+        timestamp: "1 min. ago",
+        upvotes: 5,
+      },
+    ],
+  },
+  {
+    id: 2,
+    username: "David_K",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+    text: "I've read this multiple times and each time I discover something new. The character development is incredible.",
+    timestamp: "1 hour ago",
+    upvotes: 8,
+    replies: [
+      {
+        id: 21,
+        username: "Sarah_M",
+        avatar:
+          "https://images.unsplash.com/photo-1494790108755-2616b0e86307?w=100&h=100&fit=crop&crop=face",
+        text: "Me too! It's a timeless classic.",
+        timestamp: "30 min. ago",
+        upvotes: 3,
+      },
+    ],
+  },
+  {
+    id: 3,
+    username: "Grace_L",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+    text: "Perfect for understanding the foundations of faith. The historical context really brings the stories to life.",
+    timestamp: "2 hours ago",
+    upvotes: 15,
+    replies: [
+      {
+        id: 31,
+        username: "Michael_R",
+        avatar:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+        text: "Absolutely! The themes are so profound.",
+        timestamp: "1 hour ago",
+        upvotes: 7,
+      },
+    ],
+  },
+  {
+    id: 4,
+    username: "Michael_R",
+    avatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+    text: "The themes of covenant and promise run throughout beautifully. Such a meaningful read.",
+    timestamp: "1 day ago",
+    upvotes: 6,
+    replies: [
+      {
+        id: 41,
+        username: "Grace_L",
+        avatar:
+          "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+        text: "Yes, the symbolism is rich throughout.",
+        timestamp: "23 hours ago",
+        upvotes: 4,
+      },
+    ],
+  },
+];
