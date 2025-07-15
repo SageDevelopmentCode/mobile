@@ -19,7 +19,7 @@ export interface BookSummary {
   themes: string[] | null;
   key_verse: string;
   short_summary: string;
-  why_read_hashtag: string[] | null;
+  why_read_hashtags: string[] | null;
   theme_color: string;
 }
 

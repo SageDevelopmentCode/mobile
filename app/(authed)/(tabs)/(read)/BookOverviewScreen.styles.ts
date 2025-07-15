@@ -121,7 +121,7 @@ export const styles = StyleSheet.create({
   },
   summarySection: {
     paddingHorizontal: 20,
-    marginBottom: 30,
+    marginBottom: 10,
   },
   summaryTitle: {
     fontWeight: "600",
@@ -142,6 +142,88 @@ export const styles = StyleSheet.create({
   readMoreText: {
     fontSize: 16,
     fontWeight: "600",
+  },
+  hashtagsSection: {
+    paddingHorizontal: 20,
+    marginBottom: 30,
+  },
+  hashtagsContainer: {
+    paddingRight: 20,
+    gap: 12,
+  },
+  hashtagText: {
+    fontWeight: "500",
+  },
+  themesSection: {
+    paddingHorizontal: 20,
+    marginBottom: 30,
+  },
+  themesTitle: {
+    fontWeight: "600",
+    color: colors.PrimaryWhite,
+    marginBottom: 16,
+  },
+  themesContainer: {
+    paddingRight: 20,
+    gap: 12,
+  },
+  themeItem: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  themeText: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  keyVerseSection: {
+    paddingHorizontal: 20,
+    marginBottom: 30,
+  },
+  keyVerseTitle: {
+    fontWeight: "600",
+    color: colors.PrimaryWhite,
+    marginBottom: 16,
+  },
+  keyVerseContainer: {
+    padding: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    borderRadius: 12,
+  },
+  keyVerseReference: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+  keyVerseText: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#B5B5B5",
+    fontStyle: "italic",
+  },
+  charactersSection: {
+    paddingHorizontal: 20,
+    marginBottom: 30,
+  },
+  charactersTitle: {
+    fontWeight: "600",
+    color: colors.PrimaryWhite,
+    marginBottom: 16,
+  },
+  charactersContainer: {
+    paddingRight: 20,
+    gap: 12,
+  },
+  characterItem: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 25,
+    borderWidth: 1,
+  },
+  characterText: {
+    fontSize: 14,
+    fontWeight: "500",
   },
   bookInfoSection: {
     paddingHorizontal: 20,

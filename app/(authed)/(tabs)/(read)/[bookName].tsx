@@ -226,6 +226,140 @@ export default function BookOverviewScreen() {
             </Paragraph>
           )}
         </View>
+
+        {/* Why Read Hashtags Section */}
+        {!loading &&
+          bookSummary?.why_read_hashtags &&
+          bookSummary.why_read_hashtags.length > 0 && (
+            <View style={styles.hashtagsSection}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.hashtagsContainer}
+              >
+                {bookSummary.why_read_hashtags.map((hashtag, index) => (
+                  <View key={index}>
+                    <SubHeading
+                      style={[
+                        styles.hashtagText,
+                        { color: bookSummary.theme_color || "#ECA7C8" },
+                      ]}
+                    >
+                      {hashtag}
+                    </SubHeading>
+                  </View>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+
+        {/* Themes Section */}
+        {!loading && bookSummary?.themes && bookSummary.themes.length > 0 && (
+          <View style={styles.themesSection}>
+            <Heading style={styles.themesTitle}>Themes</Heading>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.themesContainer}
+            >
+              {bookSummary.themes.map((theme, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.themeItem,
+                    {
+                      backgroundColor: `${
+                        bookSummary.theme_color || "#ECA7C8"
+                      }20`,
+                      borderColor: bookSummary.theme_color || "#ECA7C8",
+                    },
+                  ]}
+                >
+                  <SubHeading
+                    style={[
+                      styles.themeText,
+                      { color: bookSummary.theme_color || "#ECA7C8" },
+                    ]}
+                  >
+                    {theme}
+                  </SubHeading>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {/* Key Verse Section */}
+        {!loading && bookSummary?.key_verse && (
+          <View style={styles.keyVerseSection}>
+            <Heading style={styles.keyVerseTitle}>Key Verse</Heading>
+            <View style={styles.keyVerseContainer}>
+              {(() => {
+                const parts = bookSummary.key_verse.split(" - ");
+                const reference = parts[0]?.trim();
+                const verseText = parts[1]?.trim();
+
+                return (
+                  <View>
+                    {reference && (
+                      <SubHeading
+                        style={[
+                          styles.keyVerseReference,
+                          { color: bookSummary.theme_color || "#ECA7C8" },
+                        ]}
+                      >
+                        {reference}
+                      </SubHeading>
+                    )}
+                    {verseText && (
+                      <Paragraph style={styles.keyVerseText}>
+                        {verseText}
+                      </Paragraph>
+                    )}
+                  </View>
+                );
+              })()}
+            </View>
+          </View>
+        )}
+
+        {/* Main Characters Section */}
+        {!loading &&
+          bookSummary?.main_characters &&
+          bookSummary.main_characters.length > 0 && (
+            <View style={styles.charactersSection}>
+              <Heading style={styles.charactersTitle}>Main Characters</Heading>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.charactersContainer}
+              >
+                {bookSummary.main_characters.map((character, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.characterItem,
+                      {
+                        backgroundColor: `${
+                          bookSummary.theme_color || "#ECA7C8"
+                        }15`,
+                        borderColor: bookSummary.theme_color || "#ECA7C8",
+                      },
+                    ]}
+                  >
+                    <SubHeading
+                      style={[
+                        styles.characterText,
+                        { color: bookSummary.theme_color || "#ECA7C8" },
+                      ]}
+                    >
+                      {character}
+                    </SubHeading>
+                  </View>
+                ))}
+              </ScrollView>
+            </View>
+          )}
       </ScrollView>
     </View>
   );
