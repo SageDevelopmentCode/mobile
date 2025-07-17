@@ -1,4 +1,4 @@
-import { makeSupabaseRequest } from "../rest-api";
+import { supabase } from "../supabase";
 import { addCurrencyToUser } from "./user_currency";
 
 // Type definition for user chest
@@ -13,15 +13,12 @@ interface UserChest {
 
 // Function to get all chests for a specific user
 export async function getUserChests(userId: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_chests",
-    "GET",
-    {
-      "user_id.eq": userId,
-      select: "*",
-      order: "created_at.desc",
-    }
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_chests")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.error(`Error fetching chests for user ${userId}:`, error);
@@ -33,21 +30,22 @@ export async function getUserChests(userId: string) {
 
 // Function to get a specific chest by ID
 export async function getChestById(chestId: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_chests",
-    "GET",
-    {
-      "id.eq": chestId,
-      select: "*",
-    }
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_chests")
+    .select("*")
+    .eq("id", chestId)
+    .single();
 
   if (error) {
     console.error(`Error fetching chest with ID ${chestId}:`, error);
+    if (error.code === "PGRST116") {
+      return null;
+    }
     throw error;
   }
 
-  return data?.[0] || null;
+  return data;
 }
 
 // Function to insert a new chest for a user and update last_daily_chest_opened_at
@@ -66,12 +64,12 @@ export async function insertUserChest(
   };
 
   // Insert the chest
-  const { data: chestData, error: chestError } = await makeSupabaseRequest(
-    "rest/v1/user_chests",
-    "POST",
-    {},
-    chestPayload
-  );
+  const { data: chestData, error: chestError } = await supabase
+    .schema("user_data")
+    .from("user_chests")
+    .insert(chestPayload)
+    .select()
+    .single();
 
   if (chestError) {
     console.error(`Error inserting chest for user ${userId}:`, chestError);
@@ -127,12 +125,11 @@ export async function insertUserChest(
       break;
   }
 
-  const { data: userData, error: userError } = await makeSupabaseRequest(
-    "rest/v1/users",
-    "PATCH",
-    { "id.eq": userId },
-    { [updateField]: timestamp }
-  );
+  const { data: userData, error: userError } = await supabase
+    .schema("app")
+    .from("users")
+    .update({ [updateField]: timestamp })
+    .eq("id", userId);
 
   if (userError) {
     console.error(
@@ -142,7 +139,7 @@ export async function insertUserChest(
     throw userError;
   }
 
-  return chestData?.[0] || null;
+  return chestData;
 }
 
 // Function to get user's chest statistics
@@ -202,16 +199,13 @@ export async function getChestStatsByType(userId: string, chestType: string) {
 
 // Function to get unopened chests for a user
 export async function getUnopenedChests(userId: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_chests",
-    "GET",
-    {
-      "user_id.eq": userId,
-      "opened_at.is": "null",
-      select: "*",
-      order: "created_at.desc",
-    }
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_chests")
+    .select("*")
+    .eq("user_id", userId)
+    .is("opened_at", null)
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.error(`Error fetching unopened chests for user ${userId}:`, error);
@@ -223,16 +217,13 @@ export async function getUnopenedChests(userId: string) {
 
 // Function to get opened chests for a user
 export async function getOpenedChests(userId: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_chests",
-    "GET",
-    {
-      "user_id.eq": userId,
-      "opened_at.not.is": "null",
-      select: "*",
-      order: "opened_at.desc",
-    }
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_chests")
+    .select("*")
+    .eq("user_id", userId)
+    .not("opened_at", "is", null)
+    .order("opened_at", { ascending: false });
 
   if (error) {
     console.error(`Error fetching opened chests for user ${userId}:`, error);
@@ -244,16 +235,13 @@ export async function getOpenedChests(userId: string) {
 
 // Function to get chests by type for a user
 export async function getChestsByType(userId: string, chestType: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_chests",
-    "GET",
-    {
-      "user_id.eq": userId,
-      "chest_type.eq": chestType,
-      select: "*",
-      order: "created_at.desc",
-    }
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_chests")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("chest_type", chestType)
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.error(
@@ -271,36 +259,37 @@ export async function getUserLastChestByType(
   userId: string,
   chestType: string
 ) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_chests",
-    "GET",
-    {
-      "user_id.eq": userId,
-      "chest_type.eq": chestType,
-      select: "*",
-      order: "created_at.desc",
-      limit: 1,
-    }
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_chests")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("chest_type", chestType)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
 
   if (error) {
     console.error(
       `Error fetching last ${chestType} chest for user ${userId}:`,
       error
     );
+    if (error.code === "PGRST116") {
+      return null;
+    }
     throw error;
   }
 
-  return data?.[0] || null;
+  return data;
 }
 
 // Function to delete a chest (admin only or for cleanup)
 export async function deleteChest(chestId: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_chests",
-    "DELETE",
-    { "id.eq": chestId }
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_chests")
+    .delete()
+    .eq("id", chestId);
 
   if (error) {
     console.error(`Error deleting chest ${chestId}:`, error);

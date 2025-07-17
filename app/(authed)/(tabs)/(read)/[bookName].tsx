@@ -15,6 +15,7 @@ import {
   ButtonText,
   Heading,
   Paragraph,
+  SectionTitle,
   SubHeading,
   Title,
 } from "@/components/Text/TextComponents";
@@ -272,7 +273,7 @@ export default function BookOverviewScreen() {
 
         {/* Stats Section */}
         <View style={styles.statsSection}>
-          <Heading style={styles.statsTitle}>Stats</Heading>
+          <SectionTitle style={styles.statsTitle}>Stats</SectionTitle>
           <View style={styles.statsContainer}>
             <View style={styles.statItem}>
               <Twemoji hex="270d" size={24} />
@@ -299,7 +300,7 @@ export default function BookOverviewScreen() {
 
         {/* Summary Section */}
         <View style={styles.summarySection}>
-          <Heading style={styles.summaryTitle}>Summary</Heading>
+          <SectionTitle style={styles.summaryTitle}>Summary</SectionTitle>
           {loading ? (
             <Paragraph style={styles.summaryText}>Loading summary...</Paragraph>
           ) : bookSummary?.short_summary ? (
@@ -340,7 +341,7 @@ export default function BookOverviewScreen() {
         {/* Themes Section */}
         {!loading && bookSummary?.themes && bookSummary.themes.length > 0 && (
           <View style={styles.themesSection}>
-            <Heading style={styles.themesTitle}>Themes</Heading>
+            <SectionTitle style={styles.themesTitle}>Themes</SectionTitle>
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -376,7 +377,7 @@ export default function BookOverviewScreen() {
         {/* Key Verse Section */}
         {!loading && bookSummary?.key_verse && (
           <View style={styles.keyVerseSection}>
-            <Heading style={styles.keyVerseTitle}>Key Verse</Heading>
+            <SectionTitle style={styles.keyVerseTitle}>Key Verse</SectionTitle>
             <View style={styles.keyVerseContainer}>
               {(() => {
                 const parts = bookSummary.key_verse.split(" - ");
@@ -412,7 +413,9 @@ export default function BookOverviewScreen() {
           bookSummary?.main_characters &&
           bookSummary.main_characters.length > 0 && (
             <View style={styles.charactersSection}>
-              <Heading style={styles.charactersTitle}>Main Characters</Heading>
+              <SectionTitle style={styles.charactersTitle}>
+                Main Characters
+              </SectionTitle>
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
@@ -447,9 +450,9 @@ export default function BookOverviewScreen() {
 
         {/* Comments Section */}
         <View style={styles.commentsSection}>
-          <Heading style={styles.commentsTitle}>
+          <SectionTitle style={styles.commentsTitle}>
             See what others are saying
-          </Heading>
+          </SectionTitle>
           <View style={styles.commentsContainer}>
             {mockComments.map((comment) => renderComment(comment))}
           </View>

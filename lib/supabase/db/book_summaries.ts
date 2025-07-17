@@ -1,4 +1,4 @@
-import { makeSupabaseRequest } from "../rest-api";
+import { supabase } from "../supabase";
 
 // Define the BookSummary interface based on the database schema
 export interface BookSummary {
@@ -23,13 +23,13 @@ export interface BookSummary {
   theme_color: string;
 }
 
-// Function to get all book summaries using REST API
+// Function to get all book summaries using Supabase client
 export async function getAllBookSummaries() {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/book_summaries",
-    "GET",
-    { order: "book" }
-  );
+  const { data, error } = await supabase
+    .schema("content")
+    .from("book_summaries")
+    .select("*")
+    .order("book");
 
   if (error) {
     console.error("Error fetching book summaries:", error);
@@ -39,58 +39,50 @@ export async function getAllBookSummaries() {
   return data;
 }
 
-// Function to get a book summary by book name using REST API
+// Function to get a book summary by book name using Supabase client
 export async function getBookSummaryByBook(bookName: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/book_summaries",
-    "GET",
-    { "book.eq": bookName }
-  );
+  const { data, error } = await supabase
+    .schema("content")
+    .from("book_summaries")
+    .select("*")
+    .eq("book", bookName)
+    .single();
 
   if (error) {
     console.error(`Error fetching book summary for ${bookName}:`, error);
     throw error;
   }
 
-  // REST API returns an array, but we want a single object
-  if (Array.isArray(data) && data.length > 0) {
-    return data[0];
-  }
-
-  throw new Error(`Book summary for ${bookName} not found`);
+  return data;
 }
 
-// Function to get a single book summary by ID using REST API
+// Function to get a single book summary by ID using Supabase client
 export async function getBookSummaryById(id: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/book_summaries",
-    "GET",
-    { "id.eq": id }
-  );
+  const { data, error } = await supabase
+    .schema("content")
+    .from("book_summaries")
+    .select("*")
+    .eq("id", id)
+    .single();
 
   if (error) {
     console.error(`Error fetching book summary with ID ${id}:`, error);
     throw error;
   }
 
-  // REST API returns an array, but we want a single object
-  if (Array.isArray(data) && data.length > 0) {
-    return data[0];
-  }
-
-  throw new Error(`Book summary with ID ${id} not found`);
+  return data;
 }
 
-// Function to create a new book summary using REST API
+// Function to create a new book summary using Supabase client
 export async function createBookSummary(
   bookSummary: Omit<BookSummary, "id" | "created_at">
 ) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/book_summaries",
-    "POST",
-    {},
-    bookSummary
-  );
+  const { data, error } = await supabase
+    .schema("content")
+    .from("book_summaries")
+    .insert(bookSummary)
+    .select()
+    .single();
 
   if (error) {
     console.error("Error creating book summary:", error);
@@ -100,38 +92,34 @@ export async function createBookSummary(
   return data;
 }
 
-// Function to update an existing book summary using REST API
+// Function to update an existing book summary using Supabase client
 export async function updateBookSummary(
   id: string,
   bookSummaryData: Partial<Omit<BookSummary, "id" | "created_at">>
 ) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/book_summaries",
-    "PATCH",
-    { "id.eq": id },
-    bookSummaryData
-  );
+  const { data, error } = await supabase
+    .schema("content")
+    .from("book_summaries")
+    .update(bookSummaryData)
+    .eq("id", id)
+    .select()
+    .single();
 
   if (error) {
     console.error(`Error updating book summary with ID ${id}:`, error);
     throw error;
   }
 
-  // REST API might return multiple records, we want the updated one
-  if (Array.isArray(data) && data.length > 0) {
-    return data[0];
-  }
-
   return data;
 }
 
-// Function to delete a book summary using REST API
+// Function to delete a book summary using Supabase client
 export async function deleteBookSummary(id: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/book_summaries",
-    "DELETE",
-    { "id.eq": id }
-  );
+  const { data, error } = await supabase
+    .schema("content")
+    .from("book_summaries")
+    .delete()
+    .eq("id", id);
 
   if (error) {
     console.error(`Error deleting book summary with ID ${id}:`, error);
@@ -141,13 +129,14 @@ export async function deleteBookSummary(id: string) {
   return true;
 }
 
-// Function to search book summaries by book name using REST API
+// Function to search book summaries by book name using Supabase client
 export async function searchBookSummariesByName(query: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/book_summaries",
-    "GET",
-    { "book.ilike": `%${query}%`, order: "book" }
-  );
+  const { data, error } = await supabase
+    .schema("content")
+    .from("book_summaries")
+    .select("*")
+    .ilike("book", `%${query}%`)
+    .order("book");
 
   if (error) {
     console.error("Error searching book summaries:", error);
@@ -157,13 +146,14 @@ export async function searchBookSummariesByName(query: string) {
   return data;
 }
 
-// Function to filter book summaries by genre using REST API
+// Function to filter book summaries by genre using Supabase client
 export async function getBookSummariesByGenre(genre: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/book_summaries",
-    "GET",
-    { "genre.cs": `["${genre}"]`, order: "book" }
-  );
+  const { data, error } = await supabase
+    .schema("content")
+    .from("book_summaries")
+    .select("*")
+    .contains("genre", [genre])
+    .order("book");
 
   if (error) {
     console.error(`Error fetching book summaries with genre ${genre}:`, error);
@@ -173,13 +163,14 @@ export async function getBookSummariesByGenre(genre: string) {
   return data;
 }
 
-// Function to filter book summaries by author using REST API
+// Function to filter book summaries by author using Supabase client
 export async function getBookSummariesByAuthor(author: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/book_summaries",
-    "GET",
-    { "author.eq": author, order: "book" }
-  );
+  const { data, error } = await supabase
+    .schema("content")
+    .from("book_summaries")
+    .select("*")
+    .eq("author", author)
+    .order("book");
 
   if (error) {
     console.error(`Error fetching book summaries by author ${author}:`, error);
@@ -189,25 +180,22 @@ export async function getBookSummariesByAuthor(author: string) {
   return data;
 }
 
-// Function to get book summaries by reading time range using REST API
+// Function to get book summaries by reading time range using Supabase client
 export async function getBookSummariesByReadingTime(
   minMinutes: number,
   maxMinutes?: number
 ) {
-  const filters: any = {
-    "read_time_minutes.gte": minMinutes,
-    order: "read_time_minutes",
-  };
+  let query = supabase
+    .schema("content")
+    .from("book_summaries")
+    .select("*")
+    .gte("read_time_minutes", minMinutes);
 
   if (maxMinutes) {
-    filters["read_time_minutes.lte"] = maxMinutes;
+    query = query.lte("read_time_minutes", maxMinutes);
   }
 
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/book_summaries",
-    "GET",
-    filters
-  );
+  const { data, error } = await query.order("read_time_minutes");
 
   if (error) {
     console.error(`Error fetching book summaries by reading time:`, error);

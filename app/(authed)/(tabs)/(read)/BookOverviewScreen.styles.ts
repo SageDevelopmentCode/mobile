@@ -121,7 +121,7 @@ export const styles = StyleSheet.create({
   },
   summarySection: {
     paddingHorizontal: 20,
-    marginBottom: 40,
+    marginBottom: 10,
   },
   summaryTitle: {
     fontWeight: "600",

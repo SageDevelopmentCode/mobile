@@ -1,4 +1,4 @@
-import { makeSupabaseRequest } from "../rest-api";
+import { supabase } from "../supabase";
 
 // Define the UserCurrency interface based on the database schema
 export interface UserCurrency {
@@ -10,128 +10,108 @@ export interface UserCurrency {
   fruit: number;
 }
 
-// Function to create a new user currency record using REST API
+// Function to create a new user currency record using Supabase client
 export async function createUserCurrency(
   currencyData: Omit<UserCurrency, "id" | "created_at">
 ) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_currency",
-    "POST",
-    {},
-    currencyData
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_currency")
+    .insert(currencyData)
+    .select()
+    .single();
 
   if (error) {
     console.error("Error creating user currency:", error);
     throw error;
   }
 
-  // REST API may return an array, but we want a single object
-  if (Array.isArray(data) && data.length > 0) {
-    return data[0];
-  }
-
   return data;
 }
 
-// Function to get user currency for a specific user using REST API
+// Function to get user currency for a specific user using Supabase client
 export async function getUserCurrency(userId: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_currency",
-    "GET",
-    {
-      "user_id.eq": userId,
-      order: "created_at.desc",
-      limit: 1,
-    }
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_currency")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
 
   if (error) {
     console.error("Error fetching user currency:", error);
+    // Return null if no currency record found instead of throwing
+    if (error.code === "PGRST116") {
+      return null;
+    }
     throw error;
   }
 
-  // REST API returns an array, but we want a single object
-  if (Array.isArray(data) && data.length > 0) {
-    return data[0] as UserCurrency;
-  }
-
-  // Return null if no currency record found
-  return null;
+  return data as UserCurrency;
 }
 
-// Function to get user currency by ID using REST API
+// Function to get user currency by ID using Supabase client
 export async function getUserCurrencyById(id: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_currency",
-    "GET",
-    { "id.eq": id }
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_currency")
+    .select("*")
+    .eq("id", id)
+    .single();
 
   if (error) {
     console.error(`Error fetching user currency with ID ${id}:`, error);
     throw error;
   }
 
-  // REST API returns an array, but we want a single object
-  if (Array.isArray(data) && data.length > 0) {
-    return data[0] as UserCurrency;
-  }
-
-  throw new Error(`User currency with ID ${id} not found`);
+  return data as UserCurrency;
 }
 
-// Function to update an existing user currency using REST API
+// Function to update an existing user currency using Supabase client
 export async function updateUserCurrency(
   id: string,
   currencyData: Partial<Omit<UserCurrency, "id" | "created_at" | "user_id">>
 ) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_currency",
-    "PATCH",
-    { "id.eq": id },
-    currencyData
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_currency")
+    .update(currencyData)
+    .eq("id", id)
+    .select()
+    .single();
 
   if (error) {
     console.error(`Error updating user currency with ID ${id}:`, error);
     throw error;
   }
 
-  // REST API may return an array, but we want a single object
-  if (Array.isArray(data) && data.length > 0) {
-    return data[0];
-  }
-
   return data;
 }
 
-// Function to update user currency by user_id using REST API
+// Function to update user currency by user_id using Supabase client
 export async function updateUserCurrencyByUserId(
   userId: string,
   currencyData: Partial<Omit<UserCurrency, "id" | "created_at" | "user_id">>
 ) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_currency",
-    "PATCH",
-    { "user_id.eq": userId },
-    currencyData
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_currency")
+    .update(currencyData)
+    .eq("user_id", userId)
+    .select()
+    .single();
 
   if (error) {
     console.error(`Error updating user currency for user ${userId}:`, error);
     throw error;
   }
 
-  // REST API may return an array, but we want a single object
-  if (Array.isArray(data) && data.length > 0) {
-    return data[0];
-  }
-
   return data;
 }
 
-// Function to add currency to user's existing balance using REST API
+// Function to add currency to user's existing balance using Supabase client
 export async function addCurrencyToUser(
   userId: string,
   denariiToAdd: number = 0,
@@ -161,7 +141,7 @@ export async function addCurrencyToUser(
   return updatedCurrency;
 }
 
-// Function to subtract currency from user's existing balance using REST API
+// Function to subtract currency from user's existing balance using Supabase client
 export async function subtractCurrencyFromUser(
   userId: string,
   denariiToSubtract: number = 0,
@@ -204,16 +184,14 @@ export async function subtractCurrencyFromUser(
   return updatedCurrency;
 }
 
-// Function to get all currency records for a specific user using REST API
+// Function to get all currency records for a specific user using Supabase client
 export async function getAllUserCurrencyRecords(userId: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_currency",
-    "GET",
-    {
-      "user_id.eq": userId,
-      order: "created_at.desc",
-    }
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_currency")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching user currency records:", error);

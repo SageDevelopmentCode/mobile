@@ -74,7 +74,7 @@ export async function makeSupabaseRequest(
       ? SUPABASE_URL
       : `${SUPABASE_URL}/`;
     const url = `${baseUrl}${endpoint}${queryString ? `?${queryString}` : ""}`;
-
+    console.log("Final URL:", url); // Add this line
     const headers = await getDefaultHeaders();
 
     const requestOptions: RequestInit = {

@@ -46,6 +46,33 @@ const Title = ({ style, children, color, ...props }: BaseTextProps) => {
   );
 };
 
+const SectionTitle = ({ style, children, color, ...props }: BaseTextProps) => {
+  const [fontsLoaded] = useFonts({
+    Nunito_900Black,
+    Nunito_800ExtraBold,
+    Nunito_700Bold,
+    NunitoSans_600SemiBold,
+  });
+
+  if (!fontsLoaded) {
+    return <Text>Loading...</Text>;
+  }
+
+  return (
+    <Text
+      style={[
+        styles.sectionTitle,
+        color ? { color } : {},
+        style,
+        { fontFamily: "Nunito_800ExtraBold" },
+      ]}
+      {...props}
+    >
+      {children}
+    </Text>
+  );
+};
+
 // Heading component
 const Heading = ({ style, children, color, ...props }: BaseTextProps) => {
   const [fontsLoaded] = useFonts({
@@ -182,4 +209,12 @@ const Paragraph = ({ style, children, color, ...props }: BaseTextProps) => {
   );
 };
 
-export { Heading, SubHeading, Paragraph, ButtonText, Title, StatText };
+export {
+  Heading,
+  SubHeading,
+  Paragraph,
+  ButtonText,
+  Title,
+  StatText,
+  SectionTitle,
+};

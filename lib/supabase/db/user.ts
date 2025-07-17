@@ -1,47 +1,41 @@
-import { makeSupabaseRequest } from "../rest-api";
+import { supabase } from "../supabase";
 
 // Function to get a user by ID
 export async function getUserById(id: string) {
-  const { data, error } = await makeSupabaseRequest("rest/v1/users", "GET", {
-    "id.eq": id,
-    select: "*",
-  });
+  const { data, error } = await supabase
+    .schema("app") // Specify schema here
+    .from("users")
+    .select("*")
+    .eq("id", id)
+    .single();
 
-  if (error) {
-    console.error(`Error fetching user with ID ${id}:`, error);
-    throw error;
-  }
-
-  return data?.[0] || null;
+  if (error) throw error;
+  return data;
 }
 
 // Function to get the current authenticated user
 export async function getCurrentUser() {
-  const { data: authData, error: authError } = await makeSupabaseRequest(
-    "auth/v1/user",
-    "GET"
-  );
+  const { data: authData, error: authError } = await supabase.auth.getUser();
 
   if (authError) {
     console.error("Error getting authenticated user:", authError);
     throw authError;
   }
 
-  if (!authData?.id) {
+  if (!authData?.user?.id) {
     throw new Error("No authenticated user found");
   }
 
-  return getUserById(authData.id);
+  return getUserById(authData.user.id);
 }
 
 // Function to update a user's last login timestamp
 export async function updateLastLogin(userId: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/users",
-    "PATCH",
-    { "id.eq": userId },
-    { last_login: new Date().toISOString() }
-  );
+  const { data, error } = await supabase
+    .schema("app")
+    .from("users")
+    .update({ last_login: new Date().toISOString() })
+    .eq("id", userId);
 
   if (error) {
     console.error(`Error updating last_login for user ${userId}:`, error);
@@ -53,12 +47,11 @@ export async function updateLastLogin(userId: string) {
 
 // Function to update a user's energy points
 export async function updateEnergyPoints(userId: string, points: number) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/users",
-    "PATCH",
-    { "id.eq": userId },
-    { energy_points: points }
-  );
+  const { data, error } = await supabase
+    .schema("app")
+    .from("users")
+    .update({ energy_points: points })
+    .eq("id", userId);
 
   if (error) {
     console.error(`Error updating energy_points for user ${userId}:`, error);
@@ -73,15 +66,14 @@ export async function resetEnergyPoints(
   userId: string,
   defaultPoints: number = 100
 ) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/users",
-    "PATCH",
-    { "id.eq": userId },
-    {
+  const { data, error } = await supabase
+    .schema("app")
+    .from("users")
+    .update({
       energy_points: defaultPoints,
       energy_last_reset: new Date().toISOString(),
-    }
-  );
+    })
+    .eq("id", userId);
 
   if (error) {
     console.error(`Error resetting energy for user ${userId}:`, error);
@@ -97,15 +89,14 @@ export async function updateLevelAndExperience(
   level: number,
   experiencePoints: number
 ) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/users",
-    "PATCH",
-    { "id.eq": userId },
-    {
+  const { data, error } = await supabase
+    .schema("app")
+    .from("users")
+    .update({
       level,
       experience_points: experiencePoints,
-    }
-  );
+    })
+    .eq("id", userId);
 
   if (error) {
     console.error(
@@ -143,12 +134,11 @@ export async function addExperiencePoints(userId: string, pointsToAdd: number) {
 
 // Function to update a user's username
 export async function updateUsername(userId: string, newUsername: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/users",
-    "PATCH",
-    { "id.eq": userId },
-    { username: newUsername }
-  );
+  const { data, error } = await supabase
+    .schema("app")
+    .from("users")
+    .update({ username: newUsername })
+    .eq("id", userId);
 
   if (error) {
     console.error(`Error updating username for user ${userId}:`, error);
@@ -160,10 +150,11 @@ export async function updateUsername(userId: string, newUsername: string) {
 
 // Function to get all users (admin only)
 export async function getAllUsers() {
-  const { data, error } = await makeSupabaseRequest("rest/v1/users", "GET", {
-    select: "*",
-    order: "created_at.desc",
-  });
+  const { data, error } = await supabase
+    .schema("app")
+    .from("users")
+    .select("*")
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching users:", error);

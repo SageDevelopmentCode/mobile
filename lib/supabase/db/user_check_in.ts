@@ -1,4 +1,4 @@
-import { makeSupabaseRequest } from "../rest-api";
+import { supabase } from "../supabase";
 
 // Define the UserCheckIn interface based on the database schema
 export interface UserCheckIn {
@@ -14,40 +14,33 @@ export interface UserCheckIn {
   bonus_rewards?: any; // Using 'any' for JSONB
 }
 
-// Function to create a new user check-in record using REST API
+// Function to create a new user check-in record using Supabase client
 export async function createUserCheckIn(
   checkInData: Omit<UserCheckIn, "id" | "created_at">
 ) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_check_in",
-    "POST",
-    {},
-    checkInData
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_check_in")
+    .insert(checkInData)
+    .select()
+    .single();
 
   if (error) {
     console.error("Error creating user check-in:", error);
     throw error;
   }
 
-  // REST API may return an array, but we want a single object
-  if (Array.isArray(data) && data.length > 0) {
-    return data[0];
-  }
-
   return data;
 }
 
-// Function to get user check-ins for a specific user using REST API
+// Function to get user check-ins for a specific user using Supabase client
 export async function getUserCheckIns(userId: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_check_in",
-    "GET",
-    {
-      "user_id.eq": userId,
-      order: "created_at.desc",
-    }
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_check_in")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching user check-ins:", error);
@@ -57,79 +50,68 @@ export async function getUserCheckIns(userId: string) {
   return data;
 }
 
-// Function to get the latest user check-in for a specific user using REST API
+// Function to get the latest user check-in for a specific user using Supabase client
 export async function getLatestUserCheckIn(userId: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_check_in",
-    "GET",
-    {
-      "user_id.eq": userId,
-      order: "created_at.desc",
-      limit: 1,
-    }
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_check_in")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
 
   if (error) {
     console.error("Error fetching latest user check-in:", error);
+    // Return null if no check-in found instead of throwing
+    if (error.code === "PGRST116") {
+      return null;
+    }
     throw error;
   }
 
-  // REST API returns an array, but we want a single object
-  if (Array.isArray(data) && data.length > 0) {
-    return data[0] as UserCheckIn;
-  }
-
-  // Return null if no check-in found
-  return null;
+  return data as UserCheckIn;
 }
 
-// Function to get user check-in by ID using REST API
+// Function to get user check-in by ID using Supabase client
 export async function getUserCheckInById(id: string) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_check_in",
-    "GET",
-    { "id.eq": id }
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_check_in")
+    .select("*")
+    .eq("id", id)
+    .single();
 
   if (error) {
     console.error(`Error fetching user check-in with ID ${id}:`, error);
     throw error;
   }
 
-  // REST API returns an array, but we want a single object
-  if (Array.isArray(data) && data.length > 0) {
-    return data[0] as UserCheckIn;
-  }
-
-  throw new Error(`User check-in with ID ${id} not found`);
+  return data as UserCheckIn;
 }
 
-// Function to update an existing user check-in using REST API
+// Function to update an existing user check-in using Supabase client
 export async function updateUserCheckIn(
   id: string,
   checkInData: Partial<Omit<UserCheckIn, "id" | "created_at" | "user_id">>
 ) {
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_check_in",
-    "PATCH",
-    { "id.eq": id },
-    checkInData
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_check_in")
+    .update(checkInData)
+    .eq("id", id)
+    .select()
+    .single();
 
   if (error) {
     console.error(`Error updating user check-in with ID ${id}:`, error);
     throw error;
   }
 
-  // REST API may return an array, but we want a single object
-  if (Array.isArray(data) && data.length > 0) {
-    return data[0];
-  }
-
   return data;
 }
 
-// Function to get the count of user check-ins for today's date using REST API
+// Function to get the count of user check-ins for today's date using Supabase client
 export async function getUserCheckInCountForToday(
   userId: string
 ): Promise<number> {
@@ -150,16 +132,13 @@ export async function getUserCheckInCountForToday(
   const startDate = todayStart.toISOString();
   const endDate = todayEnd.toISOString();
 
-  const { data, error } = await makeSupabaseRequest(
-    "rest/v1/user_check_in",
-    "GET",
-    {
-      "user_id.eq": userId,
-      "created_at.gte": startDate,
-      "created_at.lt": endDate,
-      select: "id", // Only select ID to minimize data transfer
-    }
-  );
+  const { data, error } = await supabase
+    .schema("user_data")
+    .from("user_check_in")
+    .select("id", { count: "exact" })
+    .eq("user_id", userId)
+    .gte("created_at", startDate)
+    .lt("created_at", endDate);
 
   if (error) {
     console.error("Error fetching user check-ins for today:", error);
@@ -167,5 +146,5 @@ export async function getUserCheckInCountForToday(
   }
 
   // Return the count of check-ins
-  return Array.isArray(data) ? data.length : 0;
+  return data?.length || 0;
 }

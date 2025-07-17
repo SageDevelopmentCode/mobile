@@ -7,8 +7,13 @@ export const styles = StyleSheet.create({
     fontWeight: 800,
     color: colors.DarkPrimaryText,
   },
-  heading: {
+  sectionTitle: {
     fontSize: 20,
+    fontWeight: 800,
+    color: colors.DarkPrimaryText,
+  },
+  heading: {
+    fontSize: 16,
     fontWeight: 800,
     color: colors.DarkPrimaryText,
   },
