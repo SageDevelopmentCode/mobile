@@ -14,6 +14,7 @@ import { getChapter, Verse } from "@/lib/api/bible";
 import { tabBarOptions } from "@/constants/tabBarOptions";
 import colors from "@/constants/colors";
 import { styles } from "./reading.styles";
+import { FontAwesome6 } from "@/utils/icons";
 
 const { width } = Dimensions.get("window");
 
@@ -41,6 +42,7 @@ export default function ReadingScreen() {
         ...tabBarOptions.tabBarStyle,
         backgroundColor: "#282828",
       },
+      tabBarActiveTintColor: themeColor || "#888888",
     });
   }, [navigation]);
 
@@ -85,18 +87,12 @@ export default function ReadingScreen() {
 
   const renderVerse = (verse: Verse, index: number) => (
     <View key={verse.id} style={styles.verseContainer}>
-      <Text
-        style={[
-          styles.verseNumber,
-          {
-            fontSize: fontSize - 4,
-            color: themeColor || "#888888",
-          },
-        ]}
-      >
-        {verse.verseId}
+      <Text style={[styles.verseText, { fontSize }]}>
+        <Text style={{ color: themeColor || "#888888", fontWeight: "700" }}>
+          {verse.verseId}{" "}
+        </Text>
+        {verse.verse}
       </Text>
-      <Text style={[styles.verseText, { fontSize }]}>{verse.verse}</Text>
     </View>
   );
 
@@ -104,13 +100,35 @@ export default function ReadingScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>
-            {bookName} {currentChapter}
-          </Text>
-          <View style={styles.placeholder} />
+          <View style={styles.leftSection}>
+            <View style={styles.connectedPill}>
+              <View style={styles.bookChapterSection}>
+                <Text
+                  style={[styles.pillText, { color: themeColor || "#FFFFFF" }]}
+                >
+                  {bookName} {currentChapter}
+                </Text>
+              </View>
+              <View style={styles.translationSection}>
+                <Text style={styles.pillText}>NIV</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.rightSection}>
+            <TouchableOpacity style={styles.iconButton}>
+              <Ionicons name="search-outline" size={24} color="#FFFFFF" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => router.push("/(authed)/(tabs)/(read)")}
+            >
+              <Ionicons name="book-outline" size={24} color="#FFFFFF" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton}>
+              <Ionicons name="ellipsis-horizontal" size={24} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.PrimaryWhite} />
@@ -124,18 +142,38 @@ export default function ReadingScreen() {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>
-          {bookName} {currentChapter}
-        </Text>
-        <TouchableOpacity
-          style={styles.settingsButton}
-          onPress={() => setShowSettings(!showSettings)}
-        >
-          <Ionicons name="settings-outline" size={24} color="#FFFFFF" />
-        </TouchableOpacity>
+        <View style={styles.leftSection}>
+          <View style={styles.connectedPill}>
+            <View style={styles.bookChapterSection}>
+              <Text
+                style={[styles.pillText, { color: themeColor || "#FFFFFF" }]}
+              >
+                {bookName} {currentChapter}
+              </Text>
+            </View>
+            <View style={styles.translationSection}>
+              <Text style={styles.pillText}>NIV</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.rightSection}>
+          <TouchableOpacity style={styles.iconButton}>
+            <Ionicons name="search" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => router.push("/(authed)/(tabs)/(read)")}
+          >
+            <Ionicons name="book" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => setShowSettings(!showSettings)}
+          >
+            <Ionicons name="ellipsis-horizontal" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Settings Panel */}
@@ -168,10 +206,6 @@ export default function ReadingScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.chapterHeader}>
-          <Text style={styles.chapterTitle}>Chapter {currentChapter}</Text>
-        </View>
-
         <View style={styles.versesContainer}>
           {verses.map((verse, index) => renderVerse(verse, index))}
         </View>
@@ -183,7 +217,7 @@ export default function ReadingScreen() {
           style={styles.floatingPrevButton}
           onPress={handlePreviousChapter}
         >
-          <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
+          <FontAwesome6 name="chevron-left" size={18} color="#FFFFFF" />
         </TouchableOpacity>
       )}
 
@@ -191,7 +225,7 @@ export default function ReadingScreen() {
         style={styles.floatingNextButton}
         onPress={handleNextChapter}
       >
-        <Ionicons name="chevron-forward" size={24} color="#FFFFFF" />
+        <FontAwesome6 name="chevron-right" size={18} color="#FFFFFF" />
       </TouchableOpacity>
     </SafeAreaView>
   );
