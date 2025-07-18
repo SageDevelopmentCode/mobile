@@ -6,6 +6,7 @@ import {
   ScrollView,
   Image,
   ImageBackground,
+  TextInput,
 } from "react-native";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -45,6 +46,7 @@ export default function BookOverviewScreen() {
   const [expandedReplies, setExpandedReplies] = useState<{
     [key: number]: boolean;
   }>({});
+  const [commentText, setCommentText] = useState("");
   const navigation = useNavigation();
 
   // Find book information and determine testament
@@ -453,6 +455,37 @@ export default function BookOverviewScreen() {
           <SectionTitle style={styles.commentsTitle}>
             See what others are saying
           </SectionTitle>
+
+          {/* Comment Input */}
+          <View style={styles.commentInputContainer}>
+            <TextInput
+              style={styles.commentInput}
+              placeholder="Share your thoughts..."
+              placeholderTextColor="#888888"
+              value={commentText}
+              onChangeText={setCommentText}
+              multiline
+              maxLength={280}
+            />
+            <TouchableOpacity
+              style={[
+                styles.postButton,
+                {
+                  backgroundColor: commentText.trim()
+                    ? `${bookSummary?.theme_color || "#ECA7C8"}95`
+                    : `${bookSummary?.theme_color || "#ECA7C8"}30`,
+                },
+              ]}
+              disabled={!commentText.trim()}
+            >
+              <Ionicons
+                name="arrow-forward"
+                size={20}
+                color={commentText.trim() ? "#FFFFFF" : "#888888"}
+              />
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.commentsContainer}>
             {mockComments.map((comment) => renderComment(comment))}
           </View>
@@ -469,6 +502,13 @@ export default function BookOverviewScreen() {
             styles.readNowButton,
             { backgroundColor: `${bookSummary?.theme_color || "#ECA7C8"}95` },
           ]}
+          onPress={() =>
+            router.push(
+              `/(authed)/(tabs)/(read)/${bookName}/reading?themeColor=${encodeURIComponent(
+                bookSummary?.theme_color || "#ECA7C8"
+              )}`
+            )
+          }
         >
           <Ionicons name="book-outline" size={24} color="#FFFFFF" />
           <ButtonText style={styles.readNowButtonText}>
