@@ -112,7 +112,7 @@ export const styles = StyleSheet.create({
     paddingTop: 50,
   },
   scrollContent: {
-    paddingBottom: 40,
+    paddingBottom: 80,
     paddingTop: 16,
   },
   chapterHeader: {

@@ -16,20 +16,31 @@ import colors from "@/constants/colors";
 import { styles } from "./reading.styles";
 import { FontAwesome6 } from "@/utils/icons";
 import BookChapterBottomSheet from "@/components/Reading/BookChapterBottomSheet/BookChapterBottomSheet";
+import { bookThemeColor } from "@/utils/data/bookThemeColor";
 
 const { width } = Dimensions.get("window");
 
 export default function ReadingScreen() {
   const router = useRouter();
   const navigation = useNavigation();
-  const { bookName, themeColor } = useLocalSearchParams<{
+  const { bookName, themeColor, chapter } = useLocalSearchParams<{
     bookName: string;
     themeColor?: string;
+    chapter?: string;
   }>();
+
+  // Get theme color from bookThemeColor.ts if not provided in params
+  const resolvedThemeColor =
+    themeColor ||
+    (bookName
+      ? bookThemeColor[bookName as keyof typeof bookThemeColor] || undefined
+      : undefined);
 
   const [verses, setVerses] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentChapter, setCurrentChapter] = useState(1);
+  const [currentChapter, setCurrentChapter] = useState(
+    chapter ? parseInt(chapter) : 1
+  );
   const [fontSize, setFontSize] = useState(18);
   const [showSettings, setShowSettings] = useState(false);
   const [showBookChapterSheet, setShowBookChapterSheet] = useState(false);
@@ -44,7 +55,7 @@ export default function ReadingScreen() {
         ...tabBarOptions.tabBarStyle,
         backgroundColor: "#282828",
       },
-      tabBarActiveTintColor: themeColor || "#888888",
+      tabBarActiveTintColor: resolvedThemeColor || "#888888",
     });
   }, [navigation]);
 
@@ -91,9 +102,19 @@ export default function ReadingScreen() {
     selectedBook: string,
     selectedChapter: number
   ) => {
-    // For now, just close the sheet - functionality can be added later
     setShowBookChapterSheet(false);
-    // TODO: Add navigation logic to switch to the selected book/chapter
+
+    // Navigate to the selected book and chapter
+    const selectedThemeColor =
+      bookThemeColor[selectedBook as keyof typeof bookThemeColor] || undefined;
+    router.push({
+      pathname: `/(authed)/(tabs)/(read)/[bookName]/reading`,
+      params: {
+        bookName: selectedBook,
+        chapter: selectedChapter.toString(),
+        ...(selectedThemeColor && { themeColor: selectedThemeColor }),
+      },
+    });
   };
 
   const openBookChapterSheet = () => {
@@ -103,7 +124,9 @@ export default function ReadingScreen() {
   const renderVerse = (verse: Verse, index: number) => (
     <View key={verse.id} style={styles.verseContainer}>
       <Text style={[styles.verseText, { fontSize }]}>
-        <Text style={{ color: themeColor || "#888888", fontWeight: "700" }}>
+        <Text
+          style={{ color: resolvedThemeColor || "#888888", fontWeight: "700" }}
+        >
           {verse.verseId}{" "}
         </Text>
         {verse.verse}
@@ -167,7 +190,10 @@ export default function ReadingScreen() {
               onPress={openBookChapterSheet}
             >
               <Text
-                style={[styles.pillText, { color: themeColor || "#FFFFFF" }]}
+                style={[
+                  styles.pillText,
+                  { color: resolvedThemeColor || "#FFFFFF" },
+                ]}
               >
                 {bookName} {currentChapter}
               </Text>
@@ -255,7 +281,7 @@ export default function ReadingScreen() {
         onClose={() => setShowBookChapterSheet(false)}
         currentBook={bookName || ""}
         currentChapter={currentChapter}
-        themeColor={themeColor}
+        themeColor={resolvedThemeColor}
         onBookChapterSelect={handleBookChapterSelect}
       />
     </SafeAreaView>
