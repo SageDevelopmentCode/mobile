@@ -15,6 +15,7 @@ import { tabBarOptions } from "@/constants/tabBarOptions";
 import colors from "@/constants/colors";
 import { styles } from "./reading.styles";
 import { FontAwesome6 } from "@/utils/icons";
+import BookChapterBottomSheet from "@/components/Reading/BookChapterBottomSheet/BookChapterBottomSheet";
 
 const { width } = Dimensions.get("window");
 
@@ -31,6 +32,7 @@ export default function ReadingScreen() {
   const [currentChapter, setCurrentChapter] = useState(1);
   const [fontSize, setFontSize] = useState(18);
   const [showSettings, setShowSettings] = useState(false);
+  const [showBookChapterSheet, setShowBookChapterSheet] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -85,6 +87,19 @@ export default function ReadingScreen() {
     });
   };
 
+  const handleBookChapterSelect = (
+    selectedBook: string,
+    selectedChapter: number
+  ) => {
+    // For now, just close the sheet - functionality can be added later
+    setShowBookChapterSheet(false);
+    // TODO: Add navigation logic to switch to the selected book/chapter
+  };
+
+  const openBookChapterSheet = () => {
+    setShowBookChapterSheet(true);
+  };
+
   const renderVerse = (verse: Verse, index: number) => (
     <View key={verse.id} style={styles.verseContainer}>
       <Text style={[styles.verseText, { fontSize }]}>
@@ -102,13 +117,16 @@ export default function ReadingScreen() {
         <View style={styles.header}>
           <View style={styles.leftSection}>
             <View style={styles.connectedPill}>
-              <View style={styles.bookChapterSection}>
+              <TouchableOpacity
+                style={styles.bookChapterSection}
+                onPress={openBookChapterSheet}
+              >
                 <Text
                   style={[styles.pillText, { color: themeColor || "#FFFFFF" }]}
                 >
                   {bookName} {currentChapter}
                 </Text>
-              </View>
+              </TouchableOpacity>
               <View style={styles.translationSection}>
                 <Text style={styles.pillText}>NIV</Text>
               </View>
@@ -144,13 +162,16 @@ export default function ReadingScreen() {
       <View style={styles.header}>
         <View style={styles.leftSection}>
           <View style={styles.connectedPill}>
-            <View style={styles.bookChapterSection}>
+            <TouchableOpacity
+              style={styles.bookChapterSection}
+              onPress={openBookChapterSheet}
+            >
               <Text
                 style={[styles.pillText, { color: themeColor || "#FFFFFF" }]}
               >
                 {bookName} {currentChapter}
               </Text>
-            </View>
+            </TouchableOpacity>
             <View style={styles.translationSection}>
               <Text style={styles.pillText}>NIV</Text>
             </View>
@@ -227,6 +248,16 @@ export default function ReadingScreen() {
       >
         <FontAwesome6 name="chevron-right" size={18} color="#FFFFFF" />
       </TouchableOpacity>
+
+      {/* Book Chapter Bottom Sheet */}
+      <BookChapterBottomSheet
+        visible={showBookChapterSheet}
+        onClose={() => setShowBookChapterSheet(false)}
+        currentBook={bookName || ""}
+        currentChapter={currentChapter}
+        themeColor={themeColor}
+        onBookChapterSelect={handleBookChapterSelect}
+      />
     </SafeAreaView>
   );
 }
