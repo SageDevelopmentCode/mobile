@@ -41,6 +41,9 @@ export default function BookChapterBottomSheet({
   const otAnimatedHeight = useRef(new Animated.Value(1)).current;
   const ntAnimatedHeight = useRef(new Animated.Value(1)).current;
 
+  // Slide animation for bottom sheet
+  const slideAnim = useRef(new Animated.Value(height * 0.9)).current;
+
   // Reset animation values when modal opens
   useEffect(() => {
     if (visible) {
@@ -51,8 +54,28 @@ export default function BookChapterBottomSheet({
       ntAnimatedHeight.setValue(
         expandedTestaments.has("New Testament") ? 1 : 0
       );
+
+      // Slide up
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      // Slide down
+      Animated.timing(slideAnim, {
+        toValue: height * 0.9,
+        duration: 250,
+        useNativeDriver: true,
+      }).start();
     }
-  }, [visible, expandedTestaments, otAnimatedHeight, ntAnimatedHeight]);
+  }, [
+    visible,
+    expandedTestaments,
+    otAnimatedHeight,
+    ntAnimatedHeight,
+    slideAnim,
+  ]);
 
   const toggleBookExpansion = (bookName: string) => {
     const newExpanded = new Set(expandedBooks);
@@ -211,12 +234,20 @@ export default function BookChapterBottomSheet({
     <Modal
       visible={visible}
       transparent
-      animationType="slide"
+      animationType="none"
       onRequestClose={onClose}
     >
       <View style={styles.backdrop}>
         <TouchableOpacity style={styles.backdropTouchable} onPress={onClose} />
-        <View style={[styles.bottomSheet, { height: height * 0.9 }]}>
+        <Animated.View
+          style={[
+            styles.bottomSheet,
+            {
+              height: height * 0.9,
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
           {/* Header */}
           <View style={styles.header}>
             <Heading style={styles.headerTitle}>Select Book & Chapter</Heading>
@@ -235,7 +266,7 @@ export default function BookChapterBottomSheet({
               renderTestament(testamentName, books)
             )}
           </ScrollView>
-        </View>
+        </Animated.View>
       </View>
     </Modal>
   );

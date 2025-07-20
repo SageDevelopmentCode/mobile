@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   Modal,
   Dimensions,
+  Animated,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { TRANSLATION_MAP } from "@/utils/data/translationMap";
@@ -30,6 +31,26 @@ export default function TranslationBottomSheet({
   themeColor,
   onTranslationSelect,
 }: TranslationBottomSheetProps) {
+  const slideAnim = useRef(new Animated.Value(height * 0.9)).current;
+
+  useEffect(() => {
+    if (visible) {
+      // Slide up
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      // Slide down
+      Animated.timing(slideAnim, {
+        toValue: height * 0.9,
+        duration: 250,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [visible, slideAnim]);
+
   const handleTranslationSelect = (translation: string) => {
     onTranslationSelect?.(translation);
     onClose();
@@ -39,12 +60,20 @@ export default function TranslationBottomSheet({
     <Modal
       visible={visible}
       transparent
-      animationType="slide"
+      animationType="none"
       onRequestClose={onClose}
     >
       <View style={styles.backdrop}>
         <TouchableOpacity style={styles.backdropTouchable} onPress={onClose} />
-        <View style={[styles.bottomSheet, { height: height * 0.9 }]}>
+        <Animated.View
+          style={[
+            styles.bottomSheet,
+            {
+              height: height * 0.9,
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
           {/* Header */}
           <View style={styles.header}>
             <Heading style={styles.headerTitle}>Select Translation</Heading>
@@ -101,7 +130,7 @@ export default function TranslationBottomSheet({
               ))}
             </View>
           </ScrollView>
-        </View>
+        </Animated.View>
       </View>
     </Modal>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -6,10 +6,12 @@ import {
   ScrollView,
   Modal,
   Dimensions,
+  Animated,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { styles } from "./ReadingActionsBottomSheet.styles";
+
 import { ButtonText, Heading } from "@/components/Text/TextComponents";
+import { styles } from "./ReadingActionsBottomSheet.styles";
 
 const { height } = Dimensions.get("window");
 
@@ -40,12 +42,28 @@ export default function ReadingActionsBottomSheet({
   const [currentScreen, setCurrentScreen] =
     useState<BottomSheetScreen>("actions");
 
-  // Reset to actions screen when modal opens
+  // Slide animation for bottom sheet
+  const slideAnim = useRef(new Animated.Value(height * 0.6)).current;
+
+  // Reset to actions screen when modal opens and handle slide animation
   useEffect(() => {
     if (visible) {
       setCurrentScreen("actions");
+      // Slide up
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      // Slide down
+      Animated.timing(slideAnim, {
+        toValue: height * 0.6,
+        duration: 250,
+        useNativeDriver: true,
+      }).start();
     }
-  }, [visible]);
+  }, [visible, slideAnim]);
 
   const navigateToFontSettings = () => {
     setCurrentScreen("fontSettings");
@@ -192,12 +210,20 @@ export default function ReadingActionsBottomSheet({
     <Modal
       visible={visible}
       transparent
-      animationType="slide"
+      animationType="none"
       onRequestClose={onClose}
     >
       <View style={styles.backdrop}>
         <TouchableOpacity style={styles.backdropTouchable} onPress={onClose} />
-        <View style={[styles.bottomSheet, { height: height * 0.6 }]}>
+        <Animated.View
+          style={[
+            styles.bottomSheet,
+            {
+              height: height * 0.6,
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
           {/* Header */}
           <View style={styles.header}>
             {getLeftHeaderButton()}
@@ -217,7 +243,7 @@ export default function ReadingActionsBottomSheet({
             )}
             {currentScreen === "fontSettings" && renderFontSettings()}
           </ScrollView>
-        </View>
+        </Animated.View>
       </View>
     </Modal>
   );
