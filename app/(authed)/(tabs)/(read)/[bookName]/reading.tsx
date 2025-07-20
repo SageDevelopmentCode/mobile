@@ -73,6 +73,7 @@ export default function ReadingScreen() {
   const [showVerseActions, setShowVerseActions] = useState(false);
   const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
   const [currentTranslation, setCurrentTranslation] = useState("NIV");
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   // Helper function to get line height value from mode
   const getLineHeightValue = (mode: string) => {
@@ -264,6 +265,19 @@ export default function ReadingScreen() {
     }
   };
 
+  const handleScroll = (event: any) => {
+    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+    const scrollY = contentOffset.y;
+    const contentHeight = contentSize.height;
+    const screenHeight = layoutMeasurement.height;
+
+    // Calculate progress (0 to 1)
+    const maxScroll = contentHeight - screenHeight;
+    const progress = maxScroll > 0 ? Math.min(scrollY / maxScroll, 1) : 0;
+
+    setScrollProgress(progress);
+  };
+
   const handleVersePress = (verse: Verse) => {
     setSelectedVerse(verse);
     setShowVerseActions(true);
@@ -343,6 +357,21 @@ export default function ReadingScreen() {
               <Ionicons name="ellipsis-horizontal" size={24} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
+
+          {/* Reading Progress Bar - only show when scrolling */}
+          {scrollProgress > 0 && (
+            <View style={styles.progressBarContainer}>
+              <View
+                style={[
+                  styles.progressBar,
+                  {
+                    width: `${scrollProgress * 100}%`,
+                    backgroundColor: resolvedThemeColor || "#888888",
+                  },
+                ]}
+              />
+            </View>
+          )}
         </View>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.PrimaryWhite} />
@@ -397,6 +426,21 @@ export default function ReadingScreen() {
             <Ionicons name="ellipsis-horizontal" size={24} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
+
+        {/* Reading Progress Bar - only show when scrolling */}
+        {scrollProgress > 0 && (
+          <View style={styles.progressBarContainer}>
+            <View
+              style={[
+                styles.progressBar,
+                {
+                  width: `${scrollProgress * 100}%`,
+                  backgroundColor: resolvedThemeColor || "#888888",
+                },
+              ]}
+            />
+          </View>
+        )}
       </View>
 
       {/* Chapter Content */}
@@ -404,6 +448,8 @@ export default function ReadingScreen() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
         <View style={styles.versesContainer}>
           {verses.map((verse, index) => renderVerse(verse, index))}

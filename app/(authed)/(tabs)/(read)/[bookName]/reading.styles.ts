@@ -58,6 +58,19 @@ export const styles = StyleSheet.create({
     height: 40,
   },
 
+  progressBarContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 3,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+  },
+  progressBar: {
+    height: "100%",
+    borderRadius: 1.5,
+  },
+
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
