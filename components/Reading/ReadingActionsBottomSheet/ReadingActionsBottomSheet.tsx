@@ -31,6 +31,10 @@ interface ReadingActionsBottomSheetProps {
   themeColor?: string;
   fontSize: number;
   onFontSizeChange: (size: number) => void;
+  fontFamily?: string;
+  onFontFamilyChange?: (fontFamily: string) => void;
+  lineHeightMode?: string;
+  onLineHeightModeChange?: (mode: string) => void;
 }
 
 export default function ReadingActionsBottomSheet({
@@ -39,12 +43,64 @@ export default function ReadingActionsBottomSheet({
   themeColor,
   fontSize,
   onFontSizeChange,
+  fontFamily = "System",
+  onFontFamilyChange,
+  lineHeightMode = "Standard",
+  onLineHeightModeChange,
 }: ReadingActionsBottomSheetProps) {
   const [currentScreen, setCurrentScreen] =
     useState<BottomSheetScreen>("actions");
 
   // Slide animation for bottom sheet
   const slideAnim = useRef(new Animated.Value(height * 0.6)).current;
+
+  // Utility function to convert hex to RGB
+  const hexToRgb = (hex: string) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        }
+      : null;
+  };
+
+  // Utility function to calculate perceived brightness
+  const getPerceivedBrightness = (hex: string) => {
+    const rgb = hexToRgb(hex);
+    if (!rgb) return 0;
+    // Using the standard luminance formula
+    return rgb.r * 0.299 + rgb.g * 0.587 + rgb.b * 0.114;
+  };
+
+  // Utility function to darken a color
+  const darkenColor = (hex: string, percent: number) => {
+    const rgb = hexToRgb(hex);
+    if (!rgb) return hex;
+
+    const darken = (value: number) => Math.floor(value * (1 - percent / 100));
+
+    const newR = darken(rgb.r);
+    const newG = darken(rgb.g);
+    const newB = darken(rgb.b);
+
+    return `#${[newR, newG, newB]
+      .map((x) => x.toString(16).padStart(2, "0"))
+      .join("")}`;
+  };
+
+  // Get appropriate background color for selection
+  const getSelectionBackgroundColor = (color: string) => {
+    if (!color) return "#888888";
+
+    const brightness = getPerceivedBrightness(color);
+    // If brightness is above 180 (out of 255), darken it
+    if (brightness > 180) {
+      return darkenColor(color, 40); // Darken by 40%
+    }
+    return color;
+  };
 
   // Reset to actions screen when modal opens and handle slide animation
   useEffect(() => {
@@ -79,6 +135,35 @@ export default function ReadingActionsBottomSheet({
     const clampedSize = Math.max(14, Math.min(24, newSize));
     onFontSizeChange(clampedSize);
   };
+
+  // Line height mode options
+  const lineHeightModes = [
+    { name: "Compact", value: "Compact", lineHeight: 1.2 },
+    { name: "Standard", value: "Standard", lineHeight: 1.5 },
+    { name: "Comfortable", value: "Comfortable", lineHeight: 1.8 },
+    { name: "Large", value: "Large", lineHeight: 2.1 },
+  ];
+
+  const handleLineHeightModeSelect = (mode: string) => {
+    onLineHeightModeChange?.(mode);
+  };
+
+  // Reading-friendly font options
+  const fontOptions = [
+    { name: "System", label: "System Default", family: "System" },
+    { name: "Georgia", label: "Georgia", family: "Georgia" },
+    { name: "Times", label: "Times New Roman", family: "Times" },
+    { name: "Palatino", label: "Palatino", family: "Palatino" },
+    { name: "Helvetica", label: "Helvetica", family: "Helvetica" },
+    { name: "Arial", label: "Arial", family: "Arial" },
+    { name: "Courier", label: "Courier New", family: "Courier New" },
+    { name: "Verdana", label: "Verdana", family: "Verdana" },
+  ];
+
+  const handleFontFamilySelect = (family: string) => {
+    onFontFamilyChange?.(family);
+  };
+
   const actions: ReadingAction[] = [
     {
       id: "about",
@@ -155,6 +240,7 @@ export default function ReadingActionsBottomSheet({
 
   const renderFontSettings = () => (
     <View style={styles.fontSettingsContainer}>
+      {/* Font Size Control */}
       <View style={styles.fontSizeControl}>
         <ButtonText style={styles.settingsLabel}>Font Size</ButtonText>
         <View style={styles.fontSizeButtons}>
@@ -162,16 +248,109 @@ export default function ReadingActionsBottomSheet({
             style={styles.fontButton}
             onPress={() => adjustFontSize(false)}
           >
-            <ButtonText style={styles.fontButtonText}>A-</ButtonText>
+            <Ionicons name="remove" size={20} color="#FFFFFF" />
           </TouchableOpacity>
           <ButtonText style={styles.currentFontSize}>{fontSize}</ButtonText>
           <TouchableOpacity
             style={styles.fontButton}
             onPress={() => adjustFontSize(true)}
           >
-            <ButtonText style={styles.fontButtonText}>A+</ButtonText>
+            <Ionicons name="add" size={20} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
+      </View>
+
+      {/* Line Height Control */}
+      <View style={styles.lineHeightControl}>
+        <ButtonText style={styles.settingsLabel}>Line Height</ButtonText>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.lineHeightPillsContainer}
+        >
+          {lineHeightModes.map((mode) => (
+            <TouchableOpacity
+              key={mode.value}
+              style={[
+                styles.lineHeightPill,
+                lineHeightMode === mode.value && {
+                  backgroundColor: getSelectionBackgroundColor(
+                    themeColor || "#888888"
+                  ),
+                  borderColor: getSelectionBackgroundColor(
+                    themeColor || "#888888"
+                  ),
+                },
+              ]}
+              onPress={() => handleLineHeightModeSelect(mode.value)}
+            >
+              <ButtonText
+                style={[
+                  styles.lineHeightPillText,
+                  lineHeightMode === mode.value && {
+                    color: "#FFFFFF",
+                  },
+                ]}
+              >
+                {mode.name}
+              </ButtonText>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+
+      {/* Font Family Selection */}
+      <View style={styles.fontFamilyControl}>
+        <ButtonText style={styles.settingsLabel}>Font Family</ButtonText>
+        <ScrollView
+          style={styles.fontOptionsContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          {fontOptions.map((font) => (
+            <TouchableOpacity
+              key={font.name}
+              style={[
+                styles.fontOption,
+                fontFamily === font.family && {
+                  backgroundColor: getSelectionBackgroundColor(
+                    themeColor || "#888888"
+                  ),
+                  borderColor: getSelectionBackgroundColor(
+                    themeColor || "#888888"
+                  ),
+                },
+              ]}
+              onPress={() => handleFontFamilySelect(font.family)}
+            >
+              <Text
+                style={[
+                  styles.fontOptionText,
+                  { fontFamily: font.family },
+                  fontFamily === font.family && {
+                    color: "#FFFFFF",
+                    fontWeight: "700",
+                  },
+                  fontFamily !== font.family && {
+                    fontWeight: "600",
+                  },
+                ]}
+              >
+                {font.label}
+              </Text>
+              <Text
+                style={[
+                  styles.fontPreviewText,
+                  { fontFamily: font.family },
+                  fontFamily === font.family && {
+                    color: "#FFFFFF",
+                  },
+                ]}
+              >
+                The quick brown fox jumps
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
     </View>
   );
@@ -212,7 +391,7 @@ export default function ReadingActionsBottomSheet({
           style={[
             styles.bottomSheet,
             {
-              height: height * 0.55,
+              height: height * 0.75,
               transform: [{ translateY: slideAnim }],
             },
           ]}

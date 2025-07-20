@@ -80,13 +80,39 @@ export const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   fontSizeControl: {
-    alignItems: "center",
+    alignItems: "flex-start",
+    marginBottom: 30,
+  },
+  lineHeightControl: {
+    alignItems: "flex-start",
+    marginBottom: 30,
+  },
+  lineHeightPillsContainer: {
+    paddingRight: 20,
+  },
+  lineHeightPill: {
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    borderWidth: 1,
+    borderColor: "#333333",
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    marginRight: 12,
+  },
+  lineHeightPillText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#B5B5B5",
+  },
+  fontFamilyControl: {
+    alignItems: "flex-start",
   },
   settingsLabel: {
     fontSize: 16,
     fontWeight: "600",
     color: colors.PrimaryWhite,
     marginBottom: 16,
+    textAlign: "left",
   },
   fontSizeButtons: {
     flexDirection: "row",
@@ -95,14 +121,13 @@ export const styles = StyleSheet.create({
   },
   fontButton: {
     backgroundColor: "rgba(255, 255, 255, 0.1)",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
     borderRadius: 20,
-  },
-  fontButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.PrimaryWhite,
+    alignItems: "center",
+    justifyContent: "center",
+    minWidth: 44,
+    minHeight: 44,
   },
   currentFontSize: {
     fontSize: 16,
@@ -110,6 +135,28 @@ export const styles = StyleSheet.create({
     color: "#B5B5B5",
     minWidth: 30,
     textAlign: "center",
+  },
+  fontOptionsContainer: {
+    width: "100%",
+  },
+  fontOption: {
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    borderWidth: 1,
+    borderColor: "#333333",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    width: "100%",
+  },
+  fontOptionText: {
+    fontSize: 16,
+    color: colors.PrimaryWhite,
+    marginBottom: 4,
+  },
+  fontPreviewText: {
+    fontSize: 14,
+    color: "#B5B5B5",
+    fontStyle: "italic",
   },
   // Header Navigation Styles
   backButton: {

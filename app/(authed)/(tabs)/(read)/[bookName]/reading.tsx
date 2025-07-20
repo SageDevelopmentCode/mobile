@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   SafeAreaView,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { getChapter, Verse } from "@/lib/api/bible";
@@ -21,6 +22,20 @@ import ReadingActionsBottomSheet from "@/components/Reading/ReadingActionsBottom
 import { bookThemeColor } from "@/utils/data/bookThemeColor";
 
 const { width } = Dimensions.get("window");
+
+// Storage keys for font settings
+const FONT_SETTINGS_KEYS = {
+  FONT_SIZE: "@reading_font_size",
+  FONT_FAMILY: "@reading_font_family",
+  LINE_HEIGHT_MODE: "@reading_line_height_mode",
+};
+
+// Default font settings
+const DEFAULT_FONT_SETTINGS = {
+  fontSize: 18,
+  fontFamily: "System",
+  lineHeightMode: "Standard",
+};
 
 export default function ReadingScreen() {
   const router = useRouter();
@@ -43,12 +58,93 @@ export default function ReadingScreen() {
   const [currentChapter, setCurrentChapter] = useState(
     chapter ? parseInt(chapter) : 1
   );
-  const [fontSize, setFontSize] = useState(18);
+  const [fontSize, setFontSize] = useState(DEFAULT_FONT_SETTINGS.fontSize);
+  const [fontFamily, setFontFamily] = useState(
+    DEFAULT_FONT_SETTINGS.fontFamily
+  );
+  const [lineHeightMode, setLineHeightMode] = useState(
+    DEFAULT_FONT_SETTINGS.lineHeightMode
+  );
   const [showSettings, setShowSettings] = useState(false);
   const [showReadingActions, setShowReadingActions] = useState(false);
   const [showBookChapterSheet, setShowBookChapterSheet] = useState(false);
   const [showTranslationSheet, setShowTranslationSheet] = useState(false);
   const [currentTranslation, setCurrentTranslation] = useState("NIV");
+
+  // Helper function to get line height value from mode
+  const getLineHeightValue = (mode: string) => {
+    const lineHeightModes: { [key: string]: number } = {
+      Compact: 1.2,
+      Standard: 1.5,
+      Comfortable: 1.8,
+      Large: 2.1,
+    };
+    return lineHeightModes[mode] || 1.5;
+  };
+
+  // Save font settings to AsyncStorage
+  const saveFontSettings = async (settings: {
+    fontSize?: number;
+    fontFamily?: string;
+    lineHeightMode?: string;
+  }) => {
+    try {
+      if (settings.fontSize !== undefined) {
+        await AsyncStorage.setItem(
+          FONT_SETTINGS_KEYS.FONT_SIZE,
+          settings.fontSize.toString()
+        );
+      }
+      if (settings.fontFamily !== undefined) {
+        await AsyncStorage.setItem(
+          FONT_SETTINGS_KEYS.FONT_FAMILY,
+          settings.fontFamily
+        );
+      }
+      if (settings.lineHeightMode !== undefined) {
+        await AsyncStorage.setItem(
+          FONT_SETTINGS_KEYS.LINE_HEIGHT_MODE,
+          settings.lineHeightMode
+        );
+      }
+    } catch (error) {
+      console.error("Error saving font settings:", error);
+    }
+  };
+
+  // Load font settings from AsyncStorage
+  const loadFontSettings = async () => {
+    try {
+      const [savedFontSize, savedFontFamily, savedLineHeightMode] =
+        await Promise.all([
+          AsyncStorage.getItem(FONT_SETTINGS_KEYS.FONT_SIZE),
+          AsyncStorage.getItem(FONT_SETTINGS_KEYS.FONT_FAMILY),
+          AsyncStorage.getItem(FONT_SETTINGS_KEYS.LINE_HEIGHT_MODE),
+        ]);
+
+      if (savedFontSize) {
+        const parsedSize = parseInt(savedFontSize);
+        if (!isNaN(parsedSize)) {
+          setFontSize(parsedSize);
+        }
+      }
+
+      if (savedFontFamily) {
+        setFontFamily(savedFontFamily);
+      }
+
+      if (savedLineHeightMode) {
+        setLineHeightMode(savedLineHeightMode);
+      }
+    } catch (error) {
+      console.error("Error loading font settings:", error);
+    }
+  };
+
+  // Load font settings on component mount
+  useEffect(() => {
+    loadFontSettings();
+  }, []);
 
   useEffect(() => {
     navigation.setOptions({
@@ -146,20 +242,42 @@ export default function ReadingScreen() {
 
   const handleFontSizeChange = (size: number) => {
     setFontSize(size);
+    saveFontSettings({ fontSize: size });
   };
 
-  const renderVerse = (verse: Verse, index: number) => (
-    <View key={verse.id} style={styles.verseContainer}>
-      <Text style={[styles.verseText, { fontSize }]}>
+  const handleFontFamilyChange = (family: string) => {
+    setFontFamily(family);
+    saveFontSettings({ fontFamily: family });
+  };
+
+  const handleLineHeightModeChange = (mode: string) => {
+    setLineHeightMode(mode);
+    saveFontSettings({ lineHeightMode: mode });
+  };
+
+  const renderVerse = (verse: Verse, index: number) => {
+    const lineHeight = getLineHeightValue(lineHeightMode);
+    return (
+      <View key={verse.id} style={styles.verseContainer}>
         <Text
-          style={{ color: resolvedThemeColor || "#888888", fontWeight: "700" }}
+          style={[
+            styles.verseText,
+            { fontSize, fontFamily, lineHeight: fontSize * lineHeight },
+          ]}
         >
-          {verse.verseId}{" "}
+          <Text
+            style={{
+              color: resolvedThemeColor || "#888888",
+              fontWeight: "700",
+            }}
+          >
+            {verse.verseId}{" "}
+          </Text>
+          {verse.verse}
         </Text>
-        {verse.verse}
-      </Text>
-    </View>
-  );
+      </View>
+    );
+  };
 
   if (loading) {
     return (
@@ -310,6 +428,10 @@ export default function ReadingScreen() {
         themeColor={resolvedThemeColor}
         fontSize={fontSize}
         onFontSizeChange={handleFontSizeChange}
+        fontFamily={fontFamily}
+        onFontFamilyChange={handleFontFamilyChange}
+        lineHeightMode={lineHeightMode}
+        onLineHeightModeChange={handleLineHeightModeChange}
       />
     </SafeAreaView>
   );
