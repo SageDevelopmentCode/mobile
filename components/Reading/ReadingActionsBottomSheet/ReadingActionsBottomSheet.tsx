@@ -11,6 +11,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import { ButtonText, Heading } from "@/components/Text/TextComponents";
+import { Twemoji } from "@/components/UI/Twemoji/Twemoji";
 import { styles } from "./ReadingActionsBottomSheet.styles";
 
 const { height } = Dimensions.get("window");
@@ -20,7 +21,7 @@ type BottomSheetScreen = "actions" | "fontSettings";
 interface ReadingAction {
   id: string;
   label: string;
-  icon: keyof typeof Ionicons.glyphMap;
+  emoji: string;
   onPress: () => void;
 }
 
@@ -82,7 +83,7 @@ export default function ReadingActionsBottomSheet({
     {
       id: "about",
       label: "About this book",
-      icon: "information-circle-outline",
+      emoji: "1f4d6", // 📖 open book
       onPress: () => {
         console.log("About this book pressed");
         onClose();
@@ -90,8 +91,8 @@ export default function ReadingActionsBottomSheet({
     },
     {
       id: "annotations",
-      label: "Your annotations",
-      icon: "pencil-outline",
+      label: "Your Annotations",
+      emoji: "1f4dd", // 📝 memo
       onPress: () => {
         console.log("Your annotations pressed");
         onClose();
@@ -99,8 +100,8 @@ export default function ReadingActionsBottomSheet({
     },
     {
       id: "highlights",
-      label: "Popular highlights",
-      icon: "color-wand-outline",
+      label: "Popular Highlights",
+      emoji: "1f31f", // ⭐ star
       onPress: () => {
         console.log("Popular highlights pressed");
         onClose();
@@ -108,16 +109,16 @@ export default function ReadingActionsBottomSheet({
     },
     {
       id: "fonts",
-      label: "Fonts & settings",
-      icon: "text-outline",
+      label: "Fonts & Settings",
+      emoji: "1f524", // 🔤 abc
       onPress: () => {
         navigateToFontSettings();
       },
     },
     {
       id: "references",
-      label: "Cross references",
-      icon: "link-outline",
+      label: "Cross References",
+      emoji: "1f517", // 🔗 link
       onPress: () => {
         console.log("Cross references pressed");
         onClose();
@@ -132,15 +133,7 @@ export default function ReadingActionsBottomSheet({
       onPress={action.onPress}
       activeOpacity={0.7}
     >
-      <View
-        style={[styles.iconContainer, { borderColor: themeColor || "#888888" }]}
-      >
-        <Ionicons
-          name={action.icon}
-          size={24}
-          color={themeColor || "#888888"}
-        />
-      </View>
+      <Twemoji hex={action.emoji} size={32} />
       <ButtonText style={styles.actionLabel}>{action.label}</ButtonText>
     </TouchableOpacity>
   );
@@ -219,7 +212,7 @@ export default function ReadingActionsBottomSheet({
           style={[
             styles.bottomSheet,
             {
-              height: height * 0.6,
+              height: height * 0.55,
               transform: [{ translateY: slideAnim }],
             },
           ]}

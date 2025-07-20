@@ -15,7 +15,7 @@ const emojiAssets: { [key: string]: any } = {
   "1f932": require("@/assets/images/emojis/1f932.png"), // 🙌 grateful
   "1f636": require("@/assets/images/emojis/1f636.png"), // 😶 distant (face without mouth)
   "1f6ab": require("@/assets/images/emojis/1f6ab.png"), // 🚫 rebellious
-  "1f494": require("@/assets/images/emojis/1f494.png"), // �� broken heart
+  "1f494": require("@/assets/images/emojis/1f494.png"), // 💔 broken heart
   "1f495": require("@/assets/images/emojis/1f495.png"), // 💕 two hearts
   "1f91d": require("@/assets/images/emojis/1f91d.png"), // 🤝 forgiving (handshake)
   "1f64c": require("@/assets/images/emojis/1f64c.png"), // 🙌 serving (hands raised)
@@ -27,6 +27,9 @@ const emojiAssets: { [key: string]: any } = {
   "270d": require("@/assets/images/emojis/270d.png"), // ✍️ writing hand (verses)
   "23f1": require("@/assets/images/emojis/23f1.png"), // ⏱️ stopwatch (minutes)
   "1f4d6": require("@/assets/images/emojis/1f4d6.png"), // 📖 open book (chapters)
+  "1f4dd": require("@/assets/images/emojis/1f4dd.png"), // 📝 memo (annotations)
+  "1f517": require("@/assets/images/emojis/1f517.png"), // 🔗 link (cross references)
+  "1f524": require("@/assets/images/emojis/1f524.png"), // 🔤 abc (fonts & settings)
 };
 
 interface TwemojiProps {

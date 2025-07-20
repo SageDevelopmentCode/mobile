@@ -70,7 +70,7 @@ export const styles = StyleSheet.create({
     fontWeight: "500",
     color: colors.PrimaryWhite,
     textAlign: "center",
-    lineHeight: 18,
+    marginTop: 8,
   },
   emptySpace: {
     flex: 1,
