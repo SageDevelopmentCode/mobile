@@ -16,6 +16,8 @@ import colors from "@/constants/colors";
 import { styles } from "./reading.styles";
 import { FontAwesome6 } from "@/utils/icons";
 import BookChapterBottomSheet from "@/components/Reading/BookChapterBottomSheet/BookChapterBottomSheet";
+import TranslationBottomSheet from "@/components/Reading/TranslationBottomSheet/TranslationBottomSheet";
+import ReadingActionsBottomSheet from "@/components/Reading/ReadingActionsBottomSheet/ReadingActionsBottomSheet";
 import { bookThemeColor } from "@/utils/data/bookThemeColor";
 
 const { width } = Dimensions.get("window");
@@ -43,7 +45,10 @@ export default function ReadingScreen() {
   );
   const [fontSize, setFontSize] = useState(18);
   const [showSettings, setShowSettings] = useState(false);
+  const [showReadingActions, setShowReadingActions] = useState(false);
   const [showBookChapterSheet, setShowBookChapterSheet] = useState(false);
+  const [showTranslationSheet, setShowTranslationSheet] = useState(false);
+  const [currentTranslation, setCurrentTranslation] = useState("NIV");
 
   useEffect(() => {
     navigation.setOptions({
@@ -61,14 +66,18 @@ export default function ReadingScreen() {
 
   useEffect(() => {
     if (bookName) {
-      fetchChapter(currentChapter);
+      fetchChapter(currentChapter, currentTranslation);
     }
-  }, [bookName, currentChapter]);
+  }, [bookName, currentChapter, currentTranslation]);
 
-  const fetchChapter = async (chapter: number) => {
+  const fetchChapter = async (chapter: number, translation?: string) => {
     try {
       setLoading(true);
-      const chapterVerses = await getChapter(bookName || "", chapter);
+      const chapterVerses = await getChapter(
+        bookName || "",
+        chapter,
+        translation || currentTranslation
+      );
       setVerses(chapterVerses);
     } catch (error) {
       console.error("Error fetching chapter:", error);
@@ -121,6 +130,24 @@ export default function ReadingScreen() {
     setShowBookChapterSheet(true);
   };
 
+  const openTranslationSheet = () => {
+    setShowTranslationSheet(true);
+  };
+
+  const handleTranslationSelect = (translation: string) => {
+    setCurrentTranslation(translation);
+    // Refetch current chapter with new translation
+    fetchChapter(currentChapter, translation);
+  };
+
+  const handleReadingActionsPress = () => {
+    setShowReadingActions(true);
+  };
+
+  const handleFontSizeChange = (size: number) => {
+    setFontSize(size);
+  };
+
   const renderVerse = (verse: Verse, index: number) => (
     <View key={verse.id} style={styles.verseContainer}>
       <Text style={[styles.verseText, { fontSize }]}>
@@ -150,9 +177,12 @@ export default function ReadingScreen() {
                   {bookName} {currentChapter}
                 </Text>
               </TouchableOpacity>
-              <View style={styles.translationSection}>
-                <Text style={styles.pillText}>NIV</Text>
-              </View>
+              <TouchableOpacity
+                style={styles.translationSection}
+                onPress={openTranslationSheet}
+              >
+                <Text style={styles.pillText}>{currentTranslation}</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -198,9 +228,12 @@ export default function ReadingScreen() {
                 {bookName} {currentChapter}
               </Text>
             </TouchableOpacity>
-            <View style={styles.translationSection}>
-              <Text style={styles.pillText}>NIV</Text>
-            </View>
+            <TouchableOpacity
+              style={styles.translationSection}
+              onPress={openTranslationSheet}
+            >
+              <Text style={styles.pillText}>{currentTranslation}</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -216,36 +249,12 @@ export default function ReadingScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.iconButton}
-            onPress={() => setShowSettings(!showSettings)}
+            onPress={handleReadingActionsPress}
           >
             <Ionicons name="ellipsis-horizontal" size={24} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
       </View>
-
-      {/* Settings Panel */}
-      {showSettings && (
-        <View style={styles.settingsPanel}>
-          <View style={styles.fontSizeControl}>
-            <Text style={styles.settingsLabel}>Font Size</Text>
-            <View style={styles.fontSizeButtons}>
-              <TouchableOpacity
-                style={styles.fontButton}
-                onPress={() => adjustFontSize(false)}
-              >
-                <Text style={styles.fontButtonText}>A-</Text>
-              </TouchableOpacity>
-              <Text style={styles.currentFontSize}>{fontSize}</Text>
-              <TouchableOpacity
-                style={styles.fontButton}
-                onPress={() => adjustFontSize(true)}
-              >
-                <Text style={styles.fontButtonText}>A+</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      )}
 
       {/* Chapter Content */}
       <ScrollView
@@ -283,6 +292,24 @@ export default function ReadingScreen() {
         currentChapter={currentChapter}
         themeColor={resolvedThemeColor}
         onBookChapterSelect={handleBookChapterSelect}
+      />
+
+      {/* Translation Bottom Sheet */}
+      <TranslationBottomSheet
+        visible={showTranslationSheet}
+        onClose={() => setShowTranslationSheet(false)}
+        currentTranslation={currentTranslation}
+        themeColor={resolvedThemeColor}
+        onTranslationSelect={handleTranslationSelect}
+      />
+
+      {/* Reading Actions Bottom Sheet */}
+      <ReadingActionsBottomSheet
+        visible={showReadingActions}
+        onClose={() => setShowReadingActions(false)}
+        themeColor={resolvedThemeColor}
+        fontSize={fontSize}
+        onFontSizeChange={handleFontSizeChange}
       />
     </SafeAreaView>
   );
