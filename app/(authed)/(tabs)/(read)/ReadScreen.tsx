@@ -443,43 +443,6 @@ export default function ReadScreen() {
           />
         </View>
 
-        {/* Categories Section */}
-        <View style={styles.categoriesSection}>
-          <View style={styles.categoriesHeader}>
-            <Heading color={colors.PrimaryWhite} style={styles.categoriesTitle}>
-              Categories
-            </Heading>
-            <TouchableOpacity style={styles.viewAllButton}>
-              <ButtonText style={styles.viewAllText}>View All</ButtonText>
-              <Ionicons
-                name="chevron-forward"
-                size={16}
-                color={colors.PrimaryPurpleBackground}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.categoriesRows}>
-            <FlatList
-              data={topRowCategories}
-              renderItem={renderCategoryItem}
-              keyExtractor={(item) => item.id}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.categoriesScrollContainer}
-              style={styles.categoryRow}
-            />
-            <FlatList
-              data={bottomRowCategories}
-              renderItem={renderCategoryItem}
-              keyExtractor={(item) => item.id}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.categoriesScrollContainer}
-              style={styles.categoryRow}
-            />
-          </View>
-        </View>
-
         {/* Featured Book Section */}
         <View style={styles.featuredBookSection}>
           <TouchableOpacity style={styles.featuredBookCard}>
@@ -545,6 +508,43 @@ export default function ReadScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.continueReadingList}
           />
+        </View>
+
+        {/* Categories Section */}
+        <View style={styles.categoriesSection}>
+          <View style={styles.categoriesHeader}>
+            <Heading color={colors.PrimaryWhite} style={styles.categoriesTitle}>
+              Categories
+            </Heading>
+            <TouchableOpacity style={styles.viewAllButton}>
+              <ButtonText style={styles.viewAllText}>View All</ButtonText>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={colors.PrimaryPurpleBackground}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.categoriesRows}>
+            <FlatList
+              data={topRowCategories}
+              renderItem={renderCategoryItem}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.categoriesScrollContainer}
+              style={styles.categoryRow}
+            />
+            <FlatList
+              data={bottomRowCategories}
+              renderItem={renderCategoryItem}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.categoriesScrollContainer}
+              style={styles.categoryRow}
+            />
+          </View>
         </View>
       </ScrollView>
     </View>
