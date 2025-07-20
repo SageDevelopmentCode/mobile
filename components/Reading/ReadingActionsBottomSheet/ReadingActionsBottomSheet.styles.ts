@@ -77,7 +77,7 @@ export const styles = StyleSheet.create({
   },
   // Font Settings Styles
   fontSettingsContainer: {
-    paddingVertical: 20,
+    paddingBottom: 10,
   },
   fontSizeControl: {
     alignItems: "flex-start",

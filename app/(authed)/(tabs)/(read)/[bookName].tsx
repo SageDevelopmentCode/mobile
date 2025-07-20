@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
-  ImageBackground,
   TextInput,
 } from "react-native";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
@@ -18,17 +17,9 @@ import {
   Paragraph,
   SectionTitle,
   SubHeading,
-  Title,
 } from "@/components/Text/TextComponents";
-import colors from "@/constants/colors";
-import {
-  oldTestamentBooks,
-  OldTestamentBook,
-} from "@/utils/data/oldTestamentBooks";
-import {
-  newTestamentBooks,
-  NewTestamentBook,
-} from "@/utils/data/newTestamentBooks";
+import { oldTestamentBooks } from "@/utils/data/oldTestamentBooks";
+import { newTestamentBooks } from "@/utils/data/newTestamentBooks";
 import { Twemoji } from "@/components/UI/Twemoji/Twemoji";
 import {
   getBookSummaryByBook,

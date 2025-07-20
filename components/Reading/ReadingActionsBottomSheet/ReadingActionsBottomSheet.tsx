@@ -35,6 +35,8 @@ interface ReadingActionsBottomSheetProps {
   onFontFamilyChange?: (fontFamily: string) => void;
   lineHeightMode?: string;
   onLineHeightModeChange?: (mode: string) => void;
+  bookName?: string;
+  onNavigateToOverview?: () => void;
 }
 
 export default function ReadingActionsBottomSheet({
@@ -47,6 +49,8 @@ export default function ReadingActionsBottomSheet({
   onFontFamilyChange,
   lineHeightMode = "Standard",
   onLineHeightModeChange,
+  bookName,
+  onNavigateToOverview,
 }: ReadingActionsBottomSheetProps) {
   const [currentScreen, setCurrentScreen] =
     useState<BottomSheetScreen>("actions");
@@ -170,13 +174,13 @@ export default function ReadingActionsBottomSheet({
       label: "About this book",
       emoji: "1f4d6", // 📖 open book
       onPress: () => {
-        console.log("About this book pressed");
+        onNavigateToOverview?.();
         onClose();
       },
     },
     {
       id: "annotations",
-      label: "Your Annotations",
+      label: "Your annotations",
       emoji: "1f4dd", // 📝 memo
       onPress: () => {
         console.log("Your annotations pressed");
@@ -185,7 +189,7 @@ export default function ReadingActionsBottomSheet({
     },
     {
       id: "highlights",
-      label: "Popular Highlights",
+      label: "Popular highlights",
       emoji: "1f31f", // ⭐ star
       onPress: () => {
         console.log("Popular highlights pressed");
@@ -194,21 +198,21 @@ export default function ReadingActionsBottomSheet({
     },
     {
       id: "fonts",
-      label: "Fonts & Settings",
+      label: "Fonts & settings",
       emoji: "1f524", // 🔤 abc
       onPress: () => {
         navigateToFontSettings();
       },
     },
-    {
-      id: "references",
-      label: "Cross References",
-      emoji: "1f517", // 🔗 link
-      onPress: () => {
-        console.log("Cross references pressed");
-        onClose();
-      },
-    },
+    // {
+    //   id: "references",
+    //   label: "Cross references",
+    //   emoji: "1f517", // 🔗 link
+    //   onPress: () => {
+    //     console.log("Cross references pressed");
+    //     onClose();
+    //   },
+    // },
   ];
 
   const renderActionButton = (action: ReadingAction) => (

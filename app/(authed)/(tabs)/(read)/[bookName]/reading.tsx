@@ -19,6 +19,7 @@ import { FontAwesome6 } from "@/utils/icons";
 import BookChapterBottomSheet from "@/components/Reading/BookChapterBottomSheet/BookChapterBottomSheet";
 import TranslationBottomSheet from "@/components/Reading/TranslationBottomSheet/TranslationBottomSheet";
 import ReadingActionsBottomSheet from "@/components/Reading/ReadingActionsBottomSheet/ReadingActionsBottomSheet";
+import VerseActionsBottomSheet from "@/components/Reading/VerseActionsBottomSheet/VerseActionsBottomSheet";
 import { bookThemeColor } from "@/utils/data/bookThemeColor";
 
 const { width } = Dimensions.get("window");
@@ -69,6 +70,8 @@ export default function ReadingScreen() {
   const [showReadingActions, setShowReadingActions] = useState(false);
   const [showBookChapterSheet, setShowBookChapterSheet] = useState(false);
   const [showTranslationSheet, setShowTranslationSheet] = useState(false);
+  const [showVerseActions, setShowVerseActions] = useState(false);
+  const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
   const [currentTranslation, setCurrentTranslation] = useState("NIV");
 
   // Helper function to get line height value from mode
@@ -255,10 +258,32 @@ export default function ReadingScreen() {
     saveFontSettings({ lineHeightMode: mode });
   };
 
+  const handleNavigateToOverview = () => {
+    if (bookName) {
+      router.push(`/(authed)/(tabs)/(read)/${encodeURIComponent(bookName)}`);
+    }
+  };
+
+  const handleVersePress = (verse: Verse) => {
+    setSelectedVerse(verse);
+    setShowVerseActions(true);
+  };
+
+  const handleHighlightVerse = (verseId: string, color: string) => {
+    console.log("Highlighting verse:", verseId, "with color:", color);
+    // TODO: Implement verse highlighting functionality
+    // This will be used later when highlighting is fully implemented
+  };
+
   const renderVerse = (verse: Verse, index: number) => {
     const lineHeight = getLineHeightValue(lineHeightMode);
     return (
-      <View key={verse.id} style={styles.verseContainer}>
+      <TouchableOpacity
+        key={verse.id}
+        style={styles.verseContainer}
+        onPress={() => handleVersePress(verse)}
+        activeOpacity={0.7}
+      >
         <Text
           style={[
             styles.verseText,
@@ -275,7 +300,7 @@ export default function ReadingScreen() {
           </Text>
           {verse.verse}
         </Text>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -432,6 +457,27 @@ export default function ReadingScreen() {
         onFontFamilyChange={handleFontFamilyChange}
         lineHeightMode={lineHeightMode}
         onLineHeightModeChange={handleLineHeightModeChange}
+        bookName={bookName || ""}
+        onNavigateToOverview={handleNavigateToOverview}
+      />
+
+      {/* Verse Actions Bottom Sheet */}
+      <VerseActionsBottomSheet
+        visible={showVerseActions}
+        onClose={() => setShowVerseActions(false)}
+        themeColor={resolvedThemeColor}
+        selectedVerse={
+          selectedVerse
+            ? {
+                id: selectedVerse.id.toString(),
+                verseId: selectedVerse.verseId.toString(),
+                verse: selectedVerse.verse,
+              }
+            : undefined
+        }
+        onHighlightVerse={handleHighlightVerse}
+        bookName={bookName || ""}
+        currentChapter={currentChapter}
       />
     </SafeAreaView>
   );
