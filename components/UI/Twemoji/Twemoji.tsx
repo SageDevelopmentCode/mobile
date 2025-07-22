@@ -10,7 +10,7 @@ const emojiAssets: { [key: string]: any } = {
   "1f623": require("@/assets/images/emojis/1f623.png"), // 😣 persevering
   "1f971": require("@/assets/images/emojis/1f971.png"), // 🥱 yawning
   "1f44b": require("@/assets/images/emojis/1f44b.png"), // 👋 waving
-  "1f64f": require("@/assets/images/emojis/1f932.png"), // 🙏 surrendered
+  "1f64f": require("@/assets/images/emojis/1f64f.png"), // 🙏 folded hands (pray)
   "1f50d": require("@/assets/images/emojis/1f50d.png"), // 🔍 seeking
   "1f932": require("@/assets/images/emojis/1f932.png"), // 🙌 grateful
   "1f636": require("@/assets/images/emojis/1f636.png"), // 😶 distant (face without mouth)
@@ -30,6 +30,9 @@ const emojiAssets: { [key: string]: any } = {
   "1f4dd": require("@/assets/images/emojis/1f4dd.png"), // 📝 memo (annotations)
   "1f517": require("@/assets/images/emojis/1f517.png"), // 🔗 link (cross references)
   "1f524": require("@/assets/images/emojis/1f524.png"), // 🔤 abc (fonts & settings)
+  "1f516": require("@/assets/images/emojis/1f516.png"), // 🔖 bookmark (save)
+  "1f4cb": require("@/assets/images/emojis/1f4cb.png"), // 📋 clipboard (copy)
+  "1f5bc": require("@/assets/images/emojis/1f5bc.png"), // 🖼️ framed picture (image)
 };
 
 interface TwemojiProps {

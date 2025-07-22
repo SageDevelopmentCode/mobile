@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { ButtonText, Heading } from "@/components/Text/TextComponents";
+import { Twemoji } from "@/components/UI/Twemoji/Twemoji";
 import { styles } from "./VerseActionsBottomSheet.styles";
 
 const { height } = Dimensions.get("window");
@@ -19,8 +20,7 @@ const { height } = Dimensions.get("window");
 interface VerseAction {
   id: string;
   label: string;
-  icon: keyof typeof Ionicons.glyphMap | keyof typeof MaterialIcons.glyphMap;
-  iconType: "ionicons" | "material";
+  emoji: string;
   onPress: () => void;
 }
 
@@ -98,8 +98,7 @@ export default function VerseActionsBottomSheet({
     {
       id: "save",
       label: "Save",
-      icon: "bookmark-outline",
-      iconType: "ionicons",
+      emoji: "1f516", // 🔖 bookmark
       onPress: () => {
         console.log("Save verse:", selectedVerse?.verseId);
         handleClose();
@@ -108,8 +107,7 @@ export default function VerseActionsBottomSheet({
     {
       id: "note",
       label: "Note",
-      icon: "create-outline",
-      iconType: "ionicons",
+      emoji: "270d", // ✍️ writing hand
       onPress: () => {
         console.log("Add note to verse:", selectedVerse?.verseId);
         handleClose();
@@ -118,8 +116,7 @@ export default function VerseActionsBottomSheet({
     {
       id: "copy",
       label: "Copy",
-      icon: "copy-outline",
-      iconType: "ionicons",
+      emoji: "1f4cb", // 📋 clipboard
       onPress: () => {
         console.log("Copy verse:", selectedVerse?.verseId);
         handleClose();
@@ -128,8 +125,7 @@ export default function VerseActionsBottomSheet({
     {
       id: "share",
       label: "Share",
-      icon: "share-outline",
-      iconType: "ionicons",
+      emoji: "1f517", // 🔗 link
       onPress: () => {
         console.log("Share verse:", selectedVerse?.verseId);
         handleClose();
@@ -138,8 +134,7 @@ export default function VerseActionsBottomSheet({
     {
       id: "image",
       label: "Image",
-      icon: "image-outline",
-      iconType: "ionicons",
+      emoji: "1f5bc", // 🖼️ framed picture
       onPress: () => {
         console.log("Create image for verse:", selectedVerse?.verseId);
         handleClose();
@@ -148,8 +143,7 @@ export default function VerseActionsBottomSheet({
     {
       id: "pray",
       label: "Pray",
-      icon: "favorite-outline",
-      iconType: "ionicons",
+      emoji: "1f64f", // 🙏 folded hands
       onPress: () => {
         console.log("Pray about verse:", selectedVerse?.verseId);
         handleClose();
@@ -172,21 +166,9 @@ export default function VerseActionsBottomSheet({
       activeOpacity={0.7}
     >
       <View style={styles.actionIconContainer}>
-        {action.iconType === "ionicons" ? (
-          <Ionicons
-            name={action.icon as keyof typeof Ionicons.glyphMap}
-            size={24}
-            color="#FFFFFF"
-          />
-        ) : (
-          <MaterialIcons
-            name={action.icon as keyof typeof MaterialIcons.glyphMap}
-            size={24}
-            color="#FFFFFF"
-          />
-        )}
+        <Twemoji hex={action.emoji} size={24} />
+        <ButtonText style={styles.actionLabel}>{action.label}</ButtonText>
       </View>
-      <ButtonText style={styles.actionLabel}>{action.label}</ButtonText>
     </TouchableOpacity>
   );
 
