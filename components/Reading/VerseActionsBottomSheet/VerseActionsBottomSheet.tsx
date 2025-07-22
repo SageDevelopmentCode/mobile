@@ -48,22 +48,36 @@ export default function VerseActionsBottomSheet({
   currentChapter,
 }: VerseActionsBottomSheetProps) {
   const slideAnim = useRef(new Animated.Value(height * 0.4)).current;
+  const [modalVisible, setModalVisible] = React.useState(false);
+
+  const handleClose = () => {
+    // Start slide down animation
+    Animated.timing(slideAnim, {
+      toValue: height * 0.4,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(() => {
+      // After animation completes, hide modal and call onClose
+      setModalVisible(false);
+      onClose();
+    });
+  };
 
   useEffect(() => {
     if (visible) {
-      // Slide up
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
+      // Show modal first, then slide up
+      setModalVisible(true);
+      // Small delay to ensure modal is rendered before animation
+      setTimeout(() => {
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
+      }, 50);
     } else {
-      // Slide down
-      Animated.timing(slideAnim, {
-        toValue: height * 0.4,
-        duration: 250,
-        useNativeDriver: true,
-      }).start();
+      // Reset animation position for next open
+      slideAnim.setValue(height * 0.4);
     }
   }, [visible, slideAnim]);
 
@@ -88,7 +102,7 @@ export default function VerseActionsBottomSheet({
       iconType: "ionicons",
       onPress: () => {
         console.log("Save verse:", selectedVerse?.verseId);
-        onClose();
+        handleClose();
       },
     },
     {
@@ -98,7 +112,7 @@ export default function VerseActionsBottomSheet({
       iconType: "ionicons",
       onPress: () => {
         console.log("Add note to verse:", selectedVerse?.verseId);
-        onClose();
+        handleClose();
       },
     },
     {
@@ -108,7 +122,7 @@ export default function VerseActionsBottomSheet({
       iconType: "ionicons",
       onPress: () => {
         console.log("Copy verse:", selectedVerse?.verseId);
-        onClose();
+        handleClose();
       },
     },
     {
@@ -118,7 +132,7 @@ export default function VerseActionsBottomSheet({
       iconType: "ionicons",
       onPress: () => {
         console.log("Share verse:", selectedVerse?.verseId);
-        onClose();
+        handleClose();
       },
     },
     {
@@ -128,7 +142,7 @@ export default function VerseActionsBottomSheet({
       iconType: "ionicons",
       onPress: () => {
         console.log("Create image for verse:", selectedVerse?.verseId);
-        onClose();
+        handleClose();
       },
     },
     {
@@ -138,7 +152,7 @@ export default function VerseActionsBottomSheet({
       iconType: "ionicons",
       onPress: () => {
         console.log("Pray about verse:", selectedVerse?.verseId);
-        onClose();
+        handleClose();
       },
     },
   ];
@@ -146,7 +160,7 @@ export default function VerseActionsBottomSheet({
   const handleHighlightSelect = (color: string) => {
     if (selectedVerse) {
       onHighlightVerse?.(selectedVerse.id, color);
-      onClose();
+      handleClose();
     }
   };
 
@@ -178,13 +192,16 @@ export default function VerseActionsBottomSheet({
 
   return (
     <Modal
-      visible={visible}
+      visible={modalVisible}
       transparent
       animationType="none"
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
     >
       <View style={styles.backdrop}>
-        <TouchableOpacity style={styles.backdropTouchable} onPress={onClose} />
+        <TouchableOpacity
+          style={styles.backdropTouchable}
+          onPress={handleClose}
+        />
         <Animated.View
           style={[
             styles.bottomSheet,
@@ -201,7 +218,7 @@ export default function VerseActionsBottomSheet({
                 ? `${bookName} ${currentChapter}:${selectedVerse.verseId}`
                 : "Verse Actions"}
             </Heading>
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
               <Ionicons name="close" size={24} color="#FFFFFF" />
             </TouchableOpacity>
           </View>

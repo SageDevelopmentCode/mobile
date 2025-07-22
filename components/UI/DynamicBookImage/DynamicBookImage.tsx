@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Image, ImageStyle, View, Animated, ViewStyle } from "react-native";
+import { getBookImage } from "@/utils/data/bookImages";
 
 interface DynamicBookImageProps {
   bookName: string;
@@ -7,30 +8,19 @@ interface DynamicBookImageProps {
   fallbackBookName?: string;
 }
 
-const SUPABASE_IMAGE_BASE_URL =
-  "https://analjigcedgbgrvhoobi.supabase.co/storage/v1/object/public/book-images";
-
 export const DynamicBookImage: React.FC<DynamicBookImageProps> = ({
   bookName,
   style,
   fallbackBookName = "Genesis",
 }) => {
-  const [imageSource, setImageSource] = useState<string>(
-    `${SUPABASE_IMAGE_BASE_URL}/${bookName}.png`
-  );
-  const [hasErrored, setHasErrored] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [fadeAnim] = useState(new Animated.Value(0));
   const [pulseAnim] = useState(new Animated.Value(0.7));
 
-  const handleImageError = () => {
-    if (!hasErrored && bookName !== fallbackBookName) {
-      setHasErrored(true);
-      setImageSource(`${SUPABASE_IMAGE_BASE_URL}/${fallbackBookName}.png`);
-      setIsLoading(true);
-      fadeAnim.setValue(0);
-    }
-  };
+  // Get the appropriate image source using our local assets
+  const imageSource = useMemo(() => {
+    return getBookImage(bookName, fallbackBookName);
+  }, [bookName, fallbackBookName]);
 
   const handleImageLoad = () => {
     setIsLoading(false);
@@ -104,14 +94,13 @@ export const DynamicBookImage: React.FC<DynamicBookImageProps> = ({
 
       {/* Actual Image */}
       <Animated.Image
-        source={{ uri: imageSource }}
+        source={imageSource}
         style={[
           style,
           {
             opacity: fadeAnim,
           },
         ]}
-        onError={handleImageError}
         onLoad={handleImageLoad}
         resizeMode="cover"
       />

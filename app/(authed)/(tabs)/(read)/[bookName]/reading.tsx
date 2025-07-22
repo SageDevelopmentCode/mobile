@@ -291,6 +291,8 @@ export default function ReadingScreen() {
 
   const renderVerse = (verse: Verse, index: number) => {
     const lineHeight = getLineHeightValue(lineHeightMode);
+    const isSelected = selectedVerse?.id === verse.id;
+
     return (
       <TouchableOpacity
         key={verse.id}
@@ -301,7 +303,15 @@ export default function ReadingScreen() {
         <Text
           style={[
             styles.verseText,
-            { fontSize, fontFamily, lineHeight: fontSize * lineHeight },
+            {
+              fontSize,
+              fontFamily,
+              lineHeight: fontSize * lineHeight,
+              textDecorationLine: isSelected ? "underline" : "none",
+              textDecorationColor: isSelected
+                ? resolvedThemeColor || "#888888"
+                : "transparent",
+            },
           ]}
         >
           <Text
@@ -510,7 +520,10 @@ export default function ReadingScreen() {
       {/* Verse Actions Bottom Sheet */}
       <VerseActionsBottomSheet
         visible={showVerseActions}
-        onClose={() => setShowVerseActions(false)}
+        onClose={() => {
+          setShowVerseActions(false);
+          setSelectedVerse(null);
+        }}
         themeColor={resolvedThemeColor}
         selectedVerse={
           selectedVerse

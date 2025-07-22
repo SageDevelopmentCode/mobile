@@ -1,5 +1,4 @@
 // Import Psalms image (we'll use the same image for all books for now)
-import PsalmsImage from "../../assets/images/books/Psalms.png";
 
 export interface OldTestamentBook {
   id: number;
@@ -16,7 +15,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Genesis",
     bookName: "GENESIS",
     description: "The beginning of all things",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Law",
   },
   {
@@ -24,7 +23,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Exodus",
     bookName: "EXODUS",
     description: "God delivers His people",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Law",
   },
   {
@@ -32,7 +31,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Leviticus",
     bookName: "LEVITICUS",
     description: "Laws for holy living",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Law",
   },
   {
@@ -40,7 +39,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Numbers",
     bookName: "NUMBERS",
     description: "Wilderness wanderings",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Law",
   },
   {
@@ -48,7 +47,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Deuteronomy",
     bookName: "DEUTERONOMY",
     description: "Moses' final words",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Law",
   },
   {
@@ -56,7 +55,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Joshua",
     bookName: "JOSHUA",
     description: "Conquering the Promised Land",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "History",
   },
   {
@@ -64,7 +63,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Judges",
     bookName: "JUDGES",
     description: "Israel's cycle of rebellion",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "History",
   },
   {
@@ -72,7 +71,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Ruth",
     bookName: "RUTH",
     description: "Love and loyalty",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "History",
   },
   {
@@ -80,7 +79,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "1 Samuel",
     bookName: "1 SAMUEL",
     description: "Israel's first kings",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "History",
   },
   {
@@ -88,7 +87,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "2 Samuel",
     bookName: "2 SAMUEL",
     description: "David's reign",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "History",
   },
   {
@@ -96,7 +95,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "1 Kings",
     bookName: "1 KINGS",
     description: "Solomon's wisdom",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "History",
   },
   {
@@ -104,7 +103,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "2 Kings",
     bookName: "2 KINGS",
     description: "Kingdom divided and fallen",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "History",
   },
   {
@@ -112,7 +111,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "1 Chronicles",
     bookName: "1 CHRONICLES",
     description: "David's lineage and legacy",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "History",
   },
   {
@@ -120,7 +119,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "2 Chronicles",
     bookName: "2 CHRONICLES",
     description: "Temple and worship",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "History",
   },
   {
@@ -128,7 +127,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Ezra",
     bookName: "EZRA",
     description: "Return from exile",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "History",
   },
   {
@@ -136,7 +135,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Nehemiah",
     bookName: "NEHEMIAH",
     description: "Rebuilding Jerusalem",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "History",
   },
   {
@@ -144,7 +143,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Esther",
     bookName: "ESTHER",
     description: "God's providence",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "History",
   },
   {
@@ -152,7 +151,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Job",
     bookName: "JOB",
     description: "Faith through suffering",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Wisdom",
   },
   {
@@ -160,7 +159,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Psalms",
     bookName: "PSALMS",
     description: "Songs of praise and prayer",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Wisdom",
   },
   {
@@ -168,7 +167,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Proverbs",
     bookName: "PROVERBS",
     description: "Practical wisdom for life",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Wisdom",
   },
   {
@@ -176,7 +175,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Ecclesiastes",
     bookName: "ECCLESIASTES",
     description: "Life's meaning and purpose",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Wisdom",
   },
   {
@@ -184,7 +183,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Song of Solomon",
     bookName: "SONG OF SOLOMON",
     description: "Love and devotion",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Wisdom",
   },
   {
@@ -192,7 +191,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Isaiah",
     bookName: "ISAIAH",
     description: "The coming Messiah",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -200,7 +199,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Jeremiah",
     bookName: "JEREMIAH",
     description: "Tears of the prophet",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -208,7 +207,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Lamentations",
     bookName: "LAMENTATIONS",
     description: "Mourning for Jerusalem",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -216,7 +215,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Ezekiel",
     bookName: "EZEKIEL",
     description: "Visions of restoration",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -224,7 +223,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Daniel",
     bookName: "DANIEL",
     description: "Faithfulness in exile",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -232,7 +231,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Hosea",
     bookName: "HOSEA",
     description: "God's unfailing love",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -240,7 +239,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Joel",
     bookName: "JOEL",
     description: "The day of the Lord",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -248,7 +247,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Amos",
     bookName: "AMOS",
     description: "Justice and righteousness",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -256,7 +255,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Obadiah",
     bookName: "OBADIAH",
     description: "God's judgment on pride",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -264,7 +263,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Jonah",
     bookName: "JONAH",
     description: "God's mercy to all nations",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -272,7 +271,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Micah",
     bookName: "MICAH",
     description: "Walking humbly with God",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -280,7 +279,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Nahum",
     bookName: "NAHUM",
     description: "God's wrath and comfort",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -288,7 +287,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Habakkuk",
     bookName: "HABAKKUK",
     description: "Living by faith",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -296,7 +295,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Zephaniah",
     bookName: "ZEPHANIAH",
     description: "The great day of the Lord",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -304,7 +303,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Haggai",
     bookName: "HAGGAI",
     description: "Rebuilding God's house",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -312,7 +311,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Zechariah",
     bookName: "ZECHARIAH",
     description: "Visions of hope",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
   {
@@ -320,7 +319,7 @@ export const oldTestamentBooks: OldTestamentBook[] = [
     title: "Malachi",
     bookName: "MALACHI",
     description: "God's faithfulness",
-    coverImage: PsalmsImage,
+    coverImage: "",
     genre: "Prophets",
   },
 ];
