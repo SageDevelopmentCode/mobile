@@ -18,7 +18,7 @@ export interface UserBookSave {
 export async function getUserBookSaves(userId: string) {
   const { data, error } = await supabase
     .schema("user_data")
-    .from("user_book_saves")
+    .from("user_saved_verses")
     .select("*")
     .eq("user_id", userId)
     .order("saved_at", { ascending: false });
@@ -35,7 +35,7 @@ export async function getUserBookSaves(userId: string) {
 export async function getUserBookSavesByBook(userId: string, bookName: string) {
   const { data, error } = await supabase
     .schema("user_data")
-    .from("user_book_saves")
+    .from("user_saved_verses")
     .select("*")
     .eq("user_id", userId)
     .eq("book_name", bookName)
@@ -61,7 +61,7 @@ export async function getUserBookSavesByChapter(
 ) {
   const { data, error } = await supabase
     .schema("user_data")
-    .from("user_book_saves")
+    .from("user_saved_verses")
     .select("*")
     .eq("user_id", userId)
     .eq("book_name", bookName)
@@ -83,7 +83,7 @@ export async function getUserBookSavesByChapter(
 export async function getUserBookSaveById(id: string) {
   const { data, error } = await supabase
     .schema("user_data")
-    .from("user_book_saves")
+    .from("user_saved_verses")
     .select("*")
     .eq("id", id)
     .single();
@@ -105,7 +105,7 @@ export async function checkIfVerseSaved(
 ) {
   const { data, error } = await supabase
     .schema("user_data")
-    .from("user_book_saves")
+    .from("user_saved_verses")
     .select("id")
     .eq("user_id", userId)
     .eq("book_name", bookName)
@@ -131,7 +131,7 @@ export async function createUserBookSave(
 ) {
   const { data, error } = await supabase
     .schema("user_data")
-    .from("user_book_saves")
+    .from("user_saved_verses")
     .insert({
       ...userBookSave,
       saved_at: new Date().toISOString(),
@@ -156,7 +156,7 @@ export async function updateUserBookSave(
 ) {
   const { data, error } = await supabase
     .schema("user_data")
-    .from("user_book_saves")
+    .from("user_saved_verses")
     .update(userBookSaveData)
     .eq("id", id)
     .select()
@@ -174,7 +174,7 @@ export async function updateUserBookSave(
 export async function updateUserBookSaveNote(id: string, personalNote: string) {
   const { data, error } = await supabase
     .schema("user_data")
-    .from("user_book_saves")
+    .from("user_saved_verses")
     .update({ personal_note: personalNote })
     .eq("id", id)
     .select()
@@ -195,7 +195,7 @@ export async function updateUserBookSaveNote(id: string, personalNote: string) {
 export async function deleteUserBookSave(id: string) {
   const { data, error } = await supabase
     .schema("user_data")
-    .from("user_book_saves")
+    .from("user_saved_verses")
     .delete()
     .eq("id", id);
 
@@ -216,7 +216,7 @@ export async function deleteUserBookSaveByVerse(
 ) {
   const { data, error } = await supabase
     .schema("user_data")
-    .from("user_book_saves")
+    .from("user_saved_verses")
     .delete()
     .eq("user_id", userId)
     .eq("book_name", bookName)
@@ -238,7 +238,7 @@ export async function deleteUserBookSaveByVerse(
 export async function getUserBookSavesCount(userId: string) {
   const { count, error } = await supabase
     .schema("user_data")
-    .from("user_book_saves")
+    .from("user_saved_verses")
     .select("*", { count: "exact", head: true })
     .eq("user_id", userId);
 
@@ -254,7 +254,7 @@ export async function getUserBookSavesCount(userId: string) {
 export async function getUserBookSavesGroupedByBook(userId: string) {
   const { data, error } = await supabase
     .schema("user_data")
-    .from("user_book_saves")
+    .from("user_saved_verses")
     .select("*")
     .eq("user_id", userId)
     .order("book_name", { ascending: true })

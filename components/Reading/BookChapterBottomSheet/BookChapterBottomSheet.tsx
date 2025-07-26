@@ -7,6 +7,7 @@ import {
   Modal,
   Dimensions,
   Animated,
+  TextInput,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { bookChapters } from "@/utils/data/bookChapters";
@@ -33,13 +34,9 @@ export default function BookChapterBottomSheet({
   onBookChapterSelect,
 }: BookChapterBottomSheetProps) {
   const [expandedBooks, setExpandedBooks] = useState<Set<string>>(new Set());
-  const [expandedTestaments, setExpandedTestaments] = useState<Set<string>>(
-    new Set(["Old Testament", "New Testament"]) // Start with both expanded
-  );
-
-  // Animation refs for each testament
-  const otAnimatedHeight = useRef(new Animated.Value(1)).current;
-  const ntAnimatedHeight = useRef(new Animated.Value(1)).current;
+  const [selectedTestament, setSelectedTestament] =
+    useState<keyof typeof bookChapters>("Old Testament");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   // Slide animation for bottom sheet
   const slideAnim = useRef(new Animated.Value(height * 0.9)).current;
@@ -47,14 +44,6 @@ export default function BookChapterBottomSheet({
   // Reset animation values when modal opens
   useEffect(() => {
     if (visible) {
-      // Set initial values based on expanded state
-      otAnimatedHeight.setValue(
-        expandedTestaments.has("Old Testament") ? 1 : 0
-      );
-      ntAnimatedHeight.setValue(
-        expandedTestaments.has("New Testament") ? 1 : 0
-      );
-
       // Slide up
       Animated.timing(slideAnim, {
         toValue: 0,
@@ -68,14 +57,10 @@ export default function BookChapterBottomSheet({
         duration: 250,
         useNativeDriver: true,
       }).start();
+      // Clear search when closing
+      setSearchQuery("");
     }
-  }, [
-    visible,
-    expandedTestaments,
-    otAnimatedHeight,
-    ntAnimatedHeight,
-    slideAnim,
-  ]);
+  }, [visible, slideAnim]);
 
   const toggleBookExpansion = (bookName: string) => {
     const newExpanded = new Set(expandedBooks);
@@ -87,34 +72,62 @@ export default function BookChapterBottomSheet({
     setExpandedBooks(newExpanded);
   };
 
-  const getAnimatedValue = (testamentName: string) => {
-    return testamentName === "Old Testament"
-      ? otAnimatedHeight
-      : ntAnimatedHeight;
+  const clearSearch = () => {
+    setSearchQuery("");
   };
 
-  const toggleTestamentExpansion = (testamentName: string) => {
-    const newExpanded = new Set(expandedTestaments);
-    const animatedValue = getAnimatedValue(testamentName);
-
-    if (newExpanded.has(testamentName)) {
-      // Collapse
-      newExpanded.delete(testamentName);
-      Animated.timing(animatedValue, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-    } else {
-      // Expand
-      newExpanded.add(testamentName);
-      Animated.timing(animatedValue, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
+  const getFilteredBooks = () => {
+    if (!searchQuery.trim()) {
+      return { [selectedTestament]: bookChapters[selectedTestament] };
     }
-    setExpandedTestaments(newExpanded);
+
+    // When searching, show results from both testaments
+    const filtered: Record<string, Record<string, number>> = {};
+
+    Object.entries(bookChapters).forEach(([testamentName, books]) => {
+      const matchingBooks: Record<string, number> = {};
+
+      Object.entries(books).forEach(([bookName, chapterCount]) => {
+        if (bookName.toLowerCase().includes(searchQuery.toLowerCase())) {
+          matchingBooks[bookName] = chapterCount;
+        }
+      });
+
+      if (Object.keys(matchingBooks).length > 0) {
+        filtered[testamentName] = matchingBooks;
+      }
+    });
+
+    return filtered;
+  };
+
+  const renderSearchBar = () => {
+    return (
+      <View style={styles.searchContainer}>
+        <View style={styles.searchInputContainer}>
+          <Ionicons
+            name="search"
+            size={20}
+            color="#888888"
+            style={styles.searchIcon}
+          />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search for a book..."
+            placeholderTextColor="#888888"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            autoCapitalize="words"
+            autoCorrect={false}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
+              <Ionicons name="close-circle" size={20} color="#888888" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    );
   };
 
   const renderChapterButtons = (bookName: string, chapterCount: number) => {
@@ -154,81 +167,100 @@ export default function BookChapterBottomSheet({
     );
   };
 
+  const renderTestamentPillSelector = () => {
+    // Hide pill selector when searching
+    if (searchQuery.trim()) return null;
+
+    const testaments: (keyof typeof bookChapters)[] = [
+      "Old Testament",
+      "New Testament",
+    ];
+
+    return (
+      <View style={styles.pillSelector}>
+        {testaments.map((testament) => (
+          <TouchableOpacity
+            key={testament}
+            style={[
+              styles.pillButton,
+              selectedTestament === testament && {
+                backgroundColor: themeColor ? `${themeColor}CC` : "#888888CC",
+              },
+            ]}
+            onPress={() => setSelectedTestament(testament)}
+          >
+            <ButtonText
+              style={[
+                styles.pillButtonText,
+                selectedTestament === testament && {
+                  color: "#FFFFFF",
+                  fontWeight: "700",
+                },
+              ]}
+            >
+              {testament}
+            </ButtonText>
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+  };
+
   const renderTestament = (
     testamentName: string,
     books: Record<string, number>
   ) => {
-    const isTestamentExpanded = expandedTestaments.has(testamentName);
-    const animatedValue = getAnimatedValue(testamentName);
-
     return (
       <View key={testamentName} style={styles.testamentSection}>
-        <TouchableOpacity
-          style={styles.testamentHeader}
-          onPress={() => toggleTestamentExpansion(testamentName)}
-        >
-          <Heading style={styles.testamentTitle}>{testamentName}</Heading>
-          <ButtonText style={styles.expandCollapseText}>
-            {isTestamentExpanded ? "Collapse" : "Expand"}
-          </ButtonText>
-        </TouchableOpacity>
-
-        <Animated.View
-          style={[
-            styles.booksContainer,
-            {
-              maxHeight: animatedValue.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 10000], // Very large to ensure all content fits
-              }),
-              opacity: animatedValue,
-            },
-          ]}
-        >
-          {Object.entries(books).map(([bookName, chapterCount]) => (
-            <View key={bookName} style={styles.bookSection}>
-              <TouchableOpacity
-                style={[
-                  styles.bookHeader,
-                  currentBook === bookName && {
-                    backgroundColor: themeColor
-                      ? `${themeColor}20`
-                      : "#88888820",
-                  },
-                ]}
-                onPress={() => toggleBookExpansion(bookName)}
-              >
-                <View style={styles.bookInfo}>
-                  <ButtonText
-                    style={[
-                      styles.bookTitle,
-                      currentBook === bookName && {
-                        color: themeColor || "#888888",
-                        fontWeight: "700",
-                      },
-                    ]}
-                  >
-                    {bookName}
-                  </ButtonText>
-                  <ButtonText style={styles.chapterCount}>
-                    {chapterCount} {chapterCount === 1 ? "chapter" : "chapters"}
-                  </ButtonText>
-                </View>
-                <Ionicons
-                  name={
-                    expandedBooks.has(bookName) ? "chevron-up" : "chevron-down"
-                  }
-                  size={20}
-                  color="#888888"
-                />
-              </TouchableOpacity>
-              {renderChapterButtons(bookName, chapterCount)}
-            </View>
-          ))}
-        </Animated.View>
+        {/* Show testament title when searching */}
+        {searchQuery.trim() && (
+          <Heading style={styles.searchResultsTestamentTitle}>
+            {testamentName}
+          </Heading>
+        )}
+        {Object.entries(books).map(([bookName, chapterCount]) => (
+          <View key={bookName} style={styles.bookSection}>
+            <TouchableOpacity
+              style={[
+                styles.bookHeader,
+                currentBook === bookName && {
+                  backgroundColor: themeColor ? `${themeColor}20` : "#88888820",
+                },
+              ]}
+              onPress={() => toggleBookExpansion(bookName)}
+            >
+              <View style={styles.bookInfo}>
+                <ButtonText
+                  style={[
+                    styles.bookTitle,
+                    currentBook === bookName && {
+                      color: themeColor || "#888888",
+                      fontWeight: "700",
+                    },
+                  ]}
+                >
+                  {bookName}
+                </ButtonText>
+                <ButtonText style={styles.chapterCount}>
+                  {chapterCount} {chapterCount === 1 ? "chapter" : "chapters"}
+                </ButtonText>
+              </View>
+              <Ionicons
+                name={
+                  expandedBooks.has(bookName) ? "chevron-up" : "chevron-down"
+                }
+                size={20}
+                color="#888888"
+              />
+            </TouchableOpacity>
+            {renderChapterButtons(bookName, chapterCount)}
+          </View>
+        ))}
       </View>
     );
   };
+
+  const filteredBooks = getFilteredBooks();
 
   return (
     <Modal
@@ -256,14 +288,27 @@ export default function BookChapterBottomSheet({
             </TouchableOpacity>
           </View>
 
+          {/* Search Bar */}
+          {renderSearchBar()}
+
+          {/* Pill Selector */}
+          {renderTestamentPillSelector()}
+
           {/* Content */}
           <ScrollView
             style={styles.content}
             showsVerticalScrollIndicator={false}
             nestedScrollEnabled={true}
           >
-            {Object.entries(bookChapters).map(([testamentName, books]) =>
+            {Object.entries(filteredBooks).map(([testamentName, books]) =>
               renderTestament(testamentName, books)
+            )}
+            {Object.keys(filteredBooks).length === 0 && searchQuery.trim() && (
+              <View style={styles.noResultsContainer}>
+                <ButtonText style={styles.noResultsText}>
+                  No books found matching "{searchQuery}"
+                </ButtonText>
+              </View>
             )}
           </ScrollView>
         </Animated.View>

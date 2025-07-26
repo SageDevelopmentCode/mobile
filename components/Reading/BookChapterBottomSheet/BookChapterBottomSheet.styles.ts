@@ -33,34 +33,67 @@ export const styles = StyleSheet.create({
   closeButton: {
     padding: 4,
   },
-  content: {
+  searchContainer: {
     paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 12,
   },
-  testamentSection: {
-    marginBottom: 24,
-  },
-  testamentHeader: {
+  searchInputContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-    marginBottom: 8,
-    marginTop: 16,
+    backgroundColor: "#2A2A2A",
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 2,
   },
-  testamentTitle: {
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
     fontSize: 16,
-    fontWeight: "700",
     color: colors.PrimaryWhite,
+    paddingVertical: 12,
   },
-  expandCollapseText: {
+  clearButton: {
+    padding: 4,
+    marginLeft: 8,
+  },
+  pillSelector: {
+    flexDirection: "row",
+    marginHorizontal: 16,
+    marginTop: 4,
+    marginBottom: 12,
+    backgroundColor: "#2A2A2A",
+    borderRadius: 12,
+    padding: 4,
+  },
+  pillButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  pillButtonText: {
     fontSize: 14,
     fontWeight: "600",
     color: "#888888",
   },
-  booksContainer: {
-    paddingLeft: 8,
-    overflow: "hidden",
+  content: {
+    paddingHorizontal: 16,
+    paddingTop: 4,
+  },
+  testamentSection: {
+    marginBottom: 24,
+  },
+  searchResultsTestamentTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: colors.PrimaryWhite,
+    marginBottom: 12,
+    marginTop: 8,
   },
   bookSection: {
     marginBottom: 8,
@@ -107,5 +140,14 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     color: colors.PrimaryWhite,
+  },
+  noResultsContainer: {
+    paddingVertical: 32,
+    alignItems: "center",
+  },
+  noResultsText: {
+    fontSize: 16,
+    color: "#888888",
+    textAlign: "center",
   },
 });
