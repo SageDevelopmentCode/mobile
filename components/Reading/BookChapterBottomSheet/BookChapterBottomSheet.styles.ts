@@ -34,11 +34,15 @@ export const styles = StyleSheet.create({
     padding: 4,
   },
   searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 12,
+    gap: 12,
   },
   searchInputContainer: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#2A2A2A",
@@ -58,6 +62,14 @@ export const styles = StyleSheet.create({
   clearButton: {
     padding: 4,
     marginLeft: 8,
+  },
+  bookmarkButton: {
+    width: 48,
+    height: 48,
+    backgroundColor: "#2A2A2A",
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
   },
   pillSelector: {
     flexDirection: "row",

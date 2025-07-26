@@ -126,6 +126,9 @@ export default function BookChapterBottomSheet({
             </TouchableOpacity>
           )}
         </View>
+        <TouchableOpacity style={styles.bookmarkButton}>
+          <Ionicons name="bookmark" size={24} color="#888888" />
+        </TouchableOpacity>
       </View>
     );
   };
