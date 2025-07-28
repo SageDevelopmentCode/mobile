@@ -21,6 +21,14 @@ import TranslationBottomSheet from "@/components/Reading/TranslationBottomSheet/
 import ReadingActionsBottomSheet from "@/components/Reading/ReadingActionsBottomSheet/ReadingActionsBottomSheet";
 import VerseActionsBottomSheet from "@/components/Reading/VerseActionsBottomSheet/VerseActionsBottomSheet";
 import { bookThemeColor } from "@/utils/data/bookThemeColor";
+import { useAuth } from "@/context/AuthContext";
+import {
+  createUserBookHighlight,
+  getUserBookHighlightsByChapter,
+  checkIfVerseHighlighted,
+  updateUserBookHighlightColor,
+  UserBookHighlight,
+} from "@/lib/supabase/db/user_book_highlights";
 
 const { width } = Dimensions.get("window");
 
@@ -41,6 +49,7 @@ const DEFAULT_FONT_SETTINGS = {
 export default function ReadingScreen() {
   const router = useRouter();
   const navigation = useNavigation();
+  const { session } = useAuth();
   const { bookName, themeColor, chapter } = useLocalSearchParams<{
     bookName: string;
     themeColor?: string;
@@ -74,6 +83,7 @@ export default function ReadingScreen() {
   const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
   const [currentTranslation, setCurrentTranslation] = useState("NIV");
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [highlights, setHighlights] = useState<UserBookHighlight[]>([]);
 
   // Helper function to get line height value from mode
   const getLineHeightValue = (mode: string) => {
@@ -167,6 +177,7 @@ export default function ReadingScreen() {
   useEffect(() => {
     if (bookName) {
       fetchChapter(currentChapter, currentTranslation);
+      loadHighlights();
     }
   }, [bookName, currentChapter, currentTranslation]);
 
@@ -183,6 +194,22 @@ export default function ReadingScreen() {
       console.error("Error fetching chapter:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadHighlights = async () => {
+    if (!session?.user?.id || !bookName) return;
+
+    try {
+      const chapterHighlights = await getUserBookHighlightsByChapter(
+        session.user.id,
+        bookName,
+        currentChapter
+      );
+      setHighlights(chapterHighlights || []);
+    } catch (error) {
+      console.error("Error loading highlights:", error);
+      setHighlights([]);
     }
   };
 
@@ -283,15 +310,82 @@ export default function ReadingScreen() {
     setShowVerseActions(true);
   };
 
-  const handleHighlightVerse = (verseId: string, color: string) => {
-    console.log("Highlighting verse:", verseId, "with color:", color);
-    // TODO: Implement verse highlighting functionality
-    // This will be used later when highlighting is fully implemented
+  const handleHighlightVerse = async (verseId: string, color: string) => {
+    if (!session?.user?.id || !bookName || !selectedVerse) return;
+
+    try {
+      const verseNumber = parseInt(selectedVerse.verseId.toString());
+
+      // Check if verse is already highlighted
+      const existingHighlight = await checkIfVerseHighlighted(
+        session.user.id,
+        bookName,
+        currentChapter,
+        verseNumber
+      );
+
+      if (existingHighlight) {
+        // Update existing highlight color
+        await updateUserBookHighlightColor(existingHighlight.id, color);
+        console.log("Updated highlight color for verse:", verseId);
+      } else {
+        // Create new highlight
+        const highlightData = {
+          user_id: session.user.id,
+          book_name: bookName,
+          chapter: currentChapter,
+          verse: verseNumber,
+          verse_text: selectedVerse.verse,
+          color: color,
+        };
+
+        await createUserBookHighlight(highlightData);
+        console.log("Created new highlight for verse:", verseId);
+      }
+
+      // Reload highlights to update the UI
+      await loadHighlights();
+    } catch (error) {
+      console.error("Error highlighting verse:", error);
+    }
+  };
+
+  // Helper function to get highlight color for a verse
+  const getVerseHighlightColor = (verseNumber: number): string | null => {
+    const highlight = highlights.find((h) => h.verse === verseNumber);
+    return highlight ? highlight.color : null;
   };
 
   const renderVerse = (verse: Verse, index: number) => {
     const lineHeight = getLineHeightValue(lineHeightMode);
     const isSelected = selectedVerse?.id === verse.id;
+    const verseNumber = parseInt(verse.verseId.toString());
+    const highlightColor = getVerseHighlightColor(verseNumber);
+
+    // Split verse text into words for individual highlighting
+    const renderHighlightedText = (text: string) => {
+      if (!highlightColor) {
+        return text;
+      }
+
+      const words = text.split(" ");
+      return words.map((word, index) => (
+        <Text
+          key={index}
+          style={{
+            backgroundColor: highlightColor,
+            paddingHorizontal: 2,
+            paddingVertical: 1,
+            marginHorizontal: 1,
+            borderRadius: 2,
+            overflow: "hidden",
+          }}
+        >
+          {word}
+          {index < words.length - 1 ? " " : ""}
+        </Text>
+      ));
+    };
 
     return (
       <TouchableOpacity
@@ -318,11 +412,12 @@ export default function ReadingScreen() {
             style={{
               color: resolvedThemeColor || "#888888",
               fontWeight: "700",
+              backgroundColor: highlightColor || "transparent",
             }}
           >
             {verse.verseId}{" "}
           </Text>
-          {verse.verse}
+          {highlightColor ? renderHighlightedText(verse.verse) : verse.verse}
         </Text>
       </TouchableOpacity>
     );
@@ -537,6 +632,11 @@ export default function ReadingScreen() {
         onHighlightVerse={handleHighlightVerse}
         bookName={bookName || ""}
         currentChapter={currentChapter}
+        currentHighlightColor={
+          selectedVerse
+            ? getVerseHighlightColor(parseInt(selectedVerse.verseId.toString()))
+            : null
+        }
       />
     </SafeAreaView>
   );

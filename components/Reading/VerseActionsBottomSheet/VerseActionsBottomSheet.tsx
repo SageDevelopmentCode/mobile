@@ -36,6 +36,7 @@ interface VerseActionsBottomSheetProps {
   onHighlightVerse?: (verseId: string, color: string) => void;
   bookName?: string;
   currentChapter?: number;
+  currentHighlightColor?: string | null;
 }
 
 export default function VerseActionsBottomSheet({
@@ -46,6 +47,7 @@ export default function VerseActionsBottomSheet({
   onHighlightVerse,
   bookName,
   currentChapter,
+  currentHighlightColor,
 }: VerseActionsBottomSheetProps) {
   const slideAnim = useRef(new Animated.Value(height * 0.4)).current;
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -221,7 +223,20 @@ export default function VerseActionsBottomSheet({
                     style={[styles.colorCircle, { backgroundColor: color }]}
                     onPress={() => handleHighlightSelect(color)}
                     activeOpacity={0.8}
-                  />
+                  >
+                    {currentHighlightColor === color && (
+                      <Ionicons
+                        name="checkmark"
+                        size={20}
+                        color="#FFFFFF"
+                        style={{
+                          textShadowColor: "rgba(0,0,0,0.75)",
+                          textShadowOffset: { width: 1, height: 1 },
+                          textShadowRadius: 2,
+                        }}
+                      />
+                    )}
+                  </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>
