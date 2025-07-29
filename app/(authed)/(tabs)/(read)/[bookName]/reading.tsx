@@ -356,36 +356,35 @@ export default function ReadingScreen() {
     return highlight ? highlight.color : null;
   };
 
+  // Helper function to determine if a color is light and return appropriate text color
+  const getTextColorForHighlight = (backgroundColor: string): string => {
+    // Convert hex to RGB
+    const hex = backgroundColor.replace("#", "");
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    // Calculate relative luminance
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+    // If color is light (luminance > 0.6), return a darker version
+    if (luminance > 0.6) {
+      // Create a darker version by reducing RGB values
+      const darkerR = Math.max(0, Math.floor(r * 0.3));
+      const darkerG = Math.max(0, Math.floor(g * 0.3));
+      const darkerB = Math.max(0, Math.floor(b * 0.3));
+      return `rgb(${darkerR}, ${darkerG}, ${darkerB})`;
+    }
+
+    // For dark colors, keep white text
+    return "#FFFFFF";
+  };
+
   const renderVerse = (verse: Verse, index: number) => {
     const lineHeight = getLineHeightValue(lineHeightMode);
     const isSelected = selectedVerse?.id === verse.id;
     const verseNumber = parseInt(verse.verseId.toString());
     const highlightColor = getVerseHighlightColor(verseNumber);
-
-    // Split verse text into words for individual highlighting
-    const renderHighlightedText = (text: string) => {
-      if (!highlightColor) {
-        return text;
-      }
-
-      const words = text.split(" ");
-      return words.map((word, index) => (
-        <Text
-          key={index}
-          style={{
-            backgroundColor: highlightColor,
-            paddingHorizontal: 2,
-            paddingVertical: 1,
-            marginHorizontal: 1,
-            borderRadius: 2,
-            overflow: "hidden",
-          }}
-        >
-          {word}
-          {index < words.length - 1 ? " " : ""}
-        </Text>
-      ));
-    };
 
     return (
       <TouchableOpacity
@@ -410,14 +409,26 @@ export default function ReadingScreen() {
         >
           <Text
             style={{
-              color: resolvedThemeColor || "#888888",
+              color: highlightColor
+                ? getTextColorForHighlight(highlightColor)
+                : resolvedThemeColor || "#888888",
               fontWeight: "700",
               backgroundColor: highlightColor || "transparent",
             }}
           >
             {verse.verseId}{" "}
           </Text>
-          {highlightColor ? renderHighlightedText(verse.verse) : verse.verse}
+          <Text
+            style={{
+              backgroundColor: highlightColor || "transparent",
+              color: highlightColor
+                ? getTextColorForHighlight(highlightColor)
+                : "#FFFFFF",
+              textShadowColor: "transparent",
+            }}
+          >
+            {verse.verse}
+          </Text>
         </Text>
       </TouchableOpacity>
     );

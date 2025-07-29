@@ -220,21 +220,21 @@ export default function VerseActionsBottomSheet({
                 {highlightColors.map((color, index) => (
                   <TouchableOpacity
                     key={index}
-                    style={[styles.colorCircle, { backgroundColor: color }]}
+                    style={[
+                      styles.colorCircle,
+                      { backgroundColor: color },
+                      currentHighlightColor === color && {
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderWidth: 3,
+                        borderColor: "#FFFFFF",
+                      },
+                    ]}
                     onPress={() => handleHighlightSelect(color)}
                     activeOpacity={0.8}
                   >
                     {currentHighlightColor === color && (
-                      <Ionicons
-                        name="checkmark"
-                        size={20}
-                        color="#FFFFFF"
-                        style={{
-                          textShadowColor: "rgba(0,0,0,0.75)",
-                          textShadowOffset: { width: 1, height: 1 },
-                          textShadowRadius: 2,
-                        }}
-                      />
+                      <Ionicons name="checkmark" size={24} color="#FFFFFF" />
                     )}
                   </TouchableOpacity>
                 ))}
