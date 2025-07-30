@@ -33,6 +33,7 @@ const emojiAssets: { [key: string]: any } = {
   "1f516": require("@/assets/images/emojis/1f516.png"), // 🔖 bookmark (save)
   "1f4cb": require("@/assets/images/emojis/1f4cb.png"), // 📋 clipboard (copy)
   "1f5bc": require("@/assets/images/emojis/1f5bc.png"), // 🖼️ framed picture (image)
+  "2696": require("@/assets/images/emojis/2696.png"), // ⚖️ balance scale (compare)
 };
 
 interface TwemojiProps {

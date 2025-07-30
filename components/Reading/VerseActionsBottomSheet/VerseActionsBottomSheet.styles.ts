@@ -98,4 +98,47 @@ export const styles = StyleSheet.create({
     color: "#666666", // Dark gray
     textAlign: "center",
   },
+  // User interaction avatars
+  interactionContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 7,
+  },
+  avatarsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  avatar: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    marginRight: -8, // Overlap avatars
+    borderWidth: 2,
+    borderColor: "#1C1C1C",
+  },
+  avatarText: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "#FFFFFF",
+    textAlign: "center",
+    lineHeight: 20,
+  },
+  moreAvatarsIndicator: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: "#333333",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: "#1C1C1C",
+  },
+  moreAvatarsText: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "#888888",
+    textAlign: "center",
+  },
 });

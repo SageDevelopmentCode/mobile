@@ -40,16 +40,75 @@ export default function BookChapterBottomSheet({
 
   // Slide animation for bottom sheet
   const slideAnim = useRef(new Animated.Value(height * 0.9)).current;
+  // ScrollView ref for auto-scrolling
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  // Function to find which testament contains the current book
+  const findTestamentForBook = (
+    bookName: string
+  ): keyof typeof bookChapters | null => {
+    for (const [testamentName, books] of Object.entries(bookChapters)) {
+      if (bookName in books) {
+        return testamentName as keyof typeof bookChapters;
+      }
+    }
+    return null;
+  };
+
+  // Function to scroll to current book
+  const scrollToCurrentBook = () => {
+    if (!currentBook || !scrollViewRef.current) return;
+
+    // Small delay to ensure the view is rendered
+    setTimeout(() => {
+      // Calculate approximate scroll position
+      const testament = findTestamentForBook(currentBook);
+      if (!testament) return;
+
+      const books = bookChapters[testament];
+      const bookNames = Object.keys(books);
+      const currentBookIndex = bookNames.indexOf(currentBook);
+
+      if (currentBookIndex !== -1) {
+        // Approximate height calculation (adjust these values based on your actual component heights)
+        const searchBarHeight = 80;
+        const pillSelectorHeight = 60;
+        const testamentTitleHeight = 0; // Only shown when searching
+        const bookHeaderHeight = 70;
+
+        // Calculate scroll position
+        const scrollY =
+          searchBarHeight +
+          pillSelectorHeight +
+          testamentTitleHeight +
+          currentBookIndex * bookHeaderHeight;
+
+        scrollViewRef.current?.scrollTo({
+          y: Math.max(0, scrollY - 100), // Subtract 100 to show some context above
+          animated: true,
+        });
+      }
+    }, 400); // Wait for animation to complete
+  };
 
   // Reset animation values when modal opens
   useEffect(() => {
     if (visible) {
+      // Set the correct testament for the current book
+      const testament = findTestamentForBook(currentBook);
+      if (testament) {
+        setSelectedTestament(testament);
+      }
+
       // Slide up
       Animated.timing(slideAnim, {
         toValue: 0,
         duration: 300,
         useNativeDriver: true,
-      }).start();
+      }).start(() => {
+        // Scroll to current book after animation completes
+        scrollToCurrentBook();
+      });
     } else {
       // Slide down
       Animated.timing(slideAnim, {
@@ -60,7 +119,7 @@ export default function BookChapterBottomSheet({
       // Clear search when closing
       setSearchQuery("");
     }
-  }, [visible, slideAnim]);
+  }, [visible, slideAnim, currentBook]);
 
   const toggleBookExpansion = (bookName: string) => {
     const newExpanded = new Set(expandedBooks);
@@ -299,6 +358,7 @@ export default function BookChapterBottomSheet({
 
           {/* Content */}
           <ScrollView
+            ref={scrollViewRef}
             style={styles.content}
             showsVerticalScrollIndicator={false}
             nestedScrollEnabled={true}

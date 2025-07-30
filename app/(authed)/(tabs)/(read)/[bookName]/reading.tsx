@@ -29,6 +29,13 @@ import {
   updateUserBookHighlightColor,
   UserBookHighlight,
 } from "@/lib/supabase/db/user_book_highlights";
+import {
+  createUserBookSave,
+  checkIfVerseSaved,
+  deleteUserBookSaveByVerse,
+  getUserBookSavesByChapter,
+  UserBookSave,
+} from "@/lib/supabase/db/user_saved_verses";
 
 const { width } = Dimensions.get("window");
 
@@ -84,6 +91,7 @@ export default function ReadingScreen() {
   const [currentTranslation, setCurrentTranslation] = useState("NIV");
   const [scrollProgress, setScrollProgress] = useState(0);
   const [highlights, setHighlights] = useState<UserBookHighlight[]>([]);
+  const [savedVerses, setSavedVerses] = useState<UserBookSave[]>([]);
 
   // Helper function to get line height value from mode
   const getLineHeightValue = (mode: string) => {
@@ -178,6 +186,7 @@ export default function ReadingScreen() {
     if (bookName) {
       fetchChapter(currentChapter, currentTranslation);
       loadHighlights();
+      loadSavedVerses();
     }
   }, [bookName, currentChapter, currentTranslation]);
 
@@ -210,6 +219,22 @@ export default function ReadingScreen() {
     } catch (error) {
       console.error("Error loading highlights:", error);
       setHighlights([]);
+    }
+  };
+
+  const loadSavedVerses = async () => {
+    if (!session?.user?.id || !bookName) return;
+
+    try {
+      const chapterSavedVerses = await getUserBookSavesByChapter(
+        session.user.id,
+        bookName,
+        currentChapter
+      );
+      setSavedVerses(chapterSavedVerses || []);
+    } catch (error) {
+      console.error("Error loading saved verses:", error);
+      setSavedVerses([]);
     }
   };
 
@@ -356,6 +381,49 @@ export default function ReadingScreen() {
     return highlight ? highlight.color : null;
   };
 
+  // Helper function to check if a verse is saved
+  const getVerseSavedStatus = (verseNumber: number): boolean => {
+    return savedVerses.some((saved) => saved.verse === verseNumber);
+  };
+
+  // Handle save/unsave verse
+  const handleSaveVerse = async (verseId: string, shouldSave: boolean) => {
+    if (!session?.user?.id || !bookName || !selectedVerse) return;
+
+    try {
+      const verseNumber = parseInt(selectedVerse.verseId.toString());
+
+      if (shouldSave) {
+        // Save the verse
+        const saveData = {
+          user_id: session.user.id,
+          book_name: bookName,
+          chapter: currentChapter,
+          verse: verseNumber,
+          verse_text: selectedVerse.verse,
+          translation: currentTranslation,
+        };
+
+        await createUserBookSave(saveData);
+        console.log("Saved verse:", verseId);
+      } else {
+        // Unsave the verse
+        await deleteUserBookSaveByVerse(
+          session.user.id,
+          bookName,
+          currentChapter,
+          verseNumber
+        );
+        console.log("Unsaved verse:", verseId);
+      }
+
+      // Reload saved verses to update the UI
+      await loadSavedVerses();
+    } catch (error) {
+      console.error("Error saving/unsaving verse:", error);
+    }
+  };
+
   // Helper function to determine if a color is light and return appropriate text color
   const getTextColorForHighlight = (backgroundColor: string): string => {
     // Convert hex to RGB
@@ -386,6 +454,75 @@ export default function ReadingScreen() {
     const verseNumber = parseInt(verse.verseId.toString());
     const highlightColor = getVerseHighlightColor(verseNumber);
 
+    // Create a more transparent version of the highlight color for modern look
+    const getTransparentHighlight = (color: string) => {
+      if (!color) return "transparent";
+      // Add opacity to make it look more modern
+      if (color.startsWith("#")) {
+        return color + "40"; // 25% opacity
+      }
+      return color;
+    };
+
+    const transparentHighlight = getTransparentHighlight(highlightColor || "");
+
+    if (highlightColor) {
+      // Render highlighted verse with modern styling
+      return (
+        <TouchableOpacity
+          key={verse.id}
+          style={styles.verseContainer}
+          onPress={() => handleVersePress(verse)}
+          activeOpacity={0.7}
+        >
+          <View
+            style={[
+              styles.highlightContainer,
+              {
+                backgroundColor: transparentHighlight,
+                borderLeftWidth: 2,
+                borderLeftColor: highlightColor,
+              },
+            ]}
+          >
+            <Text
+              style={{
+                color: highlightColor,
+                fontWeight: "700",
+                fontSize: fontSize * 0.9,
+                fontFamily,
+                marginRight: 8,
+                minWidth: 24,
+                textAlign: "center",
+                lineHeight: fontSize * lineHeight * 0.9,
+                marginTop: 2,
+              }}
+            >
+              {verse.verseId}
+            </Text>
+            <Text
+              style={[
+                styles.highlightedVerseText,
+                {
+                  color: "#FFFFFF",
+                  fontSize,
+                  fontFamily,
+                  lineHeight: fontSize * lineHeight,
+                  textDecorationLine: isSelected ? "underline" : "none",
+                  textDecorationColor: isSelected
+                    ? resolvedThemeColor || "#888888"
+                    : "transparent",
+                },
+              ]}
+            >
+              {verse.verse}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      );
+    }
+
+    // Render non-highlighted verse with original styling
     return (
       <TouchableOpacity
         key={verse.id}
@@ -393,43 +530,41 @@ export default function ReadingScreen() {
         onPress={() => handleVersePress(verse)}
         activeOpacity={0.7}
       >
-        <Text
-          style={[
-            styles.verseText,
-            {
-              fontSize,
-              fontFamily,
-              lineHeight: fontSize * lineHeight,
-              textDecorationLine: isSelected ? "underline" : "none",
-              textDecorationColor: isSelected
-                ? resolvedThemeColor || "#888888"
-                : "transparent",
-            },
-          ]}
-        >
+        <View style={styles.nonHighlightedText}>
           <Text
             style={{
-              color: highlightColor
-                ? getTextColorForHighlight(highlightColor)
-                : resolvedThemeColor || "#888888",
+              color: resolvedThemeColor || "#888888",
               fontWeight: "700",
-              backgroundColor: highlightColor || "transparent",
+              fontSize: fontSize * 0.9,
+              fontFamily,
+              marginRight: 8,
+              minWidth: 24,
+              textAlign: "center",
+              lineHeight: fontSize * lineHeight * 0.9,
+              marginTop: 2,
             }}
           >
-            {verse.verseId}{" "}
+            {verse.verseId}
           </Text>
           <Text
-            style={{
-              backgroundColor: highlightColor || "transparent",
-              color: highlightColor
-                ? getTextColorForHighlight(highlightColor)
-                : "#FFFFFF",
-              textShadowColor: "transparent",
-            }}
+            style={[
+              styles.verseText,
+              {
+                fontSize,
+                fontFamily,
+                lineHeight: fontSize * lineHeight,
+                textDecorationLine: isSelected ? "underline" : "none",
+                textDecorationColor: isSelected
+                  ? resolvedThemeColor || "#888888"
+                  : "transparent",
+                color: "#FFFFFF",
+                flex: 1,
+              },
+            ]}
           >
             {verse.verse}
           </Text>
-        </Text>
+        </View>
       </TouchableOpacity>
     );
   };
@@ -641,12 +776,18 @@ export default function ReadingScreen() {
             : undefined
         }
         onHighlightVerse={handleHighlightVerse}
+        onSaveVerse={handleSaveVerse}
         bookName={bookName || ""}
         currentChapter={currentChapter}
         currentHighlightColor={
           selectedVerse
             ? getVerseHighlightColor(parseInt(selectedVerse.verseId.toString()))
             : null
+        }
+        currentSavedStatus={
+          selectedVerse
+            ? getVerseSavedStatus(parseInt(selectedVerse.verseId.toString()))
+            : false
         }
       />
     </SafeAreaView>

@@ -201,4 +201,25 @@ export const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
   },
+  // Modern highlight styles
+  highlightContainer: {
+    borderRadius: 6,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    marginVertical: 1,
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
+  highlightedVerseText: {
+    flex: 1,
+    borderRadius: 4,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    overflow: "hidden",
+  },
+  nonHighlightedText: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "flex-start",
+  },
 });

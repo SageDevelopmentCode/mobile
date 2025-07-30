@@ -24,6 +24,13 @@ interface VerseAction {
   onPress: () => void;
 }
 
+interface UserInteraction {
+  id: string;
+  name: string;
+  initials: string;
+  color: string;
+}
+
 interface VerseActionsBottomSheetProps {
   visible: boolean;
   onClose: () => void;
@@ -34,9 +41,12 @@ interface VerseActionsBottomSheetProps {
     verse: string;
   };
   onHighlightVerse?: (verseId: string, color: string) => void;
+  onSaveVerse?: (verseId: string, shouldSave: boolean) => void;
   bookName?: string;
   currentChapter?: number;
   currentHighlightColor?: string | null;
+  currentSavedStatus?: boolean;
+  userInteractions?: UserInteraction[];
 }
 
 export default function VerseActionsBottomSheet({
@@ -45,9 +55,12 @@ export default function VerseActionsBottomSheet({
   themeColor,
   selectedVerse,
   onHighlightVerse,
+  onSaveVerse,
   bookName,
   currentChapter,
   currentHighlightColor,
+  currentSavedStatus,
+  userInteractions: propUserInteractions,
 }: VerseActionsBottomSheetProps) {
   const slideAnim = useRef(new Animated.Value(height * 0.4)).current;
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -99,10 +112,13 @@ export default function VerseActionsBottomSheet({
   const verseActions: VerseAction[] = [
     {
       id: "save",
-      label: "Save",
+      label: currentSavedStatus ? "Saved" : "Save",
       emoji: "1f516", // 🔖 bookmark
       onPress: () => {
-        console.log("Save verse:", selectedVerse?.verseId);
+        if (selectedVerse) {
+          // Toggle save state - if currently saved, unsave it; if not saved, save it
+          onSaveVerse?.(selectedVerse.verseId, !currentSavedStatus);
+        }
         handleClose();
       },
     },
@@ -121,6 +137,15 @@ export default function VerseActionsBottomSheet({
       emoji: "1f4cb", // 📋 clipboard
       onPress: () => {
         console.log("Copy verse:", selectedVerse?.verseId);
+        handleClose();
+      },
+    },
+    {
+      id: "compare",
+      label: "Compare",
+      emoji: "2696", // ⚖️ balance scale
+      onPress: () => {
+        console.log("Compare translations for verse:", selectedVerse?.verseId);
         handleClose();
       },
     },
@@ -160,6 +185,26 @@ export default function VerseActionsBottomSheet({
     }
   };
 
+  // User interaction data - use prop if provided, otherwise mock data
+  const defaultUserInteractions: UserInteraction[] = [
+    { id: "1", name: "Sarah", initials: "S", color: "#FF6B6B" },
+    { id: "2", name: "Mike", initials: "M", color: "#4ECDC4" },
+    { id: "3", name: "Emma", initials: "E", color: "#45B7D1" },
+    { id: "4", name: "David", initials: "D", color: "#96CEB4" },
+    { id: "5", name: "Lisa", initials: "L", color: "#FFEAA7" },
+    { id: "6", name: "Alex", initials: "A", color: "#DDA0DD" },
+    { id: "7", name: "John", initials: "J", color: "#98D8C8" },
+  ];
+
+  const userInteractions = propUserInteractions || defaultUserInteractions;
+
+  const maxVisibleAvatars = 4;
+  const visibleUsers = userInteractions.slice(0, maxVisibleAvatars);
+  const remainingCount = Math.max(
+    0,
+    userInteractions.length - maxVisibleAvatars
+  );
+
   const renderActionButton = (action: VerseAction) => (
     <TouchableOpacity
       key={action.id}
@@ -169,7 +214,19 @@ export default function VerseActionsBottomSheet({
     >
       <View style={styles.actionIconContainer}>
         <Twemoji hex={action.emoji} size={24} />
-        <ButtonText style={styles.actionLabel}>{action.label}</ButtonText>
+        <ButtonText
+          style={[
+            styles.actionLabel,
+            // Change text color to theme color when saved
+            action.id === "save" &&
+              currentSavedStatus && {
+                color: themeColor || "#FFFFFF",
+                fontWeight: "600",
+              },
+          ]}
+        >
+          {action.label}
+        </ButtonText>
       </View>
     </TouchableOpacity>
   );
@@ -253,9 +310,9 @@ export default function VerseActionsBottomSheet({
               </ScrollView>
             </View>
 
-            {/* Tap for more button */}
+            {/* User interactions and tap for more */}
             <TouchableOpacity
-              style={styles.tapForMoreContainer}
+              style={styles.interactionContainer}
               onPress={() => {
                 console.log(
                   "Tap for more pressed for verse:",
@@ -264,8 +321,36 @@ export default function VerseActionsBottomSheet({
                 // TODO: Implement expanded verse actions
               }}
             >
+              {/* User avatars - only show if there are interactions */}
+              {userInteractions.length > 0 && (
+                <View style={styles.avatarsContainer}>
+                  {visibleUsers.map((user, index) => (
+                    <View
+                      key={user.id}
+                      style={[
+                        styles.avatar,
+                        {
+                          backgroundColor: user.color,
+                          zIndex: maxVisibleAvatars - index,
+                        },
+                      ]}
+                    >
+                      <Text style={styles.avatarText}>{user.initials}</Text>
+                    </View>
+                  ))}
+                  {remainingCount > 0 && (
+                    <View style={styles.moreAvatarsIndicator}>
+                      <Text style={styles.moreAvatarsText}>
+                        +{remainingCount}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              )}
+
+              {/* Tap for more text */}
               <ButtonText style={styles.tapForMoreText}>
-                Tap for more
+                What others are saying
               </ButtonText>
             </TouchableOpacity>
           </View>
