@@ -108,7 +108,7 @@ export const styles = StyleSheet.create({
   avatarsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginRight: 12,
+    marginRight: 10,
   },
   avatar: {
     width: 24,

@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 import { ButtonText, Heading } from "@/components/Text/TextComponents";
 import { Twemoji } from "@/components/UI/Twemoji/Twemoji";
@@ -62,6 +63,7 @@ export default function VerseActionsBottomSheet({
   currentSavedStatus,
   userInteractions: propUserInteractions,
 }: VerseActionsBottomSheetProps) {
+  const router = useRouter();
   const slideAnim = useRef(new Animated.Value(height * 0.4)).current;
   const [modalVisible, setModalVisible] = React.useState(false);
 
@@ -127,7 +129,18 @@ export default function VerseActionsBottomSheet({
       label: "Note",
       emoji: "270d", // ✍️ writing hand
       onPress: () => {
-        console.log("Add note to verse:", selectedVerse?.verseId);
+        if (selectedVerse && bookName && currentChapter) {
+          router.push({
+            pathname: `/(authed)/(tabs)/(read)/[bookName]/note`,
+            params: {
+              bookName: bookName,
+              chapter: currentChapter.toString(),
+              verseId: selectedVerse.verseId,
+              verseText: selectedVerse.verse,
+              ...(themeColor && { themeColor: themeColor }),
+            },
+          });
+        }
         handleClose();
       },
     },
@@ -212,7 +225,17 @@ export default function VerseActionsBottomSheet({
       onPress={action.onPress}
       activeOpacity={0.7}
     >
-      <View style={styles.actionIconContainer}>
+      <View
+        style={[
+          styles.actionIconContainer,
+          // Add colored border for saved state
+          action.id === "save" &&
+            currentSavedStatus && {
+              borderWidth: 2,
+              borderColor: themeColor || "#FFFFFF",
+            },
+        ]}
+      >
         <Twemoji hex={action.emoji} size={24} />
         <ButtonText
           style={[
@@ -247,7 +270,7 @@ export default function VerseActionsBottomSheet({
           style={[
             styles.bottomSheet,
             {
-              height: height * 0.43,
+              height: height * 0.45,
               transform: [{ translateY: slideAnim }],
             },
           ]}
@@ -350,7 +373,7 @@ export default function VerseActionsBottomSheet({
 
               {/* Tap for more text */}
               <ButtonText style={styles.tapForMoreText}>
-                What others are saying
+                See Reactions
               </ButtonText>
             </TouchableOpacity>
           </View>
