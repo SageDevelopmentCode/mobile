@@ -22,6 +22,12 @@ export default function ReadLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="[bookName]/note"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

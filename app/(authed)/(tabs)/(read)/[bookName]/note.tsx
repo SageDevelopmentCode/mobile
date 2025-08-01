@@ -8,11 +8,12 @@ import {
   SafeAreaView,
   Alert,
 } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { ButtonText, Heading } from "@/components/Text/TextComponents";
 import { bookThemeColor } from "@/utils/data/bookThemeColor";
 import { styles } from "./note.styles";
+import { tabBarOptions } from "@/constants/tabBarOptions";
 
 interface Category {
   id: string;
@@ -21,6 +22,7 @@ interface Category {
 }
 
 export default function NoteScreen() {
+  const navigation = useNavigation();
   const router = useRouter();
   const { bookName, chapter, verseId, verseText, themeColor } =
     useLocalSearchParams<{
@@ -30,6 +32,21 @@ export default function NoteScreen() {
       verseText: string;
       themeColor?: string;
     }>();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+    navigation.getParent()?.setOptions({
+      tabBarStyle: {
+        display: "none",
+      },
+    });
+    return () =>
+      navigation.getParent()?.setOptions({
+        ...tabBarOptions,
+      });
+  }, [navigation]);
 
   // Get theme color from bookThemeColor.ts if not provided in params
   const resolvedThemeColor =
@@ -42,7 +59,7 @@ export default function NoteScreen() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isPrivate, setIsPrivate] = useState(true);
   const [customCategory, setCustomCategory] = useState("");
-  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [isEditingCategory, setIsEditingCategory] = useState(false);
 
   // Default categories
   const defaultCategories: Category[] = [
@@ -83,12 +100,7 @@ export default function NoteScreen() {
 
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(selectedCategory === categoryId ? null : categoryId);
-    setShowCustomInput(false);
-  };
-
-  const handleCustomCategoryPress = () => {
-    setShowCustomInput(!showCustomInput);
-    setSelectedCategory(null);
+    setIsEditingCategory(false);
   };
 
   const handleAddCustomCategory = () => {
@@ -101,7 +113,7 @@ export default function NoteScreen() {
       setCategories([...categories, newCategory]);
       setSelectedCategory(newCategory.id);
       setCustomCategory("");
-      setShowCustomInput(false);
+      setIsEditingCategory(false);
     }
   };
 
@@ -124,40 +136,46 @@ export default function NoteScreen() {
     setIsPrivate(!isPrivate);
   };
 
-  const renderCategoryPill = (category: Category) => (
-    <TouchableOpacity
-      key={category.id}
-      style={[
-        styles.categoryPill,
-        {
-          backgroundColor:
-            selectedCategory === category.id ? category.color : "transparent",
-          borderColor: category.color,
-        },
-      ]}
-      onPress={() => handleCategorySelect(category.id)}
-      activeOpacity={0.7}
-    >
-      <Text
+  const renderCategoryPill = (category: Category) => {
+    const isSelected = selectedCategory === category.id;
+    const backgroundColor = isSelected
+      ? resolvedThemeColor
+      : `${resolvedThemeColor}40`; // 25% opacity
+
+    return (
+      <TouchableOpacity
+        key={category.id}
         style={[
-          styles.categoryText,
+          styles.categoryPill,
           {
-            color:
-              selectedCategory === category.id ? "#1A1A1A" : category.color,
+            backgroundColor,
+            borderColor: resolvedThemeColor,
+            borderWidth: 1,
           },
         ]}
+        onPress={() => handleCategorySelect(category.id)}
+        activeOpacity={0.7}
       >
-        {category.label}
-      </Text>
-    </TouchableOpacity>
-  );
+        <ButtonText
+          style={[
+            styles.categoryText,
+            {
+              color: isSelected ? "#1A1A1A" : "#FFFFFF",
+            },
+          ]}
+        >
+          {category.label}
+        </ButtonText>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+          <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
         <Heading style={styles.headerTitle}>Add Note</Heading>
         <TouchableOpacity onPress={handleSaveNote} style={styles.saveButton}>
@@ -170,15 +188,16 @@ export default function NoteScreen() {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Verse Display */}
         <View style={styles.verseContainer}>
-          <Text style={[styles.verseReference, { color: resolvedThemeColor }]}>
+          <ButtonText
+            style={[styles.verseReference, { color: resolvedThemeColor }]}
+          >
             {bookName} {chapter}:{verseId}
-          </Text>
-          <Text style={styles.verseText}>{verseText}</Text>
+          </ButtonText>
+          <ButtonText style={styles.verseText}>{verseText}</ButtonText>
         </View>
 
         {/* Note Input */}
         <View style={styles.noteInputContainer}>
-          <Text style={styles.inputLabel}>Your Note</Text>
           <TextInput
             style={styles.noteInput}
             placeholder="Write your thoughts, insights, or reflections..."
@@ -189,96 +208,110 @@ export default function NoteScreen() {
             onChangeText={setNoteText}
             maxLength={1000}
           />
-          <Text style={styles.characterCount}>{noteText.length}/1000</Text>
+          <ButtonText style={styles.characterCount}>
+            {noteText.length}/1000
+          </ButtonText>
         </View>
+      </ScrollView>
 
-        {/* Category Selection */}
-        <View style={styles.categoryContainer}>
-          <Text style={styles.sectionTitle}>Category</Text>
-          <View style={styles.categoriesWrapper}>
-            {categories.map(renderCategoryPill)}
+      {/* Bottom Categories and Actions */}
+      <View style={styles.bottomContainer}>
+        {/* Category Pills */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.categoryScrollView}
+          contentContainerStyle={styles.categoriesWrapper}
+        >
+          {/* Add Category Pill */}
+          {isEditingCategory ? (
+            <View style={[styles.categoryPill, styles.addCategoryInputPill]}>
+              <TextInput
+                style={styles.inlineCategoryInput}
+                placeholder="Category name..."
+                placeholderTextColor="#999999"
+                value={customCategory}
+                onChangeText={setCustomCategory}
+                maxLength={15}
+                autoFocus
+                onSubmitEditing={() => {
+                  if (customCategory.trim()) {
+                    handleAddCustomCategory();
+                  }
+                  setIsEditingCategory(false);
+                }}
+                onBlur={() => {
+                  if (customCategory.trim()) {
+                    handleAddCustomCategory();
+                  }
+                  setIsEditingCategory(false);
+                }}
+              />
+            </View>
+          ) : (
             <TouchableOpacity
               style={[
                 styles.categoryPill,
                 styles.addCategoryPill,
-                { borderColor: resolvedThemeColor },
+                {
+                  backgroundColor: `${resolvedThemeColor}40`,
+                  borderColor: resolvedThemeColor,
+                  borderWidth: 1,
+                },
               ]}
-              onPress={handleCustomCategoryPress}
+              onPress={() => setIsEditingCategory(true)}
               activeOpacity={0.7}
             >
-              <Ionicons name="add" size={16} color={resolvedThemeColor} />
-              <Text
-                style={[styles.categoryText, { color: resolvedThemeColor }]}
-              >
-                Add Custom
-              </Text>
+              <Ionicons name="add" size={16} color="#FFFFFF" />
+              <ButtonText style={[styles.categoryText, { color: "#FFFFFF" }]}>
+                Add Category
+              </ButtonText>
             </TouchableOpacity>
-          </View>
-
-          {/* Custom Category Input */}
-          {showCustomInput && (
-            <View style={styles.customCategoryContainer}>
-              <TextInput
-                style={styles.customCategoryInput}
-                placeholder="Enter custom category..."
-                placeholderTextColor="#666666"
-                value={customCategory}
-                onChangeText={setCustomCategory}
-                maxLength={20}
-              />
-              <TouchableOpacity
-                style={[
-                  styles.addButton,
-                  { backgroundColor: resolvedThemeColor },
-                ]}
-                onPress={handleAddCustomCategory}
-              >
-                <Text style={styles.addButtonText}>Add</Text>
-              </TouchableOpacity>
-            </View>
           )}
-        </View>
-      </ScrollView>
 
-      {/* Bottom Action Buttons */}
-      <View style={styles.bottomActions}>
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={handleShareNote}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="share-outline" size={20} color="#FFFFFF" />
-          <Text style={styles.actionButtonText}>Share</Text>
-        </TouchableOpacity>
+          {categories.map(renderCategoryPill)}
+        </ScrollView>
 
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={handleSeeOthersComments}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="chatbubbles-outline" size={20} color="#FFFFFF" />
-          <Text style={styles.actionButtonText}>See Others</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={togglePrivacy}
-          activeOpacity={0.7}
-        >
-          <Ionicons
-            name={isPrivate ? "lock-closed" : "globe-outline"}
-            size={20}
-            color={isPrivate ? resolvedThemeColor : "#FFFFFF"}
-          />
-          <Text
-            style={[
-              styles.actionButtonText,
-              { color: isPrivate ? resolvedThemeColor : "#FFFFFF" },
-            ]}
+        {/* Action Buttons */}
+        <View style={styles.actionButtonsRow}>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={handleShareNote}
+            activeOpacity={0.7}
           >
-            {isPrivate ? "Private" : "Public"}
-          </Text>
-        </TouchableOpacity>
+            <Ionicons name="share-outline" size={20} color="#FFFFFF" />
+            <ButtonText style={styles.actionButtonText}>Share</ButtonText>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={handleSeeOthersComments}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="chatbubbles-outline" size={20} color="#FFFFFF" />
+            <ButtonText style={styles.actionButtonText}>See Others</ButtonText>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={togglePrivacy}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={isPrivate ? "lock-closed" : "globe-outline"}
+              size={20}
+              color={isPrivate ? resolvedThemeColor : "#FFFFFF"}
+            />
+            <ButtonText
+              style={[
+                styles.actionButtonText,
+                { color: isPrivate ? resolvedThemeColor : "#FFFFFF" },
+              ]}
+            >
+              {isPrivate ? "Private" : "Public"}
+            </ButtonText>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
