@@ -80,7 +80,6 @@ export const styles = StyleSheet.create({
     backgroundColor: "#2A2A2A",
     borderRadius: 12,
     padding: 16,
-    borderLeftWidth: 4,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

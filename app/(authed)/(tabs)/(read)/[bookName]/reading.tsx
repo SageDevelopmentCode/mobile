@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -57,10 +57,11 @@ export default function ReadingScreen() {
   const router = useRouter();
   const navigation = useNavigation();
   const { session } = useAuth();
-  const { bookName, themeColor, chapter } = useLocalSearchParams<{
+  const { bookName, themeColor, chapter, verse } = useLocalSearchParams<{
     bookName: string;
     themeColor?: string;
     chapter?: string;
+    verse?: string;
   }>();
 
   // Get theme color from bookThemeColor.ts if not provided in params
@@ -92,6 +93,60 @@ export default function ReadingScreen() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [highlights, setHighlights] = useState<UserBookHighlight[]>([]);
   const [savedVerses, setSavedVerses] = useState<UserBookSave[]>([]);
+
+  // Auto-scroll functionality
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  // Auto-scroll to specific verse when chapter loads
+  useEffect(() => {
+    if (verse && verses.length > 0 && !loading) {
+      const targetVerseNumber = parseInt(verse);
+      console.log("Auto-scroll triggered for verse:", targetVerseNumber);
+
+      // Find the index of the target verse
+      const verseIndex = verses.findIndex(
+        (v) => v.verseId === targetVerseNumber
+      );
+      console.log(
+        "Verse index found:",
+        verseIndex,
+        "out of",
+        verses.length,
+        "verses"
+      );
+
+      if (verseIndex !== -1) {
+        // Delay to ensure all verses are rendered
+        setTimeout(() => {
+          if (scrollViewRef.current) {
+            // Estimate scroll position based on verse index
+            // Average verse height is approximately 80-120px depending on content and font size
+            const estimatedVerseHeight = 100;
+            const scrollPosition = Math.max(
+              0,
+              verseIndex * estimatedVerseHeight - 100
+            );
+
+            console.log("Scrolling to position:", scrollPosition);
+            scrollViewRef.current.scrollTo({
+              y: scrollPosition,
+              animated: true,
+            });
+          } else {
+            console.log("ScrollView ref not available");
+          }
+        }, 800); // Longer delay to ensure all content is rendered
+      } else {
+        console.log("Target verse not found in verses array");
+      }
+    } else {
+      console.log("Auto-scroll conditions not met:", {
+        verse,
+        versesLength: verses.length,
+        loading,
+      });
+    }
+  }, [verse, verses, loading]);
 
   // Helper function to get line height value from mode
   const getLineHeightValue = (mode: string) => {
@@ -696,6 +751,7 @@ export default function ReadingScreen() {
 
       {/* Chapter Content */}
       <ScrollView
+        ref={scrollViewRef}
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}

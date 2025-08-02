@@ -94,7 +94,7 @@ export default function CrossReferencesScreen() {
   };
 
   const handleVersePress = (reference: CrossReference) => {
-    // Navigate to the specific verse in the reading screen
+    // Navigate to the specific verse in the reading screen with auto-scroll
     router.push({
       pathname: `/(authed)/(tabs)/(read)/[bookName]/reading`,
       params: {
@@ -112,12 +112,7 @@ export default function CrossReferencesScreen() {
   ) => (
     <TouchableOpacity
       key={reference.id}
-      style={[
-        styles.verseCard,
-        {
-          borderLeftColor: resolvedThemeColor,
-        },
-      ]}
+      style={styles.verseCard}
       onPress={() => handleVersePress(reference)}
       activeOpacity={0.7}
     >
@@ -240,9 +235,7 @@ export default function CrossReferencesScreen() {
           </View>
         ) : (
           <>
-            <ButtonText
-              style={[styles.sectionTitle, { color: resolvedThemeColor }]}
-            >
+            <ButtonText style={[styles.sectionTitle, { color: "#FFFFFF" }]}>
               Related Verses ({crossReferences.length})
             </ButtonText>
             <View style={styles.referencesContainer}>
