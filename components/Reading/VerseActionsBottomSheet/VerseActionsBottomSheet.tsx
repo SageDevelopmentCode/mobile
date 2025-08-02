@@ -149,6 +149,37 @@ export default function VerseActionsBottomSheet({
       },
     },
     {
+      id: "collection",
+      label: "Collection",
+      emoji: "1f4da", // 📚 books
+      onPress: () => {
+        console.log("Add to collection:", selectedVerse?.verseId);
+        // TODO: Implement add to collection functionality
+        showToast("Added to collection", { type: "success" });
+        handleClose();
+      },
+    },
+    {
+      id: "cross-ref",
+      label: "Cross Ref",
+      emoji: "1f9e9", // 🧩 puzzle piece
+      onPress: () => {
+        if (selectedVerse && bookName && currentChapter) {
+          router.push({
+            pathname: `/(authed)/(tabs)/(read)/[bookName]/crossreferences`,
+            params: {
+              bookName: bookName,
+              chapter: currentChapter.toString(),
+              verseId: selectedVerse.verseId,
+              verseText: selectedVerse.verse,
+              ...(themeColor && { themeColor: themeColor }),
+            },
+          });
+        }
+        handleClose();
+      },
+    },
+    {
       id: "copy",
       label: "Copy",
       emoji: "1f4cb", // 📋 clipboard

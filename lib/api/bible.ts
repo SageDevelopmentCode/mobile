@@ -46,6 +46,9 @@ interface CrossReference {
   chapterId: number;
   verseId: number;
   verse: string;
+  relationStartVerse: number;
+  relationEndVerse: number;
+  rank: number;
 }
 
 interface Genre {
@@ -240,7 +243,7 @@ export async function getCrossReferences(
   chapter: number,
   verse: number,
   translation?: string
-): Promise<CrossReference[]> {
+): Promise<CrossReference[][]> {
   const bookId = getBookId(bookName);
   const trans = normalizeTranslation(translation);
 
@@ -251,7 +254,7 @@ export async function getCrossReferences(
       .padStart(3, "0")}`
   );
 
-  return apiRequest<CrossReference[]>(
+  return apiRequest<CrossReference[][]>(
     `/verse/${verseId}/relations?translation=${trans}`
   );
 }

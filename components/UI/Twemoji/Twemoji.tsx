@@ -34,6 +34,8 @@ const emojiAssets: { [key: string]: any } = {
   "1f4cb": require("@/assets/images/emojis/1f4cb.png"), // 📋 clipboard (copy)
   "1f5bc": require("@/assets/images/emojis/1f5bc.png"), // 🖼️ framed picture (image)
   "2696": require("@/assets/images/emojis/2696.png"), // ⚖️ balance scale (compare)
+  "1f4da": require("@/assets/images/emojis/1f4da.png"), // 📚 books (collection)
+  "1f9e9": require("@/assets/images/emojis/1f9e9.png"), // 🧩 puzzle piece (cross reference)
 };
 
 interface TwemojiProps {
