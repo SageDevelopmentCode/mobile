@@ -102,8 +102,13 @@ export default function BookOverviewScreen() {
     return () =>
       navigation.getParent()?.setOptions({
         ...tabBarOptions,
+        tabBarStyle: {
+          ...tabBarOptions.tabBarStyle,
+          backgroundColor: "#282828",
+        },
+        tabBarActiveTintColor: bookSummary?.theme_color || "#888888",
       });
-  }, [navigation]);
+  }, [navigation, bookSummary?.theme_color]);
 
   const handleBack = () => {
     router.back();

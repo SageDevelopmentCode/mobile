@@ -7,6 +7,7 @@ import {
   ScrollView,
   SafeAreaView,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,6 +15,8 @@ import { ButtonText, Heading } from "@/components/Text/TextComponents";
 import { bookThemeColor } from "@/utils/data/bookThemeColor";
 import { styles } from "./note.styles";
 import { tabBarOptions } from "@/constants/tabBarOptions";
+import { useAuth } from "@/context/AuthContext";
+import { createUserBookNote } from "@/lib/supabase/db/user_book_notes";
 
 interface Category {
   id: string;
@@ -24,6 +27,7 @@ interface Category {
 export default function NoteScreen() {
   const navigation = useNavigation();
   const router = useRouter();
+  const { session } = useAuth();
   const { bookName, chapter, verseId, verseText, themeColor } =
     useLocalSearchParams<{
       bookName: string;
@@ -32,6 +36,13 @@ export default function NoteScreen() {
       verseText: string;
       themeColor?: string;
     }>();
+
+  // Get theme color from bookThemeColor.ts if not provided in params
+  const resolvedThemeColor =
+    themeColor ||
+    (bookName
+      ? bookThemeColor[bookName as keyof typeof bookThemeColor] || "#888888"
+      : "#888888");
 
   useEffect(() => {
     navigation.setOptions({
@@ -45,21 +56,20 @@ export default function NoteScreen() {
     return () =>
       navigation.getParent()?.setOptions({
         ...tabBarOptions,
+        tabBarStyle: {
+          ...tabBarOptions.tabBarStyle,
+          backgroundColor: "#282828",
+        },
+        tabBarActiveTintColor: resolvedThemeColor || "#888888",
       });
-  }, [navigation]);
-
-  // Get theme color from bookThemeColor.ts if not provided in params
-  const resolvedThemeColor =
-    themeColor ||
-    (bookName
-      ? bookThemeColor[bookName as keyof typeof bookThemeColor] || "#888888"
-      : "#888888");
+  }, [navigation, resolvedThemeColor]);
 
   const [noteText, setNoteText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isPrivate, setIsPrivate] = useState(true);
   const [customCategory, setCustomCategory] = useState("");
   const [isEditingCategory, setIsEditingCategory] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Default categories
   const defaultCategories: Category[] = [
@@ -77,25 +87,56 @@ export default function NoteScreen() {
     router.back();
   };
 
-  const handleSaveNote = () => {
+  const handleSaveNote = async () => {
     if (!noteText.trim()) {
       Alert.alert("Note Required", "Please enter a note before saving.");
       return;
     }
 
-    // TODO: Implement actual save functionality
-    console.log("Saving note:", {
-      bookName,
-      chapter,
-      verseId,
-      noteText,
-      selectedCategory,
-      isPrivate,
-    });
+    if (!session?.user?.id) {
+      Alert.alert("Authentication Error", "Please log in to save notes.");
+      return;
+    }
 
-    Alert.alert("Note Saved", "Your note has been saved successfully!", [
-      { text: "OK", onPress: () => router.back() },
-    ]);
+    if (!bookName || !chapter || !verseId) {
+      Alert.alert("Error", "Missing verse information. Please try again.");
+      return;
+    }
+
+    setIsSaving(true);
+
+    try {
+      // Get the selected category label
+      const selectedCategoryLabel = selectedCategory
+        ? categories.find((cat) => cat.id === selectedCategory)?.label
+        : undefined;
+
+      // Create the note data
+      const noteData = {
+        user_id: session.user.id,
+        book_name: bookName,
+        chapter: parseInt(chapter),
+        verse: parseInt(verseId),
+        note_text: noteText.trim(),
+        is_private: isPrivate,
+        label: selectedCategoryLabel,
+      };
+
+      // Save to database
+      await createUserBookNote(noteData);
+
+      // Navigate back automatically after successful save
+      router.back();
+    } catch (error) {
+      console.error("Error saving note:", error);
+      Alert.alert(
+        "Save Failed",
+        "There was an error saving your note. Please try again.",
+        [{ text: "OK" }]
+      );
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleCategorySelect = (categoryId: string) => {
@@ -178,10 +219,20 @@ export default function NoteScreen() {
           <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
         <Heading style={styles.headerTitle}>Add Note</Heading>
-        <TouchableOpacity onPress={handleSaveNote} style={styles.saveButton}>
-          <ButtonText style={[styles.saveText, { color: resolvedThemeColor }]}>
-            Save
-          </ButtonText>
+        <TouchableOpacity
+          onPress={handleSaveNote}
+          style={[styles.saveButton, { opacity: isSaving ? 0.6 : 1 }]}
+          disabled={isSaving}
+        >
+          {isSaving ? (
+            <ActivityIndicator size="small" color={resolvedThemeColor} />
+          ) : (
+            <ButtonText
+              style={[styles.saveText, { color: resolvedThemeColor }]}
+            >
+              Save
+            </ButtonText>
+          )}
         </TouchableOpacity>
       </View>
 
