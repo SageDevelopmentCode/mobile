@@ -11,12 +11,14 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { getChapter, Verse } from "@/lib/api/bible";
 import { bookThemeColor } from "@/utils/data/bookThemeColor";
 import { useAuth } from "@/context/AuthContext";
 import colors from "@/constants/colors";
+import { tabBarOptions } from "@/constants/tabBarOptions";
+import { ButtonText } from "@/components/Text/TextComponents";
 import { styles } from "./interactions.styles";
 
 interface UserInteraction {
@@ -71,6 +73,27 @@ export default function VerseInteractionsScreen() {
 
   const versePillsRef = useRef<FlatList>(null);
   const commentsRef = useRef<FlatList>(null);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+    navigation.getParent()?.setOptions({
+      tabBarStyle: {
+        display: "none",
+      },
+    });
+    return () =>
+      navigation.getParent()?.setOptions({
+        ...tabBarOptions,
+        tabBarStyle: {
+          ...tabBarOptions.tabBarStyle,
+          backgroundColor: "#282828",
+        },
+        tabBarActiveTintColor: resolvedThemeColor || "#888888",
+      });
+  }, [navigation, resolvedThemeColor]);
 
   // Mock interactions data - in real app this would come from your backend
   const mockInteractions: UserInteraction[] = [
@@ -237,6 +260,11 @@ export default function VerseInteractionsScreen() {
     }
   };
 
+  const handleAddReaction = () => {
+    // TODO: Implement reaction picker/selector
+    console.log("Add reaction pressed");
+  };
+
   const formatTimeAgo = (timestamp: Date) => {
     const now = new Date();
     const diffInMinutes = Math.floor(
@@ -343,7 +371,7 @@ export default function VerseInteractionsScreen() {
 
         <TouchableOpacity style={styles.replyButton}>
           <Ionicons name="chatbubble-outline" size={16} color="#888888" />
-          <Text style={styles.replyText}>Reply</Text>
+          <Text style={styles.replyButtonText}>Reply</Text>
         </TouchableOpacity>
       </View>
 
@@ -434,15 +462,41 @@ export default function VerseInteractionsScreen() {
 
       {/* Current Verse Display */}
       <View style={styles.currentVerseContainer}>
-        <Text
-          style={[
-            styles.verseReference,
-            { color: resolvedThemeColor || "#888888" },
-          ]}
-        >
-          {bookName} {currentChapter}:{currentVerseId}
-        </Text>
-        <Text style={styles.verseText}>{currentVerse?.verse || verseText}</Text>
+        <View style={styles.verseCard}>
+          <ButtonText style={styles.verseText}>
+            {currentVerse?.verse || verseText}
+          </ButtonText>
+        </View>
+
+        {/* Reactions Row */}
+        <View style={styles.reactionsContainer}>
+          <View style={styles.reactionButtonsGroup}>
+            <TouchableOpacity style={styles.reactionButton}>
+              <ButtonText style={styles.reactionEmoji}>😊</ButtonText>
+              <ButtonText style={styles.reactionCount}>3.6k</ButtonText>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.reactionButton}>
+              <ButtonText style={styles.reactionEmoji}>🙏</ButtonText>
+              <ButtonText style={styles.reactionCount}>3.6k</ButtonText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.addReactionButton}
+              onPress={handleAddReaction}
+            >
+              <Ionicons name="add" size={18} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Action Buttons */}
+          <View style={styles.actionButtonsContainer}>
+            <TouchableOpacity style={styles.actionButton}>
+              <Ionicons name="bookmark-outline" size={24} color="#FFFFFF" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.actionButton}>
+              <Ionicons name="play" size={24} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
 
       {/* Interactions List */}
@@ -456,10 +510,12 @@ export default function VerseInteractionsScreen() {
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Ionicons name="chatbubbles-outline" size={48} color="#666666" />
-            <Text style={styles.emptyStateText}>No interactions yet</Text>
-            <Text style={styles.emptyStateSubtext}>
+            <ButtonText style={styles.emptyStateText}>
+              No interactions yet
+            </ButtonText>
+            <ButtonText style={styles.emptyStateSubtext}>
               Be the first to share your thoughts!
-            </Text>
+            </ButtonText>
           </View>
         }
       />

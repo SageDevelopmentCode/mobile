@@ -14,12 +14,9 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
     backgroundColor: "#181818",
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255, 255, 255, 0.1)",
-    minHeight: 70,
   },
   backButton: {
     padding: 8,
@@ -79,27 +76,80 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
   versePillTextSelected: {
-    color: "#181818",
+    color: colors.PrimaryWhite,
   },
 
   // Current Verse Display
   currentVerseContainer: {
     paddingHorizontal: 20,
     paddingVertical: 20,
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#181818",
     borderBottomWidth: 1,
     borderBottomColor: "rgba(255, 255, 255, 0.1)",
   },
   verseReference: {
     fontSize: 16,
     fontWeight: "700",
-    marginBottom: 8,
+    marginBottom: 12,
+  },
+  verseCard: {
+    backgroundColor: "#282828",
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 16,
   },
   verseText: {
     fontSize: 16,
     lineHeight: 24,
     color: colors.PrimaryWhite,
     fontWeight: "400",
+  },
+
+  // Reactions Row
+  reactionsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  reactionButtonsGroup: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  reactionButton: {
+    backgroundColor: "#282828",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 8,
+    gap: 6,
+  },
+  reactionEmoji: {
+    fontSize: 16,
+  },
+  reactionCount: {
+    fontSize: 14,
+    color: "#CCCCCC",
+    fontWeight: "500",
+  },
+  addReactionButton: {
+    backgroundColor: "#282828",
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  actionButtonsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  actionButton: {
+    padding: 8,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   // Interactions List
@@ -198,7 +248,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     gap: 6,
   },
-  replyText: {
+  replyButtonText: {
     fontSize: 14,
     color: "#888888",
   },
