@@ -53,9 +53,9 @@ export const styles = StyleSheet.create({
     paddingRight: 16,
   },
   colorCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     marginRight: 12,
     shadowColor: "#000",
     shadowOffset: {

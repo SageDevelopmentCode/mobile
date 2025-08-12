@@ -150,11 +150,6 @@ export default function CrossReferencesScreen() {
 
       {/* Original Verse */}
       <View style={styles.originalVerseContainer}>
-        <ButtonText
-          style={[styles.originalVerseLabel, { color: resolvedThemeColor }]}
-        >
-          Original Verse
-        </ButtonText>
         <View
           style={[
             styles.originalVerseCard,

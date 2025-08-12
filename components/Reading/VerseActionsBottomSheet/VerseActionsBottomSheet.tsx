@@ -214,7 +214,18 @@ export default function VerseActionsBottomSheet({
       label: "Compare",
       emoji: "2696", // ⚖️ balance scale
       onPress: () => {
-        console.log("Compare translations for verse:", selectedVerse?.verseId);
+        if (selectedVerse && bookName && currentChapter) {
+          router.push({
+            pathname: `/(authed)/(tabs)/(read)/[bookName]/compare`,
+            params: {
+              bookName: bookName,
+              chapter: currentChapter.toString(),
+              verseId: selectedVerse.verseId,
+              verseText: selectedVerse.verse,
+              ...(themeColor && { themeColor: themeColor }),
+            },
+          });
+        }
         handleClose();
       },
     },
@@ -351,7 +362,6 @@ export default function VerseActionsBottomSheet({
             <View style={styles.content}>
               {/* Highlight Colors */}
               <View style={styles.highlightSection}>
-                <ButtonText style={styles.sectionTitle}>Highlight</ButtonText>
                 <ScrollView
                   horizontal
                   showsHorizontalScrollIndicator={false}

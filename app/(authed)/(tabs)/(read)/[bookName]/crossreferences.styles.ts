@@ -11,9 +11,6 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: "#282828", // Same as reading screen header
-    borderBottomWidth: 1,
-    borderBottomColor: "#333333",
   },
   backButton: {
     padding: 4,
@@ -36,9 +33,6 @@ export const styles = StyleSheet.create({
   originalVerseContainer: {
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: "#282828",
-    borderBottomWidth: 1,
-    borderBottomColor: "#333333",
   },
   originalVerseLabel: {
     fontSize: 14,
