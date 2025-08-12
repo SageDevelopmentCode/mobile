@@ -28,6 +28,12 @@ export default function ReadLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="[bookName]/interactions"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

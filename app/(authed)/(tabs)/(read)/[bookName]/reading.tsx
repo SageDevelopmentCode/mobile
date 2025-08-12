@@ -835,6 +835,7 @@ export default function ReadingScreen() {
         onSaveVerse={handleSaveVerse}
         bookName={bookName || ""}
         currentChapter={currentChapter}
+        currentTranslation={currentTranslation}
         currentHighlightColor={
           selectedVerse
             ? getVerseHighlightColor(parseInt(selectedVerse.verseId.toString()))

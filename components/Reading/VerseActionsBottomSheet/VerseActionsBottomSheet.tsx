@@ -17,6 +17,7 @@ import { useRouter } from "expo-router";
 import { ButtonText, Heading } from "@/components/Text/TextComponents";
 import { Twemoji } from "@/components/UI/Twemoji/Twemoji";
 import { useToast } from "@/components/UI/Toast/Toast";
+import { shareVerse, VerseReference } from "@/utils/sharing/verseSharing";
 import { styles } from "./VerseActionsBottomSheet.styles";
 
 const { height } = Dimensions.get("window");
@@ -51,6 +52,7 @@ interface VerseActionsBottomSheetProps {
   currentHighlightColor?: string | null;
   currentSavedStatus?: boolean;
   userInteractions?: UserInteraction[];
+  currentTranslation?: string;
 }
 
 export default function VerseActionsBottomSheet({
@@ -65,6 +67,7 @@ export default function VerseActionsBottomSheet({
   currentHighlightColor,
   currentSavedStatus,
   userInteractions: propUserInteractions,
+  currentTranslation = "NIV",
 }: VerseActionsBottomSheetProps) {
   const router = useRouter();
   const slideAnim = useRef(new Animated.Value(height * 0.4)).current;
@@ -233,9 +236,39 @@ export default function VerseActionsBottomSheet({
       id: "share",
       label: "Share",
       emoji: "1f517", // 🔗 link
-      onPress: () => {
-        console.log("Share verse:", selectedVerse?.verseId);
-        handleClose();
+      onPress: async () => {
+        if (selectedVerse && bookName && currentChapter) {
+          try {
+            const verseReference: VerseReference = {
+              bookName: bookName,
+              chapter: currentChapter,
+              verse: parseInt(selectedVerse.verseId),
+              verseText: selectedVerse.verse,
+              translation: currentTranslation,
+            };
+
+            const success = await shareVerse(verseReference);
+
+            // Close bottom sheet first
+            handleClose();
+
+            if (success) {
+              // Show success toast after a short delay
+              setTimeout(() => {
+                showToast("Verse shared successfully!");
+              }, 300);
+            }
+          } catch (error) {
+            console.error("Error sharing verse:", error);
+            handleClose();
+            setTimeout(() => {
+              showToast("Failed to share verse");
+            }, 300);
+          }
+        } else {
+          console.log("Missing verse data for sharing");
+          handleClose();
+        }
       },
     },
     {
@@ -407,11 +440,19 @@ export default function VerseActionsBottomSheet({
               <TouchableOpacity
                 style={styles.interactionContainer}
                 onPress={() => {
-                  console.log(
-                    "Tap for more pressed for verse:",
-                    selectedVerse?.verseId
-                  );
-                  // TODO: Implement expanded verse actions
+                  if (selectedVerse && bookName && currentChapter) {
+                    router.push({
+                      pathname: `/(authed)/(tabs)/(read)/[bookName]/interactions`,
+                      params: {
+                        bookName: bookName,
+                        chapter: currentChapter.toString(),
+                        verseId: selectedVerse.verseId,
+                        verseText: selectedVerse.verse,
+                        ...(themeColor && { themeColor: themeColor }),
+                      },
+                    });
+                  }
+                  handleClose();
                 }}
               >
                 {/* User avatars - only show if there are interactions */}

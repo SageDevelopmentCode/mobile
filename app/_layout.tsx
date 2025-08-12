@@ -15,6 +15,7 @@ import {
   CharacterProvider,
   useCharacterContext,
 } from "@/lib/context/CharacterContext";
+import { useDeepLinking } from "@/hooks/useDeepLinking";
 
 // Splash Screen Content Component (needs to be inside CharacterProvider)
 function SplashScreenContent({ onFinish }: { onFinish: () => void }) {
@@ -224,6 +225,9 @@ function AuthHandler() {
   const segments = useSegments();
   const router = useRouter();
   const [showSplash, setShowSplash] = useState(true);
+
+  // Initialize deep linking
+  useDeepLinking();
 
   useEffect(() => {
     // Handle navigation immediately when authenticated
