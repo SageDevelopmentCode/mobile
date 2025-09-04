@@ -1,14 +1,18 @@
-# Setup Sage Frontend
+# 🌱 Sage: A Christian Self-Care App 
 
-### AWS Installation
+**Sage** helps people of all ages grow in faith and self-care through meaningful goals, daily practices, and engaging, game-like experiences.  
 
-- Configure Amplify CLI: https://docs.amplify.aws/gen1/javascript/tools/cli/start/set-up-cli/#configure-the-amplify-cli
+<img width="2331" height="1991" alt="GroupScreenshot" src="https://github.com/user-attachments/assets/3e9668fb-0d10-495c-8076-cb28c479dcf4" />
 
-- `amplify pull xxxxxxxxx`
-- `amplify update auth`
+## ✨ What You Can Do  
+- 📖 **Set faith-based goals** and track your growth  
+- ✅ **Complete daily tasks** to strengthen your walk  
+- ⚔️ **Battle friends with Biblical characters**  
+- 🎁 **Answer Bible questions to earn rewards**
 
-### Setup
+## 🛠️ Built With  
+- **React Native** → iOS + Android  
+- **TypeScript**
+- **Supabase**
 
-- Create env-vars.ts file and add variables
-- `npm install`
-- `npm start`
+MIT License © 2025 Julius Cecilia  
